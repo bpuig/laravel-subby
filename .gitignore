@@ -1,0 +1,7 @@
+/build
+/vendor
+/node_modules
+composer.lock
+composer.phar
+phpunit.xml
+.idea
