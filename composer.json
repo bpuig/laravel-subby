@@ -1,0 +1,63 @@
+{
+    "name": "bpuig/laravel-subby",
+    "description": "Laravel Subby is a flexible plans and subscription management system for Laravel.",
+    "type": "library",
+    "keywords": [
+        "plan",
+        "value",
+        "laravel",
+        "feature",
+        "database",
+        "recurring",
+        "subscription"
+    ],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/bpuig/laravel-subby/issues",
+        "source": "https://github.com/bpuig/laravel-subby",
+        "docs": "https://github.com/bpuig/laravel-subby/blob/master/README.md"
+    },
+    "authors": [
+        {
+            "name": "Borja Puig"
+        }
+    ],
+    "require": {
+        "php": "^7.3.0",
+        "laravel/framework": "^8.0"
+    },
+    "require-dev": {
+        "illuminate/console": "^7.0.0",
+        "illuminate/container": "^7.0.0",
+        "phpunit/phpunit": "^9.0.0",
+        "orchestra/testbench": "^6.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bpuig\\Subby\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bpuig\\Subby\\Tests\\": "tests",
+            "Bpuig\\Subby\\Tests\\Database\\Factories\\": "tests/Database/Factories"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "optimize-autoloader": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bpuig\\Subby\\SubbyServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
