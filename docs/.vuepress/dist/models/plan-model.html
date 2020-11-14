@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Plan Model | Laravel Subby</title>
+    <meta name="generator" content="VuePress 1.7.1">
+
+    <meta name="description"
+          content="Laravel Subby is a flexible plans and subscription management system for Laravel.">
+
+    <link rel="preload" href="/test-pages/assets/css/0.styles.7244528d.css" as="style">
+    <link rel="preload" href="/test-pages/assets/js/app.1423e747.js" as="script">
+    <link rel="preload" href="/test-pages/assets/js/2.60fa026b.js" as="script">
+    <link rel="preload" href="/test-pages/assets/js/13.042fe715.js" as="script">
+    <link rel="prefetch" href="/test-pages/assets/js/10.398dca2c.js">
+    <link rel="prefetch" href="/test-pages/assets/js/11.7dc5de01.js">
+    <link rel="prefetch" href="/test-pages/assets/js/12.aece5e34.js">
+    <link rel="prefetch" href="/test-pages/assets/js/14.6af1a665.js">
+    <link rel="prefetch" href="/test-pages/assets/js/3.e48d6748.js">
+    <link rel="prefetch" href="/test-pages/assets/js/4.09fd2c39.js">
+    <link rel="prefetch" href="/test-pages/assets/js/5.42448316.js">
+    <link rel="prefetch" href="/test-pages/assets/js/6.73c063ed.js">
+    <link rel="prefetch" href="/test-pages/assets/js/7.4bbc3078.js">
+    <link rel="prefetch" href="/test-pages/assets/js/8.d1c79864.js">
+    <link rel="prefetch" href="/test-pages/assets/js/9.4834181b.js">
+    <link rel="stylesheet" href="/test-pages/assets/css/0.styles.7244528d.css">
+</head>
+<body>
+<div id="app" data-server-rendered="true">
+    <div class="theme-container">
+        <header class="navbar">
+            <div class="sidebar-button">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512"
+                     class="icon">
+                    <path fill="currentColor"
+                          d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+                </svg>
+            </div>
+            <a href="/test-pages/" class="home-link router-link-active"><!----> <span
+                class="site-name">Laravel Subby</span></a>
+            <div class="links">
+                <div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value="">
+                    <!----></div>
+                <nav class="nav-links can-hide">
+                    <div class="nav-item"><a href="/test-pages/" class="nav-link">
+                        Home
+                    </a></div>
+                    <a href="https://github.com/bpuig/laravel-subby" target="_blank" rel="noopener noreferrer"
+                       class="repo-link">
+                        GitHub
+                        <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px"
+                                   y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path
+                            fill="currentColor"
+                            d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon
+                            fill="currentColor"
+                            points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span
+                            class="sr-only">(opens new window)</span></span></a></nav>
+            </div>
+        </header>
+        <div class="sidebar-mask"></div>
+        <aside class="sidebar">
+            <nav class="nav-links">
+                <div class="nav-item"><a href="/test-pages/" class="nav-link">
+                    Home
+                </a></div>
+                <a href="https://github.com/bpuig/laravel-subby" target="_blank" rel="noopener noreferrer"
+                   class="repo-link">
+                    GitHub
+                    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px"
+                               viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path
+                        fill="currentColor"
+                        d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon
+                        fill="currentColor"
+                        points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span
+                        class="sr-only">(opens new window)</span></span></a></nav>
+            <ul class="sidebar-links">
+                <li>
+                    <section class="sidebar-group depth-0"><p class="sidebar-heading"><span>The package</span> <!---->
+                    </p>
+                        <ul class="sidebar-links sidebar-group-items">
+                            <li><a href="/test-pages/" aria-current="page" class="sidebar-link">Introduction</a></li>
+                            <li><a href="/test-pages/install/" class="sidebar-link">Installation</a></li>
+                        </ul>
+                    </section>
+                </li>
+                <li>
+                    <section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Usage</span> <!---->
+                    </p>
+                        <ul class="sidebar-links sidebar-group-items">
+                            <li><a href="/test-pages/models/" aria-current="page" class="sidebar-link">Models</a></li>
+                            <li><a href="/test-pages/models/plan-model.html" aria-current="page"
+                                   class="active sidebar-link">Plan Model</a>
+                                <ul class="sidebar-sub-headers">
+                                    <li class="sidebar-sub-header"><a
+                                        href="/test-pages/models/plan-model.html#create-a-plan" class="sidebar-link">Create
+                                        a Plan</a></li>
+                                    <li class="sidebar-sub-header"><a
+                                        href="/test-pages/models/plan-model.html#get-plan-details" class="sidebar-link">Get
+                                        Plan details</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/test-pages/models/plan-feature-model.html" class="sidebar-link">Plan Feature
+                                Model</a></li>
+                            <li><a href="/test-pages/models/plan-subscription-model.html" class="sidebar-link">Plan
+                                Subscription Model</a></li>
+                        </ul>
+                    </section>
+                </li>
+            </ul>
+        </aside>
+        <main class="page">
+            <div class="theme-default-content content__default"><h1 id="plan-model"><a href="#plan-model"
+                                                                                       class="header-anchor">#</a> Plan
+                Model</h1>
+                <p>This is the main model of the package, there is nothing without plans.</p>
+                <h2 id="create-a-plan"><a href="#create-a-plan" class="header-anchor">#</a> Create a Plan<a
+                    name="create-plan"></a></h2>
+                <div class="language-php extra-class"><pre class="language-php"><code><span
+                    class="token keyword">use</span> <span class="token package">Bpuig<span
+                    class="token punctuation">\</span>Subby<span class="token punctuation">\</span>Models<span
+                    class="token punctuation">\</span>Plan</span><span class="token punctuation">;</span>
+
+<span class="token variable">$plan</span> <span class="token operator">=</span> Plan<span
+                        class="token punctuation">:</span><span class="token punctuation">:</span><span
+                        class="token function">create</span><span class="token punctuation">(</span><span
+                        class="token punctuation">[</span>
+    <span class="token single-quoted-string string">'tag'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span
+                        class="token single-quoted-string string">'basic'</span><span class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'name'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span
+                        class="token single-quoted-string string">'Basic Plan'</span><span
+                        class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'description'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span class="token single-quoted-string string">'For small businesses'</span><span
+                        class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'price'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span class="token number">9.99</span><span
+                        class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'signup_fee'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span class="token number">1.99</span><span
+                        class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'invoice_period'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span class="token number">1</span><span
+                        class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'invoice_interval'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span
+                        class="token single-quoted-string string">'month'</span><span class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'trial_period'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span class="token number">15</span><span
+                        class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'trial_interval'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span
+                        class="token single-quoted-string string">'day'</span><span class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'tier'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span class="token number">1</span><span
+                        class="token punctuation">,</span>
+    <span class="token single-quoted-string string">'currency'</span> <span class="token operator">=</span><span
+                        class="token operator">&gt;</span> <span
+                        class="token single-quoted-string string">'EUR'</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+                </div>
+                <h2 id="get-plan-details"><a href="#get-plan-details" class="header-anchor">#</a> Get Plan details<a
+                    name="get-plan-details"></a></h2>
+                <p>You can query the plan for further details as follows:</p>
+                <div class="language-php extra-class"><pre class="language-php"><code><span
+                    class="token variable">$plan</span> <span class="token operator">=</span> Plan<span
+                    class="token punctuation">:</span><span class="token punctuation">:</span><span
+                    class="token function">find</span><span class="token punctuation">(</span><span
+                    class="token number">1</span><span class="token punctuation">)</span><span
+                    class="token punctuation">;</span>
+
+<span class="token comment">// Get all plan features                </span>
+<span class="token variable">$plan</span><span class="token operator">-</span><span
+                        class="token operator">&gt;</span><span class="token property">features</span><span
+                        class="token punctuation">;</span>
+
+<span class="token comment">// Get all plan subscriptions</span>
+<span class="token variable">$plan</span><span class="token operator">-</span><span
+                        class="token operator">&gt;</span><span class="token property">subscriptions</span><span
+                        class="token punctuation">;</span>
+
+<span class="token comment">// Check if the plan is free</span>
+<span class="token variable">$plan</span><span class="token operator">-</span><span
+                        class="token operator">&gt;</span><span class="token function">isFree</span><span
+                        class="token punctuation">(</span><span class="token punctuation">)</span><span
+                        class="token punctuation">;</span>
+
+<span class="token comment">// Check if the plan has trial period</span>
+<span class="token variable">$plan</span><span class="token operator">-</span><span
+                        class="token operator">&gt;</span><span class="token function">hasTrial</span><span
+                        class="token punctuation">(</span><span class="token punctuation">)</span><span
+                        class="token punctuation">;</span>
+
+<span class="token comment">// Check if the plan has grace period</span>
+<span class="token variable">$plan</span><span class="token operator">-</span><span
+                        class="token operator">&gt;</span><span class="token function">hasGrace</span><span
+                        class="token punctuation">(</span><span class="token punctuation">)</span><span
+                        class="token punctuation">;</span>
+</code></pre>
+                </div>
+                <p>Both <code>$plan-&gt;features</code> and <code>$plan-&gt;subscriptions</code> are collections, driven
+                    from relationships, and thus you can query these relations as any normal Eloquent relationship. E.g.
+                    <code>$plan-&gt;features()-&gt;where('tag', 'social_profiles')-&gt;first()</code>.</p>
+                <p>Also read:</p>
+                <ul>
+                    <li><a href="/test-pages/models/plan-feature-model.html">Get Plan Feature value</a></li>
+                </ul>
+            </div>
+            <footer class="page-edit"><!----> <!----></footer>
+            <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/test-pages/models/" class="prev router-link-active">
+        Models
+      </a></span> <span class="next"><a href="/test-pages/models/plan-feature-model.html">
+        Plan Feature Model
+      </a>
+      →
+    </span></p></div>
+        </main>
+    </div>
+    <div class="global-ui"></div>
+</div>
+<script src="/test-pages/assets/js/app.1423e747.js" defer></script>
+<script src="/test-pages/assets/js/2.60fa026b.js" defer></script>
+<script src="/test-pages/assets/js/13.042fe715.js" defer></script>
+</body>
+</html>
