@@ -10,7 +10,7 @@ Read the docs in [https://bpuig.github.io/laravel-subby](https://bpuig.github.io
 
 ## Changelog<a name="changelog"></a>
 
-Refer to the [Changelog](/docs/CHANGELOG.md) for a full history of the project.
+Refer to the [Changelog](https://bpuig.github.io/laravel-subby/CHANGELOG.md) for a full history of the project.
 
 ## License<a name="license"></a>
 Forked originally from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions). Thank you for creating the original!
