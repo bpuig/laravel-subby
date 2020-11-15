@@ -6,9 +6,12 @@ namespace Bpuig\Subby\Tests\Unit;
 
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PlanTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Test Plan creation with already existing tag in database
      */

@@ -120,11 +120,20 @@ class PlanSubscription extends Model
     /**
      * The subscription may have many usage.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function usage(): hasMany
     {
         return $this->hasMany(config('subby.models.plan_subscription_usage'), 'subscription_id', 'id');
+    }
+
+    /**
+     * The subscription can be scheduled
+     * @return HasMany
+     */
+    public function schedules(): hasMany
+    {
+        return $this->hasMany(config('subby.models.plan_subscription_schedule'), 'subscription_id', 'id');
     }
 
     /**
