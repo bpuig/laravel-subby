@@ -10,6 +10,7 @@ use Bpuig\Subby\Models\PlanSubscriptionSchedule;
 use Bpuig\Subby\Tests\TestCase;
 use Carbon\Carbon;
 
+
 class PlanSubscriptionScheduleTest extends TestCase
 {
     /**
@@ -19,6 +20,34 @@ class PlanSubscriptionScheduleTest extends TestCase
     {
         $date = Carbon::now()->add(5, 'day');
         $this->testUser->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->setSchedule();
+
+        $schedule = PlanSubscriptionSchedule::where('plan_id', $this->testPlanPro->id)
+            ->where('subscription_id', $this->testUser->subscription('main')->id)
+            ->where('scheduled_at', $date->format('Y-m-d H:i:s'))
+            ->first();
+
+        $this->assertNotNull($schedule);
+    }
+
+    /**
+     * Test Scheduling over limit
+     */
+    public function testScheduleCreationLimit()
+    {
+        $date = Carbon::now()->add(5, 'day');
+        config(['subby.schedule.schedules_per_subscription' => 0]);
+        $this->expectExceptionMessage('Subscription has reached it\'s schedules limit.');
+        $this->testUser->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->setSchedule();
+    }
+
+    /**
+     * Test Scheduling over limit with override
+     */
+    public function testScheduleCreationAndIgnoreLimit()
+    {
+        $date = Carbon::now()->add(5, 'day');
+        config(['subby.schedule.schedules_per_subscription' => 0]);
+        $this->testUser->subscription('main')->toPlan($this->testPlanPro)->ignoreLimit()->onDate($date)->setSchedule();
 
         $schedule = PlanSubscriptionSchedule::where('plan_id', $this->testPlanPro->id)
             ->where('subscription_id', $this->testUser->subscription('main')->id)
