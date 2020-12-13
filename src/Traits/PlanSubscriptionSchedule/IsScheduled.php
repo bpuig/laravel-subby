@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Bpuig\Subby\Traits\PlanSubscriptionSchedule;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Trait IsScheduled
@@ -28,8 +29,46 @@ trait IsScheduled
      */
     private $scheduledService = 'default';
 
+    /**
+     * Tries for schedule job
+     * @var int
+     */
     private $scheduledTries = 1;
+
+    /**
+     * Timeout for job
+     * @var int
+     */
     private $scheduledTimeout = 120;
+
+    /**
+     * Allow scheduled limit ignore
+     * @var bool
+     */
+    private $ignoreScheduleLimit = false;
+
+    /**
+     * Check if subscription has reached schedule limits.
+     *
+     * @return bool
+     */
+    public function reachedScheduleLimit(): bool
+    {
+        if (is_null(config('subby.schedule.schedules_per_subscription'))) {
+            return false;
+        } else {
+            return $this->schedules()->notProcessed()->count() >= config('subby.schedule.schedules_per_subscription');
+        }
+    }
+
+    /**
+     * The subscription can be scheduled
+     * @return HasMany
+     */
+    public function schedules(): hasMany
+    {
+        return $this->hasMany(config('subby.schedule.models.plan_subscription_schedule'), 'subscription_id', 'id');
+    }
 
     /**
      * Future plan
@@ -38,7 +77,7 @@ trait IsScheduled
      *
      * @return $this
      */
-    public function toPlan($plan)
+    public function toPlan($plan): self
     {
         $this->scheduledPlan = $plan;
 
@@ -51,7 +90,7 @@ trait IsScheduled
      * @param $service
      * @return $this
      */
-    public function service(string $service)
+    public function service(string $service): self
     {
         $this->scheduledService = $service;
 
@@ -64,7 +103,7 @@ trait IsScheduled
      * @param int $seconds
      * @return $this
      */
-    public function timeout(int $seconds)
+    public function timeout(int $seconds): self
     {
         $this->scheduledTimeout = $seconds;
 
@@ -77,7 +116,7 @@ trait IsScheduled
      * @param int $number
      * @return $this
      */
-    public function tries(int $number)
+    public function tries(int $number): self
     {
         $this->scheduledTries = $number;
 
@@ -90,11 +129,43 @@ trait IsScheduled
      * @param Carbon $date
      * @throws \Exception
      */
-    public function onDate(Carbon $date)
+    public function onDate(Carbon $date): self
     {
         $this->scheduledDate = $date->format('Y-m-d H:i:s');
 
         return $this;
+    }
+
+    /**
+     * Set to ignore limit
+     * @param bool $value Value of ignore
+     * @return $this
+     */
+    public function ignoreLimit($value = true): self
+    {
+        $this->ignoreScheduleLimit = $value;
+        return $this;
+    }
+
+    /**
+     * Create schedule in database
+     * @throws \Exception
+     */
+    public function setSchedule()
+    {
+        $this->validateSchedulesPerSubscription();
+        $this->validateDate();
+        $this->validatePlan();
+        $this->validateConsecutiveChange();
+
+        app(config('subby.schedule.models.plan_subscription_schedule'))->create([
+            'plan_id' => $this->scheduledPlan->id,
+            'subscription_id' => $this->id,
+            'service' => $this->scheduledService,
+            'tries' => $this->scheduledTries,
+            'timeout' => $this->scheduledTimeout,
+            'scheduled_at' => $this->scheduledDate
+        ]);
     }
 
     /**
@@ -158,22 +229,13 @@ trait IsScheduled
     }
 
     /**
-     * Create schedule in database
+     * Validate if has reached limit of schedules
      * @throws \Exception
      */
-    public function setSchedule()
+    private function validateSchedulesPerSubscription()
     {
-        $this->validateDate();
-        $this->validatePlan();
-        $this->validateConsecutiveChange();
-
-        app(config('subby.schedule.models.plan_subscription_schedule'))->create([
-            'plan_id' => $this->scheduledPlan->id,
-            'subscription_id' => $this->id,
-            'service' => $this->scheduledService,
-            'tries' => $this->scheduledTries,
-            'timeout' => $this->scheduledTimeout,
-            'scheduled_at' => $this->scheduledDate
-        ]);
+        if ($this->ignoreScheduleLimit === false && $this->reachedScheduleLimit()) {
+            throw new \Exception('Subscription has reached it\'s schedules limit.', 500);
+        }
     }
 }

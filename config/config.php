@@ -21,6 +21,7 @@ return [
 
     // Plan schedule settings (Optional if you do not use IsScheduled trait)
     'schedule' => [
+        'schedules_per_subscription' => null, // Maximum number of schedules allowed for a subscription (null for no limit)
         'tables' => [
             'plan_subscription_schedules' => 'plan_subscription_schedules'
         ],

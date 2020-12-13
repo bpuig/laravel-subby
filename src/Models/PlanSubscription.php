@@ -128,15 +128,6 @@ class PlanSubscription extends Model
     }
 
     /**
-     * The subscription can be scheduled
-     * @return HasMany
-     */
-    public function schedules(): hasMany
-    {
-        return $this->hasMany(config('subby.schedule.models.plan_subscription_schedule'), 'subscription_id', 'id');
-    }
-
-    /**
      * Check if subscription is active.
      *
      * @return bool
