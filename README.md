@@ -2,8 +2,11 @@
 
 # Laravel Subby
 
-**Laravel Subby** is a flexible plans and subscription management system for Laravel.
+**Laravel Subby** is a flexible plans and subscription management system for Laravel. You can also schedule plan
+changes.
+
 Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
+
 ## Documentation
 
 Read the docs in [https://bpuig.github.io/laravel-subby](https://bpuig.github.io/laravel-subby)
