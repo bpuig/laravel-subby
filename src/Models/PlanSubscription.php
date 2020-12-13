@@ -133,7 +133,7 @@ class PlanSubscription extends Model
      */
     public function schedules(): hasMany
     {
-        return $this->hasMany(config('subby.models.plan_subscription_schedule'), 'subscription_id', 'id');
+        return $this->hasMany(config('subby.schedule.models.plan_subscription_schedule'), 'subscription_id', 'id');
     }
 
     /**
