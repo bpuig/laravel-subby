@@ -46,7 +46,7 @@ class PlanSubscriptionSchedule extends Model
         'timeout' => 'integer',
         'scheduled_at' => 'datetime',
         'failed_at' => 'datetime',
-        'succeeded_at' => 'date'
+        'succeeded_at' => 'datetime'
     ];
 
     /**
