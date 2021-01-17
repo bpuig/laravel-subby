@@ -158,7 +158,7 @@ trait IsScheduled
         $this->validatePlan();
         $this->validateConsecutiveChange();
 
-        app(config('subby.schedule.models.plan_subscription_schedule'))->create([
+        return app(config('subby.schedule.models.plan_subscription_schedule'))->create([
             'plan_id' => $this->scheduledPlan->id,
             'subscription_id' => $this->id,
             'service' => $this->scheduledService,
