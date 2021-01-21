@@ -58,7 +58,7 @@ class SubscriptionScheduleProcessJob implements ShouldQueue
             throw new \Exception('Selected Subscription Schedule Service does not exist', 401);
         }
 
-        // Create instance of selected service
+        // Create instance of selected service and inject plan's subscription schedule
         $this->scheduleService = app()->make(config($this->scheduleServiceConfig), ['planSubscriptionSchedule' => $this->planSubscriptionSchedule]);
     }
 
