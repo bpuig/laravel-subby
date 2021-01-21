@@ -100,12 +100,16 @@ class PlanSubscriptionSchedule extends Model
      * Pending subscription changes
      *
      * @param $query
-     *
+     * @param Carbon|null $date
      * @return mixed
      */
-    public function scopePending($query)
+    public function scopePending($query, Carbon $date = null)
     {
-        return $query->where('scheduled_at', '<=', Carbon::now())
+        if (is_null($date)) {
+            $date = Carbon::now();
+        }
+
+        return $query->where('scheduled_at', '<=', $date)
             ->notProcessed();
     }
 
