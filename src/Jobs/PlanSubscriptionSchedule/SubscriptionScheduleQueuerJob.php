@@ -21,7 +21,7 @@ class SubscriptionScheduleQueuerJob implements ShouldQueue
 
     private $planSubscriptionScheduleModel;
 
-    private $until;
+    protected $until;
 
     /**
      * Create a new job instance.
