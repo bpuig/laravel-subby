@@ -23,7 +23,7 @@ trait IsScheduleService
     public function changePlan()
     {
         if ($this->success) {
-            $this->planSubscriptionSchedule->succeed($this->clearUsage);
+            $this->planSubscriptionSchedule->succeed();
         } else {
             $this->planSubscriptionSchedule->fail();
             throw new \Exception('Process failed.', 500);
