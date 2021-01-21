@@ -188,9 +188,31 @@ class PlanSubscription extends Model
     {
         $this->canceled_at = Carbon::now();
 
+        // If cancel is immediate, set end date
         if ($immediately) {
+            $this->cancels_at = $this->canceled_at;
             $this->ends_at = $this->canceled_at;
+        } else {
+            // If cancel is not immediate, it will be cancelled at period end
+            $this->cancels_at = $this->ends_at;
         }
+
+        $this->save();
+
+        return $this;
+    }
+
+    /**
+     * Uncancel subscription
+     *
+     * This action undoes all cancel flags
+     *
+     * @return $this
+     */
+    public function uncancel()
+    {
+        $this->canceled_at = null;
+        $this->cancels_at = null;
 
         $this->save();
 
@@ -238,8 +260,8 @@ class PlanSubscription extends Model
      */
     public function renew()
     {
-        if ($this->ended() && $this->canceled()) {
-            throw new LogicException('Unable to renew canceled ended subscription.');
+        if ($this->canceled()) {
+            throw new LogicException('Unable to renew canceled subscription.');
         }
 
         $subscription = $this;
@@ -250,7 +272,6 @@ class PlanSubscription extends Model
 
             // Renew period
             $subscription->setNewPeriod();
-            $subscription->canceled_at = null;
             $subscription->save();
         });
 

@@ -2,6 +2,7 @@
 
 namespace Bpuig\Subby\Jobs\PlanSubscriptionSchedule;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -20,14 +21,18 @@ class SubscriptionScheduleQueuerJob implements ShouldQueue
 
     private $planSubscriptionScheduleModel;
 
+    protected $until;
+
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param Carbon|null $until Limit date to be processed
      */
-    public function __construct()
+    public function __construct(Carbon $until = null)
     {
         $this->planSubscriptionScheduleModel = app(config('subby.schedule.models.plan_subscription_schedule'));
+
+        $this->until = (is_null($until)) ? Carbon::now() : $until;
     }
 
     /**
@@ -40,7 +45,7 @@ class SubscriptionScheduleQueuerJob implements ShouldQueue
     {
         // Get all queues of this job
         $queuedSchedules = $this->planSubscriptionScheduleModel
-            ->pending()
+            ->pending($this->until)
             ->orderBy('scheduled_at', 'ASC')
             ->get();
 
