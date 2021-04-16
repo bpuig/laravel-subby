@@ -7,6 +7,7 @@ namespace Bpuig\Subby\Traits;
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscription;
 use Bpuig\Subby\Services\Period;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -32,7 +33,7 @@ trait HasSubscriptions
      */
     public function subscriptions(): MorphMany
     {
-        return $this->morphMany(config('subby.models.plan_subscription'), 'subscriber');
+        return $this->morphMany(config('subby.models.plan_subscription'), 'subscriber', 'subscriber_type', 'subscriber_id');
     }
 
     /**
@@ -89,13 +90,14 @@ trait HasSubscriptions
      * @param string $tag Identifier tag for the subscription
      * @param \Bpuig\Subby\Models\Plan $plan
      * @param string $name Human readable name for your subscriber's subscription
+     * @param \Carbon\Carbon|null $startDate
      *
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function newSubscription(string $tag, Plan $plan, string $name)
+    public function newSubscription(string $tag, Plan $plan, string $name, Carbon $startDate = null)
     {
-        $trial = new Period($plan->trial_interval, $plan->trial_period, now());
+        $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
         $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());
 
         return $this->subscriptions()->create([
