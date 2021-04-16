@@ -470,7 +470,7 @@ class PlanSubscription extends Model
         // previous requirements, check for usage
         $usage = $this->usage()->byFeatureTag($featureTag)->first();
 
-        if (is_null($usage)) {
+        if (!$usage) {
             // If feature usage does not exist, it means it has never been used
             // so subscriber has all usage available, since usage is inserted by recordFeatureUsage
             return true;
@@ -493,7 +493,7 @@ class PlanSubscription extends Model
     {
         $usage = $this->usage()->byFeatureTag($featureTag)->first();
 
-        return !$usage->expired() ? $usage->used : 0;
+        return (!$usage || $usage->expired()) ? 0 : $usage->used;
     }
 
     /**
