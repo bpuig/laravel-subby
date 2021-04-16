@@ -89,7 +89,7 @@ class TestCase extends Orchestra
      */
     protected function setUpDatabase()
     {
-        // import the CreatePostsTable class from the migration
+        // import classes from the migration
         include_once __DIR__ . '/Database/migrations/create_users_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plans_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plan_features_table.php.stub';
