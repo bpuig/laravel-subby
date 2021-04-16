@@ -24,8 +24,8 @@ class PlanSubscription extends Model
      */
     protected $fillable = [
         'tag',
-        'user_id',
-        'user_type',
+        'subscriber_id',
+        'subscriber_type',
         'plan_id',
         'name',
         'description',
@@ -41,8 +41,8 @@ class PlanSubscription extends Model
      */
     protected $casts = [
         'tag' => 'string',
-        'user_id' => 'integer',
-        'user_type' => 'string',
+        'subscriber_id' => 'integer',
+        'subscriber_type' => 'string',
         'plan_id' => 'integer',
         'trial_ends_at' => 'datetime',
         'starts_at' => 'datetime',
@@ -76,15 +76,15 @@ class PlanSubscription extends Model
                 'alpha_dash',
                 'max:150',
                 Rule::unique(config('subby.tables.plan_subscriptions'))->where(function ($query) {
-                    return $query->where('id', '!=', $this->id)->where('user_type', $this->user_type)
-                        ->where('user_id', $this->user_id);
+                    return $query->where('id', '!=', $this->id)->where('subscriber_type', $this->subscriber_type)
+                        ->where('subscriber_id', $this->subscriber_id);
                 }),
             ],
             'name' => 'required|string|strip_tags|max:150',
             'description' => 'nullable|string|max:32768',
             'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
-            'user_id' => 'required|integer',
-            'user_type' => 'required|string|strip_tags|max:150',
+            'subscriber_id' => 'required|integer',
+            'subscriber_type' => 'required|string|strip_tags|max:150',
             'trial_ends_at' => 'nullable|date',
             'starts_at' => 'required|date',
             'ends_at' => 'required|date',
@@ -108,13 +108,13 @@ class PlanSubscription extends Model
     }
 
     /**
-     * Get the owning user.
+     * Get the owning subscriber.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function user(): MorphTo
+    public function subscriber(): MorphTo
     {
-        return $this->morphTo('user', 'user_type', 'user_id', 'id');
+        return $this->morphTo('subscriber', 'subscriber_type', 'subscriber_id', 'id');
     }
 
     /**
@@ -279,16 +279,16 @@ class PlanSubscription extends Model
     }
 
     /**
-     * Get bookings of the given user.
+     * Get bookings of the given subscriber.
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
-     * @param \Illuminate\Database\Eloquent\Model $user
+     * @param \Illuminate\Database\Eloquent\Model $subscriber
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeOfUser(Builder $builder, Model $user): Builder
+    public function scopeOfSubscriber(Builder $builder, Model $subscriber): Builder
     {
-        return $builder->where('user_type', $user->getMorphClass())->where('user_id', $user->getKey());
+        return $builder->where('subscriber_type', $subscriber->getMorphClass())->where('subscriber_id', $subscriber->getKey());
     }
 
     /**
@@ -470,7 +470,7 @@ class PlanSubscription extends Model
 
         if (is_null($usage)) {
             // If feature usage does not exist, it means it has never been used
-            // so user has all usage available, since usage is inserted by recordFeatureUsage
+            // so subscriber has all usage available, since usage is inserted by recordFeatureUsage
             return true;
         } elseif ($usage->expired()) {
             return false;
