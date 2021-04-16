@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AlterPlanSubscriptionChangeUser extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
+            $table->renameColumn('user_id', 'subscriber_id');
+            $table->renameColumn('user_type', 'subscriber_type');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
+            $table->renameColumn('user_id', 'subscriber_id');
+            $table->renameColumn('user_type', 'subscriber_type');
+        });
+    }
+}

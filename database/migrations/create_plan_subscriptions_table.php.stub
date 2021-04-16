@@ -18,7 +18,7 @@ class CreatePlanSubscriptionsTable extends Migration
         Schema::create(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('tag');
-            $table->morphs('user');
+            $table->morphs('subscriber');
             $table->integer('plan_id')->unsigned();
             $table->string('name');
             $table->string('description')->nullable();
@@ -32,7 +32,7 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->softDeletes();
 
             // Indexes
-            $table->unique(['tag', 'user_id', 'user_type']);
+            $table->unique(['tag', 'subscriber_id', 'subscriber_type']);
             $table->foreign('plan_id')->references('id')->on(config('subby.tables.plans'))
                 ->onDelete('cascade')->onUpdate('cascade');
         });

@@ -7,6 +7,7 @@ namespace Bpuig\Subby\Traits;
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscription;
 use Bpuig\Subby\Services\Period;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -26,13 +27,13 @@ trait HasSubscriptions
     abstract public function morphMany($related, $name, $type = null, $id = null, $localKey = null);
 
     /**
-     * The user may have many subscriptions.
+     * The subscriber may have many subscriptions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function subscriptions(): MorphMany
     {
-        return $this->morphMany(config('subby.models.plan_subscription'), 'user');
+        return $this->morphMany(config('subby.models.plan_subscription'), 'subscriber', 'subscriber_type', 'subscriber_id');
     }
 
     /**
@@ -50,9 +51,9 @@ trait HasSubscriptions
      *
      * @param string $subscriptionTag
      *
-     * @return \Bpuig\Subby\Models\PlanSubscription|null
+     * @return PlanSubscription|\Illuminate\Database\Eloquent\Model|MorphMany|null
      */
-    public function subscription(string $subscriptionTag): ?PlanSubscription
+    public function subscription(string $subscriptionTag)
     {
         return $this->subscriptions()->where('tag', $subscriptionTag)->first();
     }
@@ -70,7 +71,7 @@ trait HasSubscriptions
     }
 
     /**
-     * Check if the user subscribed to the given plan.
+     * Check if the subscriber is subscribed to the given plan.
      *
      * @param int $planId
      *
@@ -84,17 +85,19 @@ trait HasSubscriptions
     }
 
     /**
-     * Subscribe user to a new plan.
+     * Subscribe subscriber to a new plan.
      *
      * @param string $tag Identifier tag for the subscription
      * @param \Bpuig\Subby\Models\Plan $plan
-     * @param string $name Human readable name for your user subscription
+     * @param string $name Human readable name for your subscriber's subscription
+     * @param \Carbon\Carbon|null $startDate
      *
      * @return \Illuminate\Database\Eloquent\Model
+     * @throws \Exception
      */
-    public function newSubscription(string $tag, Plan $plan, string $name): \Illuminate\Database\Eloquent\Model
+    public function newSubscription(string $tag, Plan $plan, string $name, Carbon $startDate = null)
     {
-        $trial = new Period($plan->trial_interval, $plan->trial_period, now());
+        $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
         $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());
 
         return $this->subscriptions()->create([
