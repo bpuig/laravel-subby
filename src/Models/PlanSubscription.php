@@ -82,11 +82,11 @@ class PlanSubscription extends Model
                         ->where('subscriber_id', $this->subscriber_id);
                 }),
             ],
-            'name' => 'required|string|strip_tags|max:150',
+            'name' => 'required|string|max:150',
             'description' => 'nullable|string|max:32768',
             'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
             'subscriber_id' => 'required|integer',
-            'subscriber_type' => 'required|string|strip_tags|max:150',
+            'subscriber_type' => 'required|string|max:150',
             'trial_ends_at' => 'nullable|date',
             'starts_at' => 'required|date',
             'ends_at' => 'required|date',
