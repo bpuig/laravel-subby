@@ -83,7 +83,7 @@ class Plan extends Model
     {
         return [
             'tag' => 'required|max:150|unique:' . config('subby.tables.plans') . ',tag',
-            'name' => 'required|string|strip_tags|max:150',
+            'name' => 'required|string|max:150',
             'description' => 'nullable|string|max:32768',
             'is_active' => 'sometimes|boolean',
             'price' => 'required|numeric',

@@ -71,7 +71,7 @@ class PlanFeature extends Model
                 }),
             ],
             'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
-            'name' => 'required|string|strip_tags|max:150',
+            'name' => 'required|string|max:150',
             'description' => 'nullable|string|max:32768',
             'value' => 'required|string',
             'resettable_period' => 'sometimes|integer',
