@@ -106,7 +106,7 @@ class PlanSubscriptionUsage extends Model
      *
      * @return bool
      */
-    public function expired(): bool
+    public function hasExpired(): bool
     {
         if (is_null($this->valid_until)) {
             return false;

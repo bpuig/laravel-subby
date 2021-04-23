@@ -124,6 +124,8 @@ class TestCase extends Orchestra
             'is_active' => true,
             'price' => 9.99,
             'currency' => 'EUR',
+            'invoice_period' => 1,
+            'invoice_interval' => 'month',
             'tier' => 1
         ]);
 

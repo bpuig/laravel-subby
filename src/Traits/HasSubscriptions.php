@@ -43,7 +43,7 @@ trait HasSubscriptions
      */
     public function activeSubscriptions(): Collection
     {
-        return $this->subscriptions->reject->inactive();
+        return $this->subscriptions->reject->isInactive();
     }
 
     /**
@@ -65,7 +65,7 @@ trait HasSubscriptions
      */
     public function subscribedPlans(): ?PlanSubscription
     {
-        $planIds = $this->subscriptions->reject->inactive()->pluck('plan_id')->unique();
+        $planIds = $this->subscriptions->reject->isInactive()->pluck('plan_id')->unique();
 
         return app(config('subby.models.plan'))->whereIn('id', $planIds)->get();
     }
@@ -77,11 +77,11 @@ trait HasSubscriptions
      *
      * @return bool
      */
-    public function subscribedTo(int $planId): bool
+    public function isSubscribedTo(int $planId): bool
     {
         $subscription = $this->subscriptions()->where('plan_id', $planId)->first();
 
-        return $subscription && $subscription->active();
+        return $subscription && $subscription->isActive();
     }
 
     /**

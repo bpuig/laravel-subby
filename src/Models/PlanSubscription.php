@@ -134,9 +134,9 @@ class PlanSubscription extends Model
      *
      * @return bool
      */
-    public function active(): bool
+    public function isActive(): bool
     {
-        return !$this->ended() || $this->onTrial();
+        return !$this->hasEnded() || $this->isOnTrial();
     }
 
     /**
@@ -144,9 +144,9 @@ class PlanSubscription extends Model
      *
      * @return bool
      */
-    public function inactive(): bool
+    public function isInactive(): bool
     {
-        return !$this->active();
+        return !$this->isActive();
     }
 
     /**
@@ -154,7 +154,7 @@ class PlanSubscription extends Model
      *
      * @return bool
      */
-    public function onTrial(): bool
+    public function isOnTrial(): bool
     {
         return $this->trial_ends_at ? Carbon::now()->lt($this->trial_ends_at) : false;
     }
@@ -164,7 +164,7 @@ class PlanSubscription extends Model
      *
      * @return bool
      */
-    public function canceled(): bool
+    public function isCanceled(): bool
     {
         return $this->canceled_at ? Carbon::now()->gte($this->canceled_at) : false;
     }
@@ -174,7 +174,7 @@ class PlanSubscription extends Model
      *
      * @return bool
      */
-    public function ended(): bool
+    public function hasEnded(): bool
     {
         return $this->ends_at ? Carbon::now()->gte($this->ends_at) : false;
     }
@@ -262,7 +262,7 @@ class PlanSubscription extends Model
      */
     public function renew()
     {
-        if ($this->canceled()) {
+        if ($this->isCanceled()) {
             throw new LogicException('Unable to renew canceled subscription.');
         }
 
@@ -383,13 +383,13 @@ class PlanSubscription extends Model
      * @param int $uses
      *
      * @param bool $incremental
-     * @return \Bpuig\Subby\Models\PlanSubscriptionUsage
+     * @return PlanSubscriptionUsage|Model
      */
     public function recordFeatureUsage(
         string $featureTag,
         int $uses = 1,
         bool $incremental = true
-    ): PlanSubscriptionUsage
+    )
     {
         $feature = $this->plan->features()->where('tag', $featureTag)->first();
 
@@ -404,7 +404,7 @@ class PlanSubscription extends Model
                 // Set date from subscription creation date so the reset
                 // period match the period specified by the subscription's plan.
                 $usage->valid_until = $feature->getResetDate($this->created_at);
-            } elseif ($usage->expired()) {
+            } elseif ($usage->hasExpired()) {
                 // If the usage record has been expired, let's assign
                 // a new expiration date and reset the uses to zero.
                 $usage->valid_until = $feature->getResetDate($usage->valid_until);
@@ -452,7 +452,7 @@ class PlanSubscription extends Model
     public function canUseFeature(string $featureTag): bool
     {
         // If subscription has ended, cannot use
-        if ($this->ended()) {
+        if ($this->hasEnded()) {
             return false;
         }
 
@@ -474,7 +474,7 @@ class PlanSubscription extends Model
             // If feature usage does not exist, it means it has never been used
             // so subscriber has all usage available, since usage is inserted by recordFeatureUsage
             return true;
-        } elseif ($usage->expired()) {
+        } elseif ($usage->hasExpired()) {
             return false;
         }
 
@@ -493,7 +493,7 @@ class PlanSubscription extends Model
     {
         $usage = $this->usage()->byFeatureTag($featureTag)->first();
 
-        return (!$usage || $usage->expired()) ? 0 : $usage->used;
+        return (!$usage || $usage->hasExpired()) ? 0 : $usage->used;
     }
 
     /**
