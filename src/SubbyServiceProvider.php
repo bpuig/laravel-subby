@@ -58,7 +58,7 @@ class SubbyServiceProvider extends ServiceProvider
         ], 'subby.migrations');
 
         $this->publishes([
-            __DIR__ . '/../database/migrations/PlanSubscriptionSchedule/v1.0.0/alter_plan_subscription_change_user.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_alter_plan_subscription_change_user.php')
+            __DIR__ . '/../database/migrations/v1.0.0/alter_plan_subscription_change_user.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_alter_plan_subscription_change_user.php')
         ], 'subby.migrations.v1.0.0');
 
         $this->publishes([
