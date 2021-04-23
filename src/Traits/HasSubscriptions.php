@@ -67,7 +67,7 @@ trait HasSubscriptions
     {
         $planIds = $this->subscriptions->reject->inactive()->pluck('plan_id')->unique();
 
-        return app('subby.plan')->whereIn('id', $planIds)->get();
+        return app(config('subby.models.plan'))->whereIn('id', $planIds)->get();
     }
 
     /**
