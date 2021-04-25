@@ -58,7 +58,7 @@ class SubbyServiceProvider extends ServiceProvider
         ], 'subby.migrations');
 
         $this->publishes([
-            __DIR__ . '/../database/migrations/v2.0.0/alter_plans_table_default_invoice.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_alter_plans_table_default_invoice.php'),
+            __DIR__ . '/../database/migrations/v3.0.0/alter_plans_table_default_invoice.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_alter_plans_table_default_invoice.php'),
             __DIR__ . '/../database/migrations/v3.0.0/remove_softdeletes_laravel_subby.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_remove_softdeletes_laravel_subby.php')
         ], 'subby.migrations.v3.0.0');
 
