@@ -27,7 +27,6 @@ class CreatePlanFeaturesTable extends Migration
             $table->string('resettable_interval')->default('month');
             $table->mediumInteger('sort_order')->unsigned()->default(0);
             $table->timestamps();
-            $table->softDeletes();
 
             // Indexes
             $table->unique(['tag', 'plan_id']);

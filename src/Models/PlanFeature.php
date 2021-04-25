@@ -9,13 +9,11 @@ use Bpuig\Subby\Traits\BelongsToPlan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
 
 class PlanFeature extends Model
 {
     use BelongsToPlan;
-    use SoftDeletes;
 
     /**
      * {@inheritdoc}
@@ -41,7 +39,6 @@ class PlanFeature extends Model
         'resettable_period' => 'integer',
         'resettable_interval' => 'string',
         'sort_order' => 'integer',
-        'deleted_at' => 'datetime',
     ];
 
     /**

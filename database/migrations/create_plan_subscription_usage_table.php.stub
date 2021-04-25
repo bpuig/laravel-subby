@@ -23,7 +23,6 @@ class CreatePlanSubscriptionUsageTable extends Migration
             $table->dateTime('valid_until')->nullable();
             $table->string('timezone')->nullable();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->unique(['subscription_id', 'feature_id']);
             $table->foreign('subscription_id')->references('id')->on(config('subby.tables.plan_subscriptions'))
