@@ -31,6 +31,16 @@ class PlanSubscriptionUsageTest extends TestCase
     }
 
     /**
+     * Consume all of a feature and check next period
+     */
+    public function testRenewToNextPeriodAndUseFeature()
+    {
+        $this->testUser->subscription('main')->renew();
+        $usage = $this->testUser->subscription('main')->recordFeatureUsage('posts_per_social_profile', 1);
+        $this->assertTrue($usage->used === 1);
+    }
+
+    /**
      * Cancel subscription immediately and check for usage
      */
     public function testImmediateCancelSubscriptionAndUseIt()
