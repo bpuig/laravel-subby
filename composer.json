@@ -24,7 +24,8 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
-        "laravel/framework": "^8.0"
+        "laravel/framework": "^8.0",
+        "doctrine/dbal": "^3.0"
     },
     "require-dev": {
         "illuminate/console": "^8.0.0",
