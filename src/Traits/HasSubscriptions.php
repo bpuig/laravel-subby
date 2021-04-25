@@ -63,7 +63,7 @@ trait HasSubscriptions
      *
      * @return \Bpuig\Subby\Models\PlanSubscription|null
      */
-    public function subscribedPlans(): ?PlanSubscription
+    public function subscribedPlans()
     {
         $planIds = $this->subscriptions->reject->isInactive()->pluck('plan_id')->unique();
 

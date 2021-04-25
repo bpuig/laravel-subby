@@ -29,10 +29,9 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->dateTime('canceled_at')->nullable();
             $table->string('timezone')->nullable();
             $table->timestamps();
-            $table->softDeletes();
 
             // Indexes
-            $table->unique(['tag', 'subscriber_id', 'subscriber_type']);
+            $table->unique(['tag', 'subscriber_id', 'subscriber_type'], 'unique_plan_subscription');
             $table->foreign('plan_id')->references('id')->on(config('subby.tables.plans'))
                 ->onDelete('cascade')->onUpdate('cascade');
         });

@@ -8,11 +8,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PlanSubscriptionUsage extends Model
 {
-    use SoftDeletes;
 
     /**
      * {@inheritdoc}
@@ -32,7 +30,6 @@ class PlanSubscriptionUsage extends Model
         'feature_id' => 'integer',
         'used' => 'integer',
         'valid_until' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
     /**

@@ -12,14 +12,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
 use LogicException;
 
 class PlanSubscription extends Model
 {
     use BelongsToPlan;
-    use SoftDeletes;
 
     /**
      * {@inheritdoc}
@@ -50,8 +48,7 @@ class PlanSubscription extends Model
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
         'cancels_at' => 'datetime',
-        'canceled_at' => 'datetime',
-        'deleted_at' => 'datetime',
+        'canceled_at' => 'datetime'
     ];
 
     /**
