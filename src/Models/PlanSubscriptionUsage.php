@@ -93,7 +93,7 @@ class PlanSubscriptionUsage extends Model
      */
     public function scopeByFeatureTag(Builder $builder, string $featureTag): Builder
     {
-        $feature = PlanFeature::where('tag', $featureTag)->first();
+        $feature = PlanSubscriptionFeature::where('tag', $featureTag)->first();
 
         return $builder->where('feature_id', $feature->getKey() ?? null);
     }

@@ -40,4 +40,19 @@ class PlanSubscriptionTest extends TestCase
 
         $this->assertFalse($anExceptionWasThrown);
     }
+
+
+    /**
+     * Test Attach feature
+     */
+    public function testAttachFeatureNotExistingInPlan()
+    {
+        $this->testUser->subscription('main')->features()->create([
+            'tag' => 'social_koala_profiles', 'name' => 'Social profiles available for your koala', 'value' => 5, 'sort_order' => 10
+        ]);
+
+        $this->assertDatabaseHas(config('subby.tables.plan_subscription_features'), [
+            'tag' => 'social_koala_profiles',
+        ]);
+    }
 }
