@@ -19,21 +19,25 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->increments('id');
             $table->string('tag');
             $table->morphs('subscriber');
-            $table->integer('plan_id')->unsigned();
+            $table->unsignedInteger('plan_id')->nullable();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->decimal('price')->default('0.00');
+            $table->string('currency', 3);
+            $table->unsignedSmallInteger('invoice_period')->default(1);
+            $table->string('invoice_interval')->default('month');
+            $table->unsignedMediumInteger('tier')->default(0);
             $table->dateTime('trial_ends_at')->nullable();
             $table->dateTime('starts_at')->nullable();
             $table->dateTime('ends_at')->nullable();
             $table->dateTime('cancels_at')->nullable();
-            $table->dateTime('canceled_at')->nullable();
-            $table->string('timezone')->nullable();
             $table->timestamps();
+            $table->dateTime('canceled_at')->nullable();
 
             // Indexes
             $table->unique(['tag', 'subscriber_id', 'subscriber_type'], 'unique_plan_subscription');
             $table->foreign('plan_id')->references('id')->on(config('subby.tables.plans'))
-                ->onDelete('cascade')->onUpdate('cascade');
+                ->onDelete('null')->onUpdate('cascade');
         });
     }
 

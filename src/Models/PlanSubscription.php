@@ -6,6 +6,7 @@ namespace Bpuig\Subby\Models;
 
 use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
+use Bpuig\Subby\Traits\HasPricing;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,7 +18,7 @@ use LogicException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan;
+    use BelongsToPlan, HasPricing;
 
     /**
      * {@inheritdoc}
@@ -29,6 +30,11 @@ class PlanSubscription extends Model
         'plan_id',
         'name',
         'description',
+        'price',
+        'currency',
+        'invoice_period',
+        'invoice_interval',
+        'tier',
         'trial_ends_at',
         'starts_at',
         'ends_at',
@@ -44,6 +50,11 @@ class PlanSubscription extends Model
         'subscriber_id' => 'integer',
         'subscriber_type' => 'string',
         'plan_id' => 'integer',
+        'price' => 'float',
+        'currency' => 'string',
+        'invoice_period' => 'integer',
+        'invoice_interval' => 'string',
+        'tier' => 'integer',
         'trial_ends_at' => 'datetime',
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
@@ -79,11 +90,16 @@ class PlanSubscription extends Model
                         ->where('subscriber_id', $this->subscriber_id);
                 }),
             ],
-            'name' => 'required|string|max:150',
-            'description' => 'nullable|string|max:32768',
-            'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
             'subscriber_id' => 'required|integer',
             'subscriber_type' => 'required|string|max:150',
+            'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
+            'name' => 'required|string|max:150',
+            'description' => 'nullable|string|max:32768',
+            'price' => 'required|numeric',
+            'currency' => 'required|alpha|size:3',
+            'invoice_period' => 'sometimes|integer|max:100000',
+            'invoice_interval' => 'sometimes|in:hour,day,week,month',
+            'tier' => 'nullable|integer|max:100000',
             'trial_ends_at' => 'nullable|date',
             'starts_at' => 'required|date',
             'ends_at' => 'required|date',

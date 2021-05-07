@@ -2,6 +2,32 @@
 
 All notable changes to `laravel-subby` will be documented in this file.
 
+## x.0.0
+
+### Breaking Changes
+
+#### Plans
+
+- Removed `hasGrace()` method from plan and it's database related columns.
+- Removed columns from database that had no logic implemented:
+    - `prorate_day`, `prorate_period`, `prorate_extend_due`, `active_subscribers_limit`, `grace_period`
+      , `grace_interval`, `timezone`
+
+#### Plan subscription
+
+- Dettached plan subscriptions from plans, now they are their own replica of the plan. This makes the legal part of the
+  subscription easier since when someone subscribes to a plan, and then you change the plan, it will affect existing
+  contracts and in some places, changing conditions unilaterally can put you in trouble. Plan is referenced only for
+  reference features.
+    - Now plan subscription clones plan columns `price`, `currency`, `invoice_period`, `invoice_interval` and `tier`.
+      And they will stay like that even when you change plan prices.
+- Add method `isFree()`.
+
+#### Plan subscription usage
+
+- Removed columns from database that had no logic implemented:
+    - `timezone`
+
 ## 3.0.2
 
 ## Fix

@@ -40,9 +40,6 @@ $plan->isFree();
 
 // Check if the plan has trial period
 $plan->hasTrial();
-
-// Check if the plan has grace period
-$plan->hasGrace();
 ```
 
 Both `$plan->features` and `$plan->subscriptions` are collections, driven from relationships, and thus you can query

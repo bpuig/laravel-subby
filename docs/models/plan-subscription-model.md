@@ -124,6 +124,7 @@ $user->isSubscribedTo($planId);
 Alternatively you can use the following methods available in the subscription model:
 
 ```php
+$user->subscription('main')->isFree();
 $user->subscription('main')->isActive();
 $user->subscription('main')->isCanceled();
 $user->subscription('main')->hasEnded();

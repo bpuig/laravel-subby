@@ -21,7 +21,6 @@ class CreatePlanSubscriptionUsageTable extends Migration
             $table->integer('feature_id')->unsigned();
             $table->integer('used')->unsigned();
             $table->dateTime('valid_until')->nullable();
-            $table->string('timezone')->nullable();
             $table->timestamps();
 
             $table->unique(['subscription_id', 'feature_id']);
