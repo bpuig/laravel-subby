@@ -19,6 +19,15 @@ class PlanSubscriptionPlanlessFeatureUsageTest extends TestCase
         $this->assertTrue($this->testUser->subscription('main')->canUseFeature('social_cat_profiles'));
     }
 
+    /**
+     * Test use attached feature existing in current related plan
+     */
+    public function testCannotUseFeatureExistingInCurrentRelatedPlan()
+    {
+        $this->expectException('Illuminate\Database\QueryException');
+        $this->expectExceptionMessage('UNIQUE constraint failed: plan_subscription_features.subscription_id, plan_subscription_features.tag');
+        $this->testUser->subscription('main')->features()->create(['tag' => 'social_profiles', 'name' => 'Social profiles', 'value' => 10, 'sort_order' => 10]);
+    }
 
     /**
      * Consume all of a feature and check if can use
