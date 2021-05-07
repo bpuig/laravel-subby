@@ -41,12 +41,27 @@ Subscription usage data will be cleared by default, unless `false` is given as s
 
 If you want the same billing frequency (`invoice_period` and `invoice_interval`) set third parameter to `true`
 and subscription will inherit plan's billing frequency. If you want to keep current subscription invoice intervals, set
-to `false`.
+to `false`. By default, invoice details are synchronized with new plan.
 
 - Plan change will adjust existing features to the ones in the new plan.
 - Change will also remove features attached to old plan.
 - Existent features that where previously attached without plan but exist in the new plan now will use plan values.
-- Features not attached to a plan and inexistent in new plan will remain the same.
+- Features not attached to a plan and nonexistent in new plan will remain the same.
+
+## Change its price and details<a name="change-price-and-details"></a>
+
+You can change the price or details without affecting attached features or plan. With this feature you can set prices
+individually for every subscriber.
+
+```php 
+$subscription = $user->subscription('main');
+
+$subscription->description = 'Main description with great discount';
+$subscription->price = 12;
+
+$subscription->save();
+
+```
 
 ## Subscriber's subscriptions
 
@@ -95,7 +110,7 @@ $user->subscription('main')->recordFeatureUsage('social_profiles');
 
 The `recordFeatureUsage` method accepts 3 parameters: the first one is the feature's tag, the second one is the quantity
 of uses to add (default is `1`), and the third one indicates if the addition should be incremental (default behavior),
-when disabled the usage will be override by the quantity provided. E.g.:
+when disabled the usage will be overridden by the quantity provided. E.g.:
 
 ```php
 // Increment by 1

@@ -5,11 +5,16 @@ from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscripti
 
 ## What it does
 
-The way this package is made, there are [plans](/models/plan-model.md) that
-have [features](/models/plan-feature-model.md), and then there is an entity receiving the trait of
-having [subscriptions](/models/plan-subscription-model.md). It can be an user, a team, whatever you want;
-see [Attach Subscriptions to model](/install/#attach-subscription). This entity can be subscribed to one or more plans
-and use its features.
+The way this package is made:
+
+1. There are [plans](/models/plan-model.md) that have [features](/models/plan-feature-model.md).
+2. There is an entity (morph relationship) receiving the trait of
+   having [subscriptions](/models/plan-subscription-model.md). It can be an user, a team, whatever you want;
+   see [Attach Subscriptions to model](/install/#attach-subscription).
+3. This entity can be subscribed to one or more plans and use its features and other features not attached to a plan.
+   This subscription is made like a "snapshot" of current plan details. If plan is modified in the future, subscriber's
+   subscription stays as it was, price, invoicing and features are "frozen" unless manually synchronized with related
+   plan.
 
 With the [scheduling extra](/extras/plan-subscription-schedule.md), you can schedule your plan changes in the future.
 
