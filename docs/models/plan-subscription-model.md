@@ -60,8 +60,36 @@ $subscription->description = 'Main description with great discount';
 $subscription->price = 12;
 
 $subscription->save();
-
 ```
+
+### Revert custom subscription changes (resynchronize to plan)
+
+You can revert changes made to subscription with function `syncWithPlan`.
+
+```php 
+// Synchronize price, invoicing and tier with related plan
+$user->subscription('main')->syncPlan();
+
+// Synchronize plan and also features
+$user->subscription('main')->syncPlan(null, true, true);
+```
+
+`syncWithPlan()` accepts 3 parameters. First parameter is a `Plan`, if you want to synchronize with current plan
+(default behaviour), set to `null`. Second is `bool` for synchronizing also invoicing details (period and interval),
+default behaviour is to synchronize `true`. The third one is `bool` to also synchronize features.
+
+### Revert custom plan subscription feature overrides (resynchronize plan features)
+
+You can revert all feature changes made to subscription that are related to a plan.
+
+```php 
+// Resynchronize features
+$user->subscription('main')->syncPlanFeatures();
+```
+
+Now all plan features available in subscription's related plan will be reset in subscription feature. If your subscriber
+has attached manually a feature that was not previously available in plan, but now is, your custom subscription feature
+will be related to plan feature and will be overridden with plan's feature details in this synchronization.
 
 ## Subscriber's subscriptions
 

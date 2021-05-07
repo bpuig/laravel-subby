@@ -262,21 +262,26 @@ class PlanSubscription extends Model
         }
 
         // Synchronize subscription data with plan
-        $this->syncWithPlan($plan, $syncInvoicing);
-        $this->syncFeaturesWithPlan($plan);
+        $this->syncPlan($plan, $syncInvoicing);
+        $this->syncPlanFeatures($plan);
 
         return $this;
     }
 
     /**
      * Synchronize subscription data with plan
-     * @param Plan $plan Plan to be synchronized
+     * @param Plan|null $plan Plan to be synchronized
      * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
+     * @param bool $syncFeatures
      * @return PlanSubscription
      * @throws \Exception
      */
-    private function syncWithPlan(Plan $plan, $syncInvoicing = true): PlanSubscription
+    public function syncPlan(Plan $plan = null, $syncInvoicing = true, $syncFeatures = false): PlanSubscription
     {
+        if (!$plan) {
+            $plan = $this->plan;
+        }
+
         $this->plan_id = $plan->id;
         $this->price = $plan->price;
         $this->currency = $plan->currency;
@@ -288,15 +293,23 @@ class PlanSubscription extends Model
 
         $this->save();
 
+        if ($syncFeatures) {
+            $this->syncPlanFeatures($plan);
+        }
+
         return $this;
     }
 
     /**
      * Synchronize features with current plan
-     * @param Plan $plan
+     * @param Plan|null $plan
      */
-    private function syncFeaturesWithPlan(Plan $plan)
+    public function syncPlanFeatures(Plan $plan = null)
     {
+        if (!$plan) {
+            $plan = $this->plan;
+        }
+
         // Delete features that where attached to a plan but no longer existing in selected plan
         $featuresWithPlan = $this->features()->whereNotNull('plan_id')->get();
         $planFeatures = $plan->features();
@@ -315,7 +328,7 @@ class PlanSubscription extends Model
      * Attach plan features to subscription
      * @param Plan $plan
      */
-    public function attachPlanFeatures(Plan $plan)
+    private function attachPlanFeatures(Plan $plan)
     {
         // Now attach selected plan features
         // if they do not exist, will be created
@@ -335,6 +348,7 @@ class PlanSubscription extends Model
                 ]);
         }
     }
+
     /**
      * Renew subscription period.
      *
