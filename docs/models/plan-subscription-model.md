@@ -11,12 +11,13 @@ the `newSubscription` method to create the model's subscription.
 $user = User::find(1);
 $plan = Plan::find(1);
 
-$user->newSubscription('main', $plan, 'Main subscription');
+$user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscription');
 ```
 
 The first argument passed to `newSubscription` method should be the identifier tag of the subscription. If your
 application offer a single subscription, you might call this `main` or `primary`. The second argument is the plan
-instance your user is subscribing to and the third argument is a human readable name for your subscription.
+instance your user is subscribing to, and the third argument is a human-readable name for your subscription. Fourth
+argument is a description. Fifth argument is a start date.
 
 ## Change its Plan<a name="change-plan"></a>
 
@@ -28,15 +29,24 @@ $subscription = PlanSubscription::find(1);
 
 // Change subscription plan
 $subscription->changePlan($plan);
+
+// Change subscription plan and keep usage
+$subscription->changePlan($plan, false);
+
+// Change subscription plan, keep usage and invoicing data
+$subscription->changePlan($plan, false, false);
 ```
 
-If both plans (current and new plan) have the same billing frequency (e.g., `invoice_period` and `invoice_interval`) the
-subscription will retain the same billing dates. If the plans don't have the same billing frequency, the subscription
-will have the new plan billing frequency, starting on the day of the change.
+Subscription usage data will be cleared by default, unless `false` is given as second parameter.
 
-_Subscription usage data will be cleared_ by default, unless `false` is given as second parameter.
+If you want the same billing frequency (`invoice_period` and `invoice_interval`) set third parameter to `true`
+and subscription will inherit plan's billing frequency. If you want to keep current subscription invoice intervals, set
+to `false`.
 
-Also, if the new plan has a trial period, and it's a new subscription, the trial period will be applied.
+- Plan change will adjust existing features to the ones in the new plan.
+- Change will also remove features attached to old plan.
+- Existent features that where previously attached without plan but exist in the new plan now will use plan values.
+- Features not attached to a plan and inexistent in new plan will remain the same.
 
 ## Subscriber's subscriptions
 
@@ -112,23 +122,28 @@ $user->subscription('main')->usage()->delete();
 
 ## Check Subscription status<a name="check-subscription-status"></a>
 
-For a subscription to be considered active _one of the following must be `true`_:
+For a subscription to be considered active one of the following must be `true`:
 
 - Subscription has an active trial.
 - Subscription `ends_at` is in the future.
 
-```php
-$user->isSubscribedTo($planId);
-```
-
 Alternatively you can use the following methods available in the subscription model:
 
 ```php
-$user->subscription('main')->isFree();
 $user->subscription('main')->isActive();
 $user->subscription('main')->isCanceled();
 $user->subscription('main')->hasEnded();
 $user->subscription('main')->isOnTrial();
+```
+
+### Other<a name="other"></a>
+
+```php 
+// Check if subscription is free
+$user->subscription('main')->isFree();
+
+// Check subscriber to plan
+$user->isSubscribedTo($planId);
 ```
 
 > Canceled subscriptions with an active trial or `ends_at` in the future are considered active.

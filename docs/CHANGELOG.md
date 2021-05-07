@@ -4,6 +4,10 @@ All notable changes to `laravel-subby` will be documented in this file.
 
 ## x.0.0
 
+### New
+
+- Added Plan Subscription Features, this is a snapshot of the features parent plan han at the moment of creation.
+
 ### Breaking Changes
 
 #### Plans
@@ -22,6 +26,8 @@ All notable changes to `laravel-subby` will be documented in this file.
     - Now plan subscription clones plan columns `price`, `currency`, `invoice_period`, `invoice_interval` and `tier`.
       And they will stay like that even when you change plan prices.
 - Add method `isFree()`.
+- `newSubscription()` method fourth parameter is `$description` instead of `$startDate`. By default takes plan
+  description.
 
 #### Plan subscription usage
 

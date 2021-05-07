@@ -38,6 +38,7 @@ class TestCase extends Orchestra
                 'plans' => 'plans',
                 'plan_features' => 'plan_features',
                 'plan_subscriptions' => 'plan_subscriptions',
+                'plan_subscription_features' => 'plan_subscription_features',
                 'plan_subscription_usage' => 'plan_subscription_usage'
             ],
             // Models
@@ -45,6 +46,7 @@ class TestCase extends Orchestra
                 'plan' => \Bpuig\Subby\Models\Plan::class,
                 'plan_feature' => \Bpuig\Subby\Models\PlanFeature::class,
                 'plan_subscription' => \Bpuig\Subby\Tests\Models\PlanSubscription::class,
+                'plan_subscription_feature' => \Bpuig\Subby\Models\PlanSubscriptionFeature::class,
                 'plan_subscription_usage' => \Bpuig\Subby\Models\PlanSubscriptionUsage::class,
             ],
             // Plan schedule settings (Optional if you do not use the extension)

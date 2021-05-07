@@ -90,23 +90,35 @@ trait HasSubscriptions
      * @param string $tag Identifier tag for the subscription
      * @param \Bpuig\Subby\Models\Plan $plan
      * @param string $name Human readable name for your subscriber's subscription
+     * @param string $description
      * @param \Carbon\Carbon|null $startDate
      *
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function newSubscription(string $tag, Plan $plan, string $name, Carbon $startDate = null)
+    public function newSubscription(string $tag, Plan $plan, string $name, string $description, Carbon $startDate = null)
     {
         $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
         $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());
 
-        return $this->subscriptions()->create([
+        $subscription = $this->subscriptions()->create([
             'tag' => $tag,
-            'name' => $name,
-            'plan_id' => $plan->getKey(),
+            'name' => !$name ? $plan->name : $name,
+            'description' => !$description ? $plan->description : $description,
+            'plan_id' => $plan->id,
+            'price' => $plan->price,
+            'currency' => $plan->currency,
+            'tier' => $plan->tier,
+            'invoice_interval' => $plan->invoice_interval,
+            'invoice_period' => $plan->invoice_period,
             'trial_ends_at' => $trial->getEndDate(),
             'starts_at' => $period->getStartDate(),
             'ends_at' => $period->getEndDate(),
         ]);
+
+        $subscription->attachPlanFeatures($plan);
+
+        return $subscription;
     }
 }
+

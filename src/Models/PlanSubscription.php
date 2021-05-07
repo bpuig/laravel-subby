@@ -133,6 +133,15 @@ class PlanSubscription extends Model
     }
 
     /**
+     * Get subscription features
+     * @return HasMany
+     */
+    public function features(): HasMany
+    {
+        return $this->hasMany(config('subby.models.plan_subscription_features'), 'subscription_id', 'id');
+    }
+
+    /**
      * The subscription may have many usage.
      *
      * @return HasMany
@@ -239,31 +248,91 @@ class PlanSubscription extends Model
      *
      * @param \Bpuig\Subby\Models\Plan $plan
      * @param bool $clearUsage Clear subscription usage
-     *
+     * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
      * @return $this
      */
-    public function changePlan(Plan $plan, bool $clearUsage = true)
+    public function changePlan(Plan $plan, bool $clearUsage = true, bool $syncInvoicing = true)
     {
-        // If plans does not have the same billing frequency
-        // (e.g., invoice_interval and invoice_period) we will update
-        // the billing dates starting today, and since we are basically creating
-        // a new billing cycle, the usage data will be cleared.
-        if ($this->plan->invoice_interval !== $plan->invoice_interval || $this->plan->invoice_period !== $plan->invoice_period) {
-            $this->setNewPeriod($plan->invoice_interval, $plan->invoice_period);
-            // Sometimes you want to keep usage
-            // E.g. of false: Renew plan at day 6 of subscription,
-            // and if you consumed 2 resources, you keep having 2 consumed of
-            // the new limit
-            if ($clearUsage) {
-                $this->usage()->delete();
-            }
+        // Sometimes you want to keep usage
+        // E.g. of false: Renew plan at day 6 of subscription,
+        // and if you consumed 2 resources, you keep having 2 consumed of
+        // the new limit
+        if ($clearUsage) {
+            $this->usage()->delete();
         }
 
-        // Attach new plan to subscription
-        $this->plan_id = $plan->getKey();
+        // Synchronize subscription data with plan
+        $this->syncWithPlan($plan, $syncInvoicing);
+        $this->syncFeaturesWithPlan($plan);
+
+        return $this;
+    }
+
+    /**
+     * Synchronize subscription data with plan
+     * @param Plan $plan Plan to be synchronized
+     * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
+     * @return PlanSubscription
+     * @throws \Exception
+     */
+    private function syncWithPlan(Plan $plan, $syncInvoicing = true): PlanSubscription
+    {
+        $this->plan_id = $plan->id;
+        $this->price = $plan->price;
+        $this->currency = $plan->currency;
+        $this->tier = $plan->tier;
+
+        if ($syncInvoicing) {
+            $this->setNewPeriod($plan->invoice_interval, $plan->invoice_period);
+        }
+
         $this->save();
 
         return $this;
+    }
+
+    /**
+     * Synchronize features with current plan
+     * @param Plan $plan
+     */
+    private function syncFeaturesWithPlan(Plan $plan)
+    {
+        // Delete features that where attached to a plan but no longer existing in selected plan
+        $featuresWithPlan = $this->features()->whereNotNull('plan_id')->get();
+        $planFeatures = $plan->features();
+
+        $featuresWithPlanTags = $featuresWithPlan->pluck('tag');
+        $planFeatureTags = $planFeatures->pluck('tag');
+
+        $featuresWithoutPlan = $featuresWithPlanTags->diff($planFeatureTags);
+
+        $this->features()->whereIn('tag', $featuresWithoutPlan->all())->delete();
+
+        $this->attachPlanFeatures($plan);
+    }
+
+    /**
+     * Attach plan features to subscription
+     * @param Plan $plan
+     */
+    public function attachPlanFeatures(Plan $plan)
+    {
+        // Now attach selected plan features
+        // if they do not exist, will be created
+        // if they exist but are attached to another feature_id or detached from feature, will be attached to plan feature
+        foreach ($plan->features() as $planFeature) {
+            $this->features()->updateOrCreate(
+                ['tag' => $planFeature->tag],
+                [
+                    'feature_id' => $planFeature->id,
+                    'name' => $planFeature->name,
+                    'description' => $planFeature->description,
+                    'value' => $planFeature->value,
+                    'resettable_period' => $planFeature->resettable_period,
+                    'resettable_interval' => $planFeature->resettable_interval,
+                    'sort_order' => $planFeature->sort_order,
+                ]);
+        }
     }
 
     /**
@@ -370,15 +439,16 @@ class PlanSubscription extends Model
      * @param string $start
      *
      * @return $this
+     * @throws \Exception
      */
     protected function setNewPeriod($invoice_interval = '', $invoice_period = '', $start = '')
     {
         if (empty($invoice_interval)) {
-            $invoice_interval = $this->plan->invoice_interval;
+            $invoice_interval = $this->invoice_interval;
         }
 
         if (empty($invoice_period)) {
-            $invoice_period = $this->plan->invoice_period;
+            $invoice_period = $this->invoice_period;
         }
 
         $period = new Period($invoice_interval, $invoice_period, $start);
@@ -398,13 +468,9 @@ class PlanSubscription extends Model
      * @param bool $incremental
      * @return PlanSubscriptionUsage|Model
      */
-    public function recordFeatureUsage(
-        string $featureTag,
-        int $uses = 1,
-        bool $incremental = true
-    )
+    public function recordFeatureUsage(string $featureTag, int $uses = 1, bool $incremental = true)
     {
-        $feature = $this->plan->features()->where('tag', $featureTag)->first();
+        $feature = $this->features()->where('tag', $featureTag)->first();
 
         $usage = $this->usage()->firstOrNew([
             'subscription_id' => $this->getKey(),
@@ -530,7 +596,7 @@ class PlanSubscription extends Model
      */
     public function getFeatureValue(string $featureTag)
     {
-        $feature = $this->plan->features()->where('tag', $featureTag)->first();
+        $feature = $this->features()->where('tag', $featureTag)->first();
 
         return $feature->value ?? null;
     }
