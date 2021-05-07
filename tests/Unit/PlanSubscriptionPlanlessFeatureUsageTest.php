@@ -12,7 +12,7 @@ class PlanSubscriptionPlanlessFeatureUsageTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Test use attached feature
+     * Test use attached feature without plan
      */
     public function testCanUseFeatureNotExistingInPlan()
     {
