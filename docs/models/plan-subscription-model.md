@@ -4,7 +4,7 @@
 
 You can subscribe a user (or any model correctly traited) to a plan by using the `newSubscription()` function available
 in the `HasSubscriptions` trait. First, retrieve an instance of your subscriber model, which typically will be your user
-model and an instance of the plan your user is subscribing to. Once you have retrieved the model instance, you may use
+model, and an instance of the plan your user is subscribing to. Once you have retrieved the model instance, you may use
 the `newSubscription` method to create the model's subscription.
 
 ```php
@@ -48,7 +48,7 @@ to `false`. By default, invoice details are synchronized with new plan.
 - Existent features that where previously attached without plan but exist in the new plan now will use plan values.
 - Features not attached to a plan and nonexistent in new plan will remain the same.
 
-## Change its price and details<a name="change-price-and-details"></a>
+## Change price and details<a name="change-price-and-details"></a>
 
 You can change the price or details without affecting attached features or plan. With this feature you can set prices
 individually for every subscriber.
