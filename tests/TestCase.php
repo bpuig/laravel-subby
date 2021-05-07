@@ -164,5 +164,7 @@ class TestCase extends Orchestra
 
         // Subscribe test user to plan
         $this->testUser->newSubscription('main', $this->testPlanBasic);
+
+        $this->testUser->subscription('main')->features()->create(['tag' => 'social_cat_profiles', 'name' => 'Social profiles available for your cat', 'value' => 10, 'sort_order' => 10]);
     }
 }
