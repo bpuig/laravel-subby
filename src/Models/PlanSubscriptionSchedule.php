@@ -128,10 +128,11 @@ class PlanSubscriptionSchedule extends Model
     /**
      * Process scheduled plan change
      * @param bool $clearUsage
+     * @param bool $syncInvoicing
      */
-    public function processScheduledPlanChange(bool $clearUsage = true)
+    public function processScheduledPlanChange(bool $clearUsage = true, bool $syncInvoicing = true)
     {
-        $this->subscription->changePlan($this->plan, $clearUsage);
+        $this->subscription->changePlan($this->plan, $clearUsage, $syncInvoicing);
         $this->succeed();
     }
 

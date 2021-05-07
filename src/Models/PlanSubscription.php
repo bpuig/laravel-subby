@@ -138,7 +138,7 @@ class PlanSubscription extends Model
      */
     public function features(): HasMany
     {
-        return $this->hasMany(config('subby.models.plan_subscription_features'), 'subscription_id', 'id');
+        return $this->hasMany(config('subby.models.plan_subscription_feature'), 'subscription_id', 'id');
     }
 
     /**
@@ -320,7 +320,8 @@ class PlanSubscription extends Model
         // Now attach selected plan features
         // if they do not exist, will be created
         // if they exist but are attached to another feature_id or detached from feature, will be attached to plan feature
-        foreach ($plan->features() as $planFeature) {
+
+        foreach ($plan->features as $planFeature) {
             $this->features()->updateOrCreate(
                 ['tag' => $planFeature->tag],
                 [
@@ -334,7 +335,6 @@ class PlanSubscription extends Model
                 ]);
         }
     }
-
     /**
      * Renew subscription period.
      *

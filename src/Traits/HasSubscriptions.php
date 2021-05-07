@@ -89,14 +89,14 @@ trait HasSubscriptions
      *
      * @param string $tag Identifier tag for the subscription
      * @param \Bpuig\Subby\Models\Plan $plan
-     * @param string $name Human readable name for your subscriber's subscription
-     * @param string $description
+     * @param string|null $name Human readable name for your subscriber's subscription
+     * @param string|null $description
      * @param \Carbon\Carbon|null $startDate
      *
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function newSubscription(string $tag, Plan $plan, string $name, string $description, Carbon $startDate = null)
+    public function newSubscription(string $tag, Plan $plan, string $name = null, string $description = null, Carbon $startDate = null)
     {
         $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
         $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());

@@ -32,7 +32,7 @@ class CreatePlanSubscriptionFeaturesTable extends Migration
                 ->onDelete('cascade')->onUpdate('cascade');
 
             $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_features'))
-                ->onDelete('null')->onUpdate('cascade');
+                ->onDelete('set null')->onUpdate('cascade');
         });
     }
 

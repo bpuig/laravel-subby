@@ -26,7 +26,7 @@ class AlterPlanSubscription extends Migration
             $table->dropForeign(['plan_id']);
 
             $table->foreign('plan_id')->references('id')->on(config('subby.tables.plans'))
-                ->onDelete('null')->onUpdate('cascade');
+                ->onDelete('set null')->onUpdate('cascade');
         });
     }
 

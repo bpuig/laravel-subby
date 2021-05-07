@@ -96,6 +96,7 @@ class TestCase extends Orchestra
         include_once __DIR__ . '/../database/migrations/create_plans_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plan_features_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plan_subscriptions_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_plan_subscription_features_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plan_subscription_usage_table.php.stub';
         include_once __DIR__ . '/../database/migrations/PlanSubscriptionSchedule/create_plan_subscription_schedules_table.php.stub';
 
@@ -106,6 +107,7 @@ class TestCase extends Orchestra
         (new \CreatePlansTable)->up();
         (new \CreatePlanFeaturesTable)->up();
         (new \CreatePlanSubscriptionsTable)->up();
+        (new \CreatePlanSubscriptionFeaturesTable)->up();
         (new \CreatePlanSubscriptionUsageTable)->up();
         (new \CreatePlanSubscriptionSchedulesTable)->up();
     }
@@ -161,6 +163,6 @@ class TestCase extends Orchestra
         ]);
 
         // Subscribe test user to plan
-        $this->testUser->newSubscription('main', $this->testPlanBasic, 'Main subscription');
+        $this->testUser->newSubscription('main', $this->testPlanBasic);
     }
 }

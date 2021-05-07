@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
+use Bpuig\Subby\Traits\HasResetDate;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,6 +13,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PlanSubscriptionFeature extends Model
 {
+
+    use HasResetDate;
+
     /**
      * {@inheritdoc}
      */
