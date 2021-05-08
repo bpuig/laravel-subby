@@ -263,8 +263,7 @@ class PlanSubscription extends Model
         }
 
         // Synchronize subscription data with plan
-        $this->syncPlan($plan, $syncInvoicing);
-        $this->syncPlanFeatures($plan);
+        $this->syncPlan($plan, $syncInvoicing, true);
 
         return $this;
     }

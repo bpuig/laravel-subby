@@ -116,7 +116,7 @@ trait HasSubscriptions
             'ends_at' => $period->getEndDate(),
         ]);
 
-        $subscription->attachPlanFeatures($plan);
+        $subscription->syncPlanFeatures($plan);
 
         return $subscription;
     }

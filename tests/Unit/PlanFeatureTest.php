@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class PlanFeatureTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * Test Plan creation with already existing tag in database
      */

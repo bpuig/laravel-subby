@@ -41,7 +41,6 @@ class PlanSubscriptionTest extends TestCase
         $this->assertFalse($anExceptionWasThrown);
     }
 
-
     /**
      * Test Attach feature
      */
@@ -54,5 +53,25 @@ class PlanSubscriptionTest extends TestCase
         $this->assertDatabaseHas(config('subby.tables.plan_subscription_features'), [
             'tag' => 'social_koala_profiles',
         ]);
+    }
+
+
+    /**
+     * Test plan synchronization
+     */
+    public function testPlanSynchronization()
+    {
+        $subscription = $this->testUser->subscription('main');
+
+        $subscription->description = 'Main description with great discount';
+        $subscription->price = 12.00;
+
+        $subscription->save();
+
+        $this->assertTrue($this->testUser->subscription('main')->price === 12.00);
+
+        $this->testUser->subscription('main')->syncPlan();
+
+        $this->assertTrue($this->testUser->subscription('main')->price === 9.99);
     }
 }
