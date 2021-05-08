@@ -55,7 +55,6 @@ class PlanSubscriptionTest extends TestCase
         ]);
     }
 
-
     /**
      * Test plan synchronization
      */
@@ -64,11 +63,11 @@ class PlanSubscriptionTest extends TestCase
         $subscription = $this->testUser->subscription('main');
 
         $subscription->description = 'Main description with great discount';
-        $subscription->price = 12.00;
+        $subscription->price = 4.00;
 
         $subscription->save();
 
-        $this->assertTrue($this->testUser->subscription('main')->price === 12.00);
+        $this->assertTrue($this->testUser->subscription('main')->price === 4.00);
 
         $this->testUser->subscription('main')->syncPlan();
 
