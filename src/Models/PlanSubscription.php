@@ -9,6 +9,7 @@ use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasPricing;
 use Carbon\Carbon;
 use DB;
+use http\Exception\BadMethodCallException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -278,7 +279,9 @@ class PlanSubscription extends Model
      */
     public function syncPlan(Plan $plan = null, $syncInvoicing = true, $syncFeatures = false): PlanSubscription
     {
-        if (!$plan) {
+        if (!$plan && !$this->plan) {
+            throw new BadMethodCallException('Default plan not set.');
+        } elseif (!$plan) {
             $plan = $this->plan;
         }
 
@@ -306,12 +309,16 @@ class PlanSubscription extends Model
      */
     public function syncPlanFeatures(Plan $plan = null)
     {
-        if (!$plan) {
+        if (!$plan && !$this->plan) {
+            throw new BadMethodCallException('Default plan not set.');
+        } elseif (!$plan) {
             $plan = $this->plan;
         }
 
         // Delete features that where attached to a plan but no longer existing in selected plan
-        $featuresWithPlan = $this->features()->whereNotNull('plan_id')->get();
+        $featuresWithPlan = $this->features()->whereHas('feature', function (Builder $query) {
+            $query->whereNotNull('plan_id');
+        })->get();
         $planFeatures = $plan->features();
 
         $featuresWithPlanTags = $featuresWithPlan->pluck('tag');
