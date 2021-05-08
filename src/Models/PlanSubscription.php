@@ -314,31 +314,43 @@ class PlanSubscription extends Model
             $plan = $this->plan;
         }
 
-        // Delete features that where attached to a plan but no longer existing in selected plan
+        $this->deleteFeaturesNotInPlan($plan);
+        $this->updatePlanFeatures($plan);
+    }
+
+    /**
+     * Remove features that have plan related but are no longer in selected plan
+     * @param Plan $plan Plan to be compared
+     */
+    private function deleteFeaturesNotInPlan(Plan $plan)
+    {
+        // Retrieve current features that are related to a plan
         $featuresWithPlan = $this->features()->whereHas('feature', function (Builder $query) {
             $query->whereNotNull('plan_id');
         })->get();
+
+        // Retrieve selected plan features
         $planFeatures = $plan->features();
 
+        // Use tags to find which features are no longer in selected plan
         $featuresWithPlanTags = $featuresWithPlan->pluck('tag');
         $planFeatureTags = $planFeatures->pluck('tag');
 
         $featuresWithoutPlan = $featuresWithPlanTags->diff($planFeatureTags);
 
+        // Delete not found features
         $this->features()->whereIn('tag', $featuresWithoutPlan->all())->delete();
-
-        $this->attachPlanFeatures($plan);
     }
 
     /**
-     * Attach plan features to subscription
-     * @param Plan $plan
+     * Update subscription features to have same features as selected plan
+     * @param Plan $plan Plan to be compared
      */
-    private function attachPlanFeatures(Plan $plan)
+    private function updatePlanFeatures(Plan $plan)
     {
-        // Now attach selected plan features
+        // Now update selected plan features
         // if they do not exist, will be created
-        // if they exist but are attached to another feature_id or detached from feature, will be attached to plan feature
+        // if they exist but are update to another feature_id or detached from feature, will be attached to plan feature
 
         foreach ($plan->features as $planFeature) {
             $this->features()->updateOrCreate(
