@@ -7,7 +7,7 @@ namespace Bpuig\Subby\Tests\Unit;
 use Bpuig\Subby\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class PlanSubscriptionPlanlessFeatureUsageTest extends TestCase
+class PlanSubscriptionFeatureWithoutPlanUsageTest extends TestCase
 {
     use RefreshDatabase;
 
