@@ -24,9 +24,9 @@ All notable changes to `laravel-subby` will be documented in this file.
   contracts and in some places, changing conditions unilaterally can put you in trouble. Plan is referenced only for
   reference features.
     - Now plan subscription clones plan columns `price`, `currency`, `invoice_period`, `invoice_interval` and `tier`.
-      And they will stay like that even when you change plan prices.
+      They will stay like that even when you change parent plan prices.
 - Add method `isFree()`.
-- `newSubscription()` method fourth parameter is `$description` instead of `$startDate`. By default takes plan
+- `newSubscription()` method fourth parameter is `$description` instead of `$startDate`. By default, it takes plan's
   description.
 
 #### Plan subscription usage

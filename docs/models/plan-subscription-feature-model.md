@@ -4,10 +4,10 @@ This model relates to which features has a Subscription.
 
 ## How does it work?
 
-A [subscription](/models/plan-subscription-model.md) has features that can be used. This features are either assigned
+A [subscription](/models/plan-subscription-model.md) has features that can be used. These features are either assigned
 and inherited of plan when user is subscribed to a plan or manually assigned without relation to a plan.
 
-### Example
+## Add feature to subscription
 
 A plan has `social_profiles` feature. When subscriber is subscribed to that plan, the subscription can now
 use `social_profiles`.
@@ -26,12 +26,12 @@ $user->subscription('main')->features()->create([
     ]);
 ```
 
-Now user can also make use of the `pictures_per_social_profile` feature and it will be reset monthly.
+Now user can also make use of the `pictures_per_social_profile` feature, and it will be reset monthly.
 
-### Attach existing plan feature
+### Add existing plan feature
 
 If subscriber has inherited a feature from a plan, there cannot be two features with the same tag attached to
-subscriber. But, since subscription features do not depend anymore from plan features, you can override said feature.
+subscriber. But, since subscription features do not depend anymore on plan features, you can override said feature.
 
 ```php
 // Modify feature limit for subscriber
@@ -42,3 +42,12 @@ $user->subscription('main')->features()->where('tag', 'pictures_per_social_profi
 ```
 
 Just like that, our user will be always capable of using 60 pictures, no matter what the plan feature limit is.
+
+## Retrieve features without plan
+
+If you manually attached features that were not included in related subscription plan, you can retrieve them via scope.
+
+```php 
+// Retrieve features that are not tied in any form to a plan
+$user->subscription('main')->features()->withoutPlan()->get();
+```

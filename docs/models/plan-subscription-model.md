@@ -14,20 +14,22 @@ $plan = Plan::find(1);
 $user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscription');
 ```
 
-The first argument passed to `newSubscription` method should be the identifier tag of the subscription. If your
-application offer a single subscription, you might call this `main` or `primary`. The second argument is the plan
-instance your user is subscribing to, and the third argument is a human-readable name for your subscription. Fourth
-argument is a description. Fifth argument is a start date.
+- First argument passed to `newSubscription` method should be the identifier tag of the subscription. If your
+  application offers a single subscription, you might call this `main` or `primary`.
+- Second argument is the plan instance your subscriber is subscribing to.
+- Third argument is a human-readable name for your subscription.
+- Fourth argument is a description.
+- Fifth argument is a start date for the subscription.
 
 ## Change its Plan<a name="change-plan"></a>
 
-You can change subscription plan easily as follows:
+You can change subscription related plan easily as follows:
 
 ```php
 $plan = Plan::find(2);
 $subscription = PlanSubscription::find(1);
 
-// Change subscription plan
+// Change subscription plan clearing usage and synchronizing invoicing periods
 $subscription->changePlan($plan);
 
 // Change subscription plan and keep usage
@@ -48,7 +50,7 @@ to `false`. By default, invoice details are synchronized with new plan.
 - Existent features that where previously attached without plan but exist in the new plan now will use plan values.
 - Features not attached to a plan and nonexistent in new plan will remain the same.
 
-## Change price and details<a name="change-price-and-details"></a>
+## Change pricing and other details<a name="change-price-and-details"></a>
 
 You can change the price or details without affecting attached features or plan. With this feature you can set prices
 individually for every subscriber.
@@ -77,19 +79,6 @@ $user->subscription('main')->syncPlan(null, true, true);
 `syncWithPlan()` accepts 3 parameters. First parameter is a `Plan`, if you want to synchronize with current plan
 (default behaviour), set to `null`. Second is `bool` for synchronizing also invoicing details (period and interval),
 default behaviour is to synchronize `true`. The third one is `bool` to also synchronize features.
-
-### Revert custom plan subscription feature overrides (resynchronize plan features)
-
-You can revert all feature changes made to subscription that are related to a plan.
-
-```php 
-// Resynchronize features
-$user->subscription('main')->syncPlanFeatures();
-```
-
-Now all plan features available in subscription's related plan will be reset in subscription feature. If your subscriber
-has attached manually a feature that was not previously available in plan, but now is, your custom subscription feature
-will be related to plan feature and will be overridden with plan's feature details in this synchronization.
 
 ## Subscriber's subscriptions
 
@@ -178,6 +167,19 @@ $user->subscription('main')->isCanceled();
 $user->subscription('main')->hasEnded();
 $user->subscription('main')->isOnTrial();
 ```
+
+## Revert overridden plan subscription features
+
+You can revert all feature changes made to subscription that are related to a plan.
+
+```php 
+// Resynchronize features
+$user->subscription('main')->syncPlanFeatures();
+```
+
+Now all plan features available in subscription's related plan will be reset in subscription feature. If your subscriber
+has attached manually a feature that was not previously available in plan, but now is, your custom subscription feature
+will be related to plan feature and will be overridden with plan's feature details in this synchronization.
 
 ### Other<a name="other"></a>
 
