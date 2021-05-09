@@ -4,9 +4,8 @@
 namespace Bpuig\Subby\Tests\Unit;
 
 
-use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Tests\TestCase;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -42,6 +41,29 @@ class PlanSubscriptionTest extends TestCase
     }
 
     /**
+     * Test plan change
+     */
+    public function testPlanChange()
+    {
+        $subscription = $this->testUser->subscription('main');
+
+        $subscription->changePlan($this->testPlanPro);
+
+        // Plan has been changed
+        $this->assertTrue($this->testUser->subscription('main')->plan_id === $this->testPlanPro->id);
+
+        // No previous plan features still attached and related to plan
+        $this->assertTrue($subscription->features()->whereHas('feature', function (Builder $query) {
+                $query->where('plan_id', $this->testPlanBasic);
+            })->count() === 0);
+
+        // Current plan features
+        $this->assertTrue($this->testUser->subscription('main')->features()->whereHas('feature', function (Builder $query) {
+                $query->where('plan_id', $this->testPlanPro->id);
+            })->count() === $this->testPlanPro->features()->count());
+    }
+
+    /**
      * Test Attach feature
      */
     public function testAttachFeatureNotExistingInPlan()
@@ -73,4 +95,6 @@ class PlanSubscriptionTest extends TestCase
 
         $this->assertTrue($this->testUser->subscription('main')->price === 9.99);
     }
+
+
 }
