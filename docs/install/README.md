@@ -24,27 +24,20 @@ Migrate:
 php artisan migrate
 ```
 
-## Upgrade to major
+## Upgrade from v3.x to v4.x
 
 This package need to be upgraded version by version to apply database changes.
 
-### Upgrade from v0.x to v3.x
-
-Require in composer version 3 or greater. Publish and migrate:
+Require in composer version 4 or greater. Publish and migrate:
 
 ```shell
-php artisan vendor:publish --tag=subby.migrations.v3.0.0
+php artisan vendor:publish --tag=subby.migrations.v4.0.0
 php artisan migrate
 ```
 
-### Where are v1 and v2?
-
-These versions had changes that made the package unusable. Since this package is not used by many people (maybe just me)
-I'll take the freedom to remove them. They did more bad than good.
-
 ### Breaking changes
 
-Find breaking changes in changelog.
+Find breaking changes in [changelog](../CHANGELOG.md).
 
 ## Attach Subscriptions to model<a name="attach-subscription"></a>
 

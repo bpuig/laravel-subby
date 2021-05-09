@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bpuig\Subby\Models;
 
 use Bpuig\Subby\Traits\HasResetDate;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -97,5 +98,17 @@ class PlanSubscriptionFeature extends Model
     public function feature()
     {
         return $this->belongsTo(config('subby.models.plan_feature'), 'feature_id', 'id');
+    }
+
+    /**
+     * Show features that are not inherited by subscription's plan relation
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithoutPlan(Builder $query)
+    {
+        return $query->whereHas('feature', function (Builder $query) {
+            $query->whereNull('plan_id');
+        });
     }
 }

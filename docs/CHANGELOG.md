@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-subby` will be documented in this file.
 
-## x.0.0
+## 4.0.0
 
 ### New
 

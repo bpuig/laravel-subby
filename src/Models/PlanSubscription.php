@@ -325,9 +325,7 @@ class PlanSubscription extends Model
     private function deleteFeaturesNotInPlan(Plan $plan)
     {
         // Retrieve current features that are related to a plan
-        $featuresWithPlan = $this->features()->whereHas('feature', function (Builder $query) {
-            $query->whereNotNull('plan_id');
-        })->get();
+        $featuresWithPlan = $this->features()->withoutPlan()->get();
 
         // Retrieve selected plan features
         $planFeatures = $plan->features();
