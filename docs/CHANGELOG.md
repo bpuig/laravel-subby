@@ -34,6 +34,10 @@ All notable changes to `laravel-subby` will be documented in this file.
 - Removed columns from database that had no logic implemented:
     - `timezone`
 
+#### Plan subscription Schedule
+
+- Now schedules are separated in their own extension, which allows use of Laravel 7.
+
 ## 3.0.2
 
 ## Fix

@@ -64,10 +64,6 @@ class SubbyServiceProvider extends ServiceProvider
             __DIR__ . '/../database/migrations/v4.0.0/alter_plan_subscription_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 2) . '_alter_plan_subscription_table.php'),
             __DIR__ . '/../database/migrations/v4.0.0/alter_plan_subscription_usage_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 3) . '_alter_plan_subscription_usage_table.php'),
         ], 'subby.migrations.v4.0.0');
-
-        $this->publishes([
-            __DIR__ . '/../database/migrations/PlanSubscriptionSchedule/create_plan_subscription_schedules_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_plan_subscription_schedules_table.php')
-        ], 'subby.migrations.plan-subscription-schedule');
     }
 
 }

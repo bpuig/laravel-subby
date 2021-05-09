@@ -45,22 +45,9 @@ class TestCase extends Orchestra
             'models' => [
                 'plan' => \Bpuig\Subby\Models\Plan::class,
                 'plan_feature' => \Bpuig\Subby\Models\PlanFeature::class,
-                'plan_subscription' => \Bpuig\Subby\Tests\Models\PlanSubscription::class,
+                'plan_subscription' => \Bpuig\Subby\Models\PlanSubscription::class,
                 'plan_subscription_feature' => \Bpuig\Subby\Models\PlanSubscriptionFeature::class,
                 'plan_subscription_usage' => \Bpuig\Subby\Models\PlanSubscriptionUsage::class,
-            ],
-            // Plan schedule settings (Optional if you do not use the extension)
-            'schedule' => [
-                'tables' => [
-                    'plan_subscription_schedules' => 'plan_subscription_schedules' // Optional if HasSchedule trait is not used
-                ],
-                'models' => [
-                    'plan_subscription_schedule' => \Bpuig\Subby\Models\PlanSubscriptionSchedule::class,
-                ],
-                'services' => [
-                    'success' => \Bpuig\Subby\Tests\Services\PlanSubscriptionSchedule\SuccessScheduleService::class,
-                    'fail' => \Bpuig\Subby\Tests\Services\PlanSubscriptionSchedule\FailedScheduleService::class
-                ]
             ]
         ]);
 
@@ -98,7 +85,6 @@ class TestCase extends Orchestra
         include_once __DIR__ . '/../database/migrations/create_plan_subscriptions_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plan_subscription_features_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plan_subscription_usage_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/PlanSubscriptionSchedule/create_plan_subscription_schedules_table.php.stub';
 
         Artisan::call('migrate:fresh', ['--force' => true]);
 
@@ -109,7 +95,6 @@ class TestCase extends Orchestra
         (new \CreatePlanSubscriptionsTable)->up();
         (new \CreatePlanSubscriptionFeaturesTable)->up();
         (new \CreatePlanSubscriptionUsageTable)->up();
-        (new \CreatePlanSubscriptionSchedulesTable)->up();
     }
 
     /**

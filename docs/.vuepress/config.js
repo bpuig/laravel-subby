@@ -47,15 +47,7 @@ module.exports = {
                     ['/models/plan-feature-model.md', 'Plan Feature Model'],
                     ['/models/plan-subscription-model.md', 'Plan Subscription Model']
                 ]
-            },
-            {
-                title: 'Extras',   // required
-                sidebarDepth: 3,
-                collapsable: false,
-                children: [
-                    ['/extras/plan-subscription-schedule.md', 'Plan Subscription Schedule'],
-                ]
-            },
+            }
         ]
     },
 
