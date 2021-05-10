@@ -7,6 +7,7 @@ All notable changes to `laravel-subby` will be documented in this file.
 ### New
 
 - Added Plan Subscription Features, this is a snapshot of the features parent plan han at the moment of creation.
+- Added method `isAltered()` on subscription to know if features are the same as in plan.
 
 ### Breaking Changes
 
