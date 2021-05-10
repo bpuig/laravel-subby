@@ -166,6 +166,9 @@ $user->subscription('main')->isActive();
 $user->subscription('main')->isCanceled();
 $user->subscription('main')->hasEnded();
 $user->subscription('main')->isOnTrial();
+
+// To know if subscription has the same values as related plan or has been changed
+$user->subscription('main')->isAltered();
 ```
 
 ## Revert overridden plan subscription features
