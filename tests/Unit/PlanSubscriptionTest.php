@@ -96,5 +96,22 @@ class PlanSubscriptionTest extends TestCase
         $this->assertTrue($this->testUser->subscription('main')->price === 9.99);
     }
 
+    /**
+     * Test subscription is not altered
+     */
+    public function testSubscriptionIsNotAltered()
+    {
+        $this->testUser->subscription('main')->syncPlan(null, true, true);
+        $this->assertFalse($this->testUser->subscription('main')->isAltered());
+    }
+
+    /**
+     * Test subscription is altered
+     */
+    public function testSubscriptionIsAltered()
+    {
+        $this->testUser->subscription('main')->features()->create(['tag' => 'social_dog_profiles', 'name' => 'Social profiles available for your dog', 'value' => 2, 'sort_order' => 25]);
+        $this->assertTrue($this->testUser->subscription('main')->isAltered());
+    }
 
 }

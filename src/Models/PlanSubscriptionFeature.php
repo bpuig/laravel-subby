@@ -107,8 +107,9 @@ class PlanSubscriptionFeature extends Model
      */
     public function scopeWithoutPlan(Builder $query)
     {
-        return $query->whereHas('feature', function (Builder $query) {
+        return $query->orWhereHas('feature', function (Builder $query) {
             $query->whereNull('plan_id');
-        });
+        })
+            ->orWhereNull('feature_id');
     }
 }

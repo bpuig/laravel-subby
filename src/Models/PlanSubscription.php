@@ -203,6 +203,18 @@ class PlanSubscription extends Model
     }
 
     /**
+     * Check if subscription features have been altered
+     * @return bool
+     */
+    public function isAltered(): bool
+    {
+        $planFeatures = collect($this->plan->features()->select('tag', 'value', 'resettable_period', 'resettable_interval')->get());
+        $currentFeatures = collect($this->features()->select('tag', 'value', 'resettable_period', 'resettable_interval')->get());
+
+        return $currentFeatures->diff($planFeatures)->count() > 0;
+    }
+
+    /**
      * Cancel subscription.
      *
      * @param bool $immediately
@@ -276,7 +288,7 @@ class PlanSubscription extends Model
      * @return PlanSubscription
      * @throws \Exception
      */
-    public function syncPlan(Plan $plan = null, $syncInvoicing = true, $syncFeatures = false): PlanSubscription
+    public function syncPlan(Plan $plan = null, bool $syncInvoicing = true, bool $syncFeatures = false): PlanSubscription
     {
         if (!$plan && !$this->plan) {
             throw new BadMethodCallException('Default plan not set.');
@@ -316,6 +328,8 @@ class PlanSubscription extends Model
 
         $this->deleteFeaturesNotInPlan($plan);
         $this->updatePlanFeatures($plan);
+
+        return $this;
     }
 
     /**
@@ -324,7 +338,7 @@ class PlanSubscription extends Model
      */
     private function deleteFeaturesNotInPlan(Plan $plan)
     {
-        // Retrieve current features that are related to a plan
+        // Retrieve current features that are not related to a plan
         $featuresWithPlan = $this->features()->withoutPlan()->get();
 
         // Retrieve selected plan features
@@ -346,10 +360,9 @@ class PlanSubscription extends Model
      */
     private function updatePlanFeatures(Plan $plan)
     {
-        // Now update selected plan features
+        // Update selected plan features
         // if they do not exist, will be created
         // if they exist but are update to another feature_id or detached from feature, will be attached to plan feature
-
         foreach ($plan->features as $planFeature) {
             $this->features()->updateOrCreate(
                 ['tag' => $planFeature->tag],
