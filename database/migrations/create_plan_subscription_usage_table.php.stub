@@ -26,7 +26,7 @@ class CreatePlanSubscriptionUsageTable extends Migration
             $table->unique(['subscription_id', 'feature_id']);
             $table->foreign('subscription_id')->references('id')->on(config('subby.tables.plan_subscriptions'))
                 ->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_features'))
+            $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))
                 ->onDelete('cascade')->onUpdate('cascade');
         });
     }

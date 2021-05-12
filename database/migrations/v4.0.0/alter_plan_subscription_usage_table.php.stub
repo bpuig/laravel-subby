@@ -15,6 +15,10 @@ class AlterPlanSubscriptionUsageTable extends Migration
     {
         Schema::table(config('subby.tables.plan_subscription_usage'), function (Blueprint $table) {
             $table->dropColumn('timezone');
+            $table->dropForeign(['feature_id']);
+
+            $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))
+                            ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
