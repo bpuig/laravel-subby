@@ -7,6 +7,14 @@ in the `HasSubscriptions` trait. First, retrieve an instance of your subscriber'
 user model and an instance of the plan your subscriber is subscribing to. Once you have retrieved the model instance,
 you may use the `newSubscription` method to create the model's subscription.
 
+The subscription is made as a _snapshot_ using current plan details as a template. Same happens with subscription
+features. When you create a subscription a copy of the Plan Features is made into your Plan Subscription Features.
+
+If related plan is modified in the future, subscriber's subscription stays as it was, price, invoicing and features
+are "frozen" unless
+[manually synchronized](/models/plan-subscription-model.md#revert-overridden-plan-subscription-features) with related
+plan.
+
 ```php
 $user = User::find(1);
 $plan = Plan::find(1);
