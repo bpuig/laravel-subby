@@ -1,6 +1,6 @@
 # Plan Subscription Model
 
-## Create a Subscription<a name="create-subscription"></a>
+## Create a Subscription
 
 You can subscribe a user (or any model correctly traited) to a plan by using the `newSubscription()` function available
 in the `HasSubscriptions` trait. First, retrieve an instance of your subscriber's model, which typically will be your
@@ -21,7 +21,7 @@ $user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscr
 - Fourth argument is a description.
 - Fifth argument is a start date for the subscription.
 
-## Change its Plan<a name="change-plan"></a>
+## Change its Plan
 
 You can change subscription related plan easily as follows:
 
@@ -50,7 +50,7 @@ to `false`. By default, invoice details are synchronized with new plan.
 - Existent features that where previously attached without plan but exist in the new plan now will use plan values.
 - Features not attached to a plan and nonexistent in new plan will remain the same.
 
-## Change pricing and other details<a name="change-price-and-details"></a>
+## Change pricing and other details
 
 You can change the price or details without affecting attached features or plan. With this feature you can set prices
 individually for every subscriber.
@@ -66,7 +66,7 @@ $subscription->save();
 
 ### Revert custom subscription changes (resynchronize to plan)
 
-You can revert changes made to subscription with function `syncWithPlan`.
+You can revert changes made to subscription with function `syncPlan`.
 
 ```php 
 // Synchronize price, invoicing and tier with related plan
@@ -76,7 +76,7 @@ $user->subscription('main')->syncPlan();
 $user->subscription('main')->syncPlan(null, true, true);
 ```
 
-`syncWithPlan()` accepts 3 parameters. First parameter is a `Plan`, if you want to synchronize with current plan
+`syncPlan()` accepts 3 parameters. First parameter is a `Plan`, if you want to synchronize with current plan
 (default behaviour), set to `null`. Second is `bool` for synchronizing also invoicing details (period and interval),
 default behaviour is to synchronize `true`. The third one is `bool` to also synchronize features.
 
@@ -92,7 +92,7 @@ $user->subscriptions;
 $user->activeSubscriptions;
 ```
 
-## Subscription Feature Usage<a name="subscription-feature-usage"></a>
+## Subscription Feature Usage
 
 There are multiple ways to determine the usage and ability of a particular feature in the subscriber's subscription, the
 most common one is `canUseFeature`:
@@ -116,7 +116,7 @@ Other feature methods on the user subscription instance are:
 
 > All methods share the same signature: e.g. `$user->subscription('main')->getFeatureUsage('social_profiles');`.
 
-### Record Feature Usage<a name="record-feature-usage"></a>
+### Record Feature Usage
 
 In order to effectively use the ability methods you will need to keep track of every usage of each feature (or at least
 those that require it). You may use the `recordFeatureUsage` method available through the user `subscription()` method:
@@ -137,7 +137,7 @@ $user->subscription('main')->recordFeatureUsage('social_profiles', 1);
 $user->subscription('main')->recordFeatureUsage('social_profiles', 3, false);
 ```
 
-### Reduce Feature Usage<a name="reduce-feature-usage"></a>
+### Reduce Feature Usage
 
 Reducing the feature usage is _almost_ the same as incrementing it. Here we only _substract_ a given quantity (default
 is `1`) to the actual usage:
@@ -146,13 +146,13 @@ is `1`) to the actual usage:
 $user->subscription('main')->reduceFeatureUsage('social_profiles', 2);
 ```
 
-### Clear the Subscription Usage data<a name="clear-subscription-usage-data"></a>
+### Clear the Subscription Usage data
 
 ```php
 $user->subscription('main')->usage()->delete();
 ```
 
-## Check Subscription status<a name="check-subscription-status"></a>
+## Check Subscription status
 
 For a subscription to be considered active one of the following must be `true`:
 
@@ -184,7 +184,7 @@ Now all plan features available in subscription's related plan will be reset in 
 has attached manually a feature that was not previously available in plan, but now is, your custom subscription feature
 will be related to plan feature and will be overridden with plan's feature details in this synchronization.
 
-### Other<a name="other"></a>
+### Other
 
 ```php 
 // Check if subscription is free
@@ -196,7 +196,7 @@ $user->isSubscribedTo($planId);
 
 > Canceled subscriptions with an active trial or `ends_at` in the future are considered active.
 
-## Renew a Subscription<a name="renew-subscription"></a>
+## Renew a Subscription
 
 To renew a subscription you may use the `renew` method available in the subscription model. This will set a
 new `ends_at` date based on the selected plan and _will clear the usage data_ of the subscription.
@@ -207,7 +207,7 @@ $user->subscription('main')->renew();
 
 _Canceled subscriptions with an ended period can't be renewed._
 
-## Cancel a Subscription<a name="cancel-subscription"></a>
+## Cancel a Subscription
 
 To cancel a subscription, simply use the `cancel` method on the user's subscription:
 
@@ -222,7 +222,7 @@ subscription _immediately_:
 $user->subscription('main')->cancel(true);
 ```
 
-## Scopes<a name="scopes"></a>
+## Scopes
 
 ```php
 // Get subscriptions by plan
