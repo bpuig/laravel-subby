@@ -14,9 +14,9 @@ class CreatePlanSubscriptionFeaturesTable extends Migration
     public function up()
     {
         Schema::create(config('subby.tables.plan_subscription_features'), function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('subscription_id');
-            $table->unsignedInteger('feature_id')->nullable();
+            $table->increments('id');
+            $table->unsignedInteger('plan_subscription_id');
+            $table->unsignedInteger('plan_feature_id')->nullable();
             $table->string('tag');
             $table->string('name');
             $table->string('description')->nullable();
@@ -26,12 +26,12 @@ class CreatePlanSubscriptionFeaturesTable extends Migration
             $table->unsignedMediumInteger('sort_order')->default(0);
             $table->timestamps();
 
-            $table->unique(['subscription_id', 'tag']);
+            $table->unique(['plan_subscription_id', 'tag']);
 
-            $table->foreign('subscription_id')->references('id')->on(config('subby.tables.plan_subscriptions'))
+            $table->foreign('plan_subscription_id')->references('id')->on(config('subby.tables.plan_subscriptions'))
                 ->onDelete('cascade')->onUpdate('cascade');
 
-            $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_features'))
+            $table->foreign('plan_feature_id')->references('id')->on(config('subby.tables.plan_features'))
                 ->onDelete('set null')->onUpdate('cascade');
         });
     }

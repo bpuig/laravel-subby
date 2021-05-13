@@ -17,7 +17,7 @@ class CreatePlanFeaturesTable extends Migration
     {
         Schema::create(config('subby.tables.plan_features'), function (Blueprint $table) {
             // Columns
-            $table->increments('id');
+            $table->id('id');
             $table->string('tag');
             $table->unsignedInteger('plan_id');
             $table->string('name');

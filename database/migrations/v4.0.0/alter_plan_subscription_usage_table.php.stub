@@ -14,10 +14,14 @@ class AlterPlanSubscriptionUsageTable extends Migration
     public function up()
     {
         Schema::table(config('subby.tables.plan_subscription_usage'), function (Blueprint $table) {
+            $table->dropForeign(['subscription_id']);
+            $table->dropColumn('subscription_id');
+            $table->renameColumn('feature_id', 'plan_subscription_feature_id');
             $table->dropColumn('timezone');
+
             $table->dropForeign(['feature_id']);
 
-            $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))
+            $table->foreign('plan_subscription_feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))
                             ->onDelete('cascade')->onUpdate('cascade');
         });
     }
@@ -30,7 +34,13 @@ class AlterPlanSubscriptionUsageTable extends Migration
     public function down()
     {
         Schema::table(config('subby.tables.plan_subscription_usage'), function (Blueprint $table) {
+            $table->renameColumn('plan_subscription_feature_id', 'subscription_id');
+            $table->renameColumn('feature_id', 'plan_feature_id');
             $table->string('timezone')->nullable()->after('valid_until');
+
+            $table->dropForeign(['plan_feature_id']);
+            $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))
+                                        ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 }
