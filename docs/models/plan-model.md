@@ -57,7 +57,7 @@ The use of tiers is **optional**. Usually a tier is a "level" of subscription.
 
 It helps with upgrading or downgrading because usually an upgrade is changed, billed and renewed instantly, and a
 downgrade is changed and billed at the end of period (
-see [laravel-subby-schedule](https://github.com/bpuig/laravel-subby)).
+see [laravel-subby-schedule](https://github.com/bpuig/laravel-subby-schedule)).
 
 ### Example
 
