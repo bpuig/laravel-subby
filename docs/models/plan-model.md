@@ -1,6 +1,7 @@
 # Plan Model
 
-This is the main model of the package, there is nothing without plans.
+This is the main model of the package, there is nothing without plans. After creating a plan, you
+can [attach it to a subscription](/models/plan-subscription-model.md#create-a-subscription).
 
 ## Create a Plan
 
