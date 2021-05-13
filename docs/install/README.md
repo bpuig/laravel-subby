@@ -39,7 +39,7 @@ php artisan migrate
 
 Find breaking changes in [changelog](../CHANGELOG.md).
 
-## Attach Subscriptions to model<a name="attach-subscription"></a>
+## Attach Subscriptions to model
 
 **Laravel Subby** has been specially made for Eloquent. To add Subscription functionality to your User model just use
 the `\Bpuig\Subby\Traits\HasSubscriptions` trait like this:

@@ -28,11 +28,11 @@ The way this package is made:
   like `renew()`, `cancel()` etc. E.g.: when cancelling a subscription you may want to also cancel the recurring payment
   attached.
 
-## Changelog<a name="changelog"></a>
+## Changelog
 
 Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
-## License<a name="license"></a>
+## License
 
 Forked originally from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions). Thank you for
 creating the original!

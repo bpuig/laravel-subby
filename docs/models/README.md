@@ -1,4 +1,4 @@
-# Models<a name="models"></a>
+# Models
 
 **Subby** uses 5 models:
 
