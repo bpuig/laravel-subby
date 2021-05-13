@@ -92,6 +92,31 @@ $user->subscriptions;
 $user->activeSubscriptions;
 ```
 
+## Subscriber's main subscription
+
+Since usually projects work with only one subscription or one primary, you have to set the tag for it in the
+config `main_subscription_tag`.
+
+By default is `main`.
+
+```php
+// config/subby.php
+return [
+    'main_subscription_tag' => 'main',
+    ...
+];
+````
+
+Then:
+
+```php
+// This:
+$user->mainSubscription();
+
+// Equals
+$user->subscription('main');
+```
+
 ## Subscription Feature Usage
 
 There are multiple ways to determine the usage and ability of a particular feature in the subscriber's subscription, the

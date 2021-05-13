@@ -24,7 +24,12 @@ Migrate:
 php artisan migrate
 ```
 
-## Upgrade from v3.x to v4.x
+## Define main subscription
+
+Since usually projects work with only one subscription or one primary, you have to set the tag for it in the
+config `main_subscription_tag`. By default is `main`.
+
+# Upgrade from v3.x to v4.x
 
 This package need to be upgraded version by version to apply database changes.
 

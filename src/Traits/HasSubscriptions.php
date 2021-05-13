@@ -47,6 +47,15 @@ trait HasSubscriptions
     }
 
     /**
+     * Main subscription
+     * @return PlanSubscription|\Illuminate\Database\Eloquent\Model|MorphMany|null
+     */
+    public function mainSubscription()
+    {
+        return $this->subscription(config('subby.main_subscription_tag'));
+    }
+
+    /**
      * Get a subscription by tag.
      *
      * @param string $subscriptionTag

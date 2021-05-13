@@ -19,9 +19,11 @@ php artisan migrate
 
 ## Config
 
-A new model has been introduced, add new table and model in your subby config:
+A new model has been introduced, add new table and model in your subby config. A new config `main_subscription_tag` has
+been added.
 
 ```php
+'main_subscription_tag' => 'main',
 'tables' => [
         ...
         'plan_subscription_features' => 'plan_subscription_features',

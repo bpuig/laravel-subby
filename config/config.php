@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'main_subscription_tag' => 'main',
+
     // Database Tables
     'tables' => [
         'plans' => 'plans',
