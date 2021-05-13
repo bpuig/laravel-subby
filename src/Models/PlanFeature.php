@@ -75,14 +75,4 @@ class PlanFeature extends Model
             'sort_order' => 'nullable|integer|max:100000',
         ];
     }
-
-    /**
-     * The plan feature may have many subscription usage.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function usage(): HasMany
-    {
-        return $this->hasMany(config('subby.models.plan_subscription_usage'), 'feature_id', 'id');
-    }
 }

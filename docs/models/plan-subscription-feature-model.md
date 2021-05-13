@@ -4,38 +4,62 @@ This model relates to which features has a Subscription.
 
 ## How does it work?
 
-A [subscription](/models/plan-subscription-model.md) has features that can be used. These features are either assigned
-and inherited of plan when user is subscribed to a plan or manually assigned without relation to a plan.
+A [subscription](/models/plan-subscription-model.md) has features that can be used. Subscription Features are related
+but independent from Plan Features. When a subscription is created or a feature is attached, it makes a copy so it's
+decoupled and changes to related plan will not be applied automatically.
 
-## Add feature to subscription
+## How do Subscription Features relate to Plan Features?
+
+Plan Subscription Feature has two relationships to Plan, if you force it they can be two different plans, usually both
+will only lead to one Plan.
+
+### Via Subscription
+
+`PlanSubscriptionFeature` belongs **always** to one `PlanSubscription`, and it belongs **always** to one `Plan`.
+
+### Via Plan Feature
+
+`PlanSubscriptionFeature` **may** belong to one `PlanFeature`, and it belongs **always** to one `Plan`.
+
+## Add features to a subscription
+
+### Inherited from plan when subscribed
+
+Features are assigned and inherited from plan when user is subscribed to a plan. This makes a copy of current plan
+features into the subscription.
+
+```php
+$user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscription');
+```
+
+Now subscriber's subscription will have all current plan features.
+
+### Manually assign without relation to a plan feature
 
 A plan has `social_profiles` feature. When subscriber is subscribed to that plan, the subscription can now
 use `social_profiles`.
 
 ```php
-$user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscription');
-
 // You can also attach directly features to user
 $user->subscription('main')->features()->create([
-   'tag' => 'pictures_per_social_profile', 
-   'name' => 'Pictures per social profile', 
-   'value' => 30,
+    'tag' => 'pictures_per_social_profile', 
+    'name' => 'Pictures per social profile', 
+    'value' => 30,
     'sort_order' => 10,
     'resettable_period' => 1,
     'resettable_interval' => 'month'
-    ]);
+]);
 ```
-
 Now user can also make use of the `pictures_per_social_profile` feature, and it will be reset monthly.
 
-### Add existing plan feature
+### Override existing feature values
 
 If subscriber has inherited a feature from a plan, there cannot be two features with the same tag attached to
-subscriber. But, since subscription features do not depend anymore on plan features, you can override said feature.
+subscriber. But since subscription features do not depend anymore on plan features, you can override said feature.
 
 ```php
 // Modify feature limit for subscriber
-$user->subscription('main')->features()->where('tag', 'pictures_per_social_profile')
+$user->subscription('main')->getFeatureByTag('pictures_per_social_profile')
     ->update([     
        'value' => 60,
     ]);

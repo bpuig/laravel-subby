@@ -19,7 +19,7 @@ $plan->features()->saveMany([
 ]);
 ```
 
-## Get Plan Feature value<a name="get-feature-value"></a>
+## Get Plan Feature value
 
 Say you want to show the value of the feature _posts_per_social_profile_ from above. You can do so in many ways:
 
@@ -40,7 +40,7 @@ $amountOfPosts = PlanFeature::where('tag', 'posts_per_social_profile')->first()-
 $amountOfPosts = PlanSubscription::find(1)->getFeatureValue('posts_per_social_profile');
 ```
 
-## Feature Options<a name="feature-options"></a>
+## Feature Options
 
 Plan features are great for fine-tuning subscriptions, you can top up certain feature for X times of usage, so users may
 then use it only for that amount. Features also have the ability to be resettable and then it's usage could be expired

@@ -18,6 +18,10 @@ All notable changes to `laravel-subby` will be documented in this file.
     - `prorate_day`, `prorate_period`, `prorate_extend_due`, `active_subscribers_limit`, `grace_period`
       , `grace_interval`, `timezone`
 
+#### Plan features
+
+- Removed `usage()` method.
+
 #### Plan subscription
 
 - Dettached plan subscriptions from plans, now they are their own replica of the plan. This makes the legal part of the
@@ -32,8 +36,12 @@ All notable changes to `laravel-subby` will be documented in this file.
 
 #### Plan subscription usage
 
+- Removed `subscription` relationship.
 - Removed columns from database that had no logic implemented:
     - `timezone`
+- Renamed columns to keep relationships clearer:
+    - `subscription_id` to `plan_subscription_id`
+    - `feature_id` to `plan_subscription_feature_id`
 
 #### Plan subscription Schedule
 

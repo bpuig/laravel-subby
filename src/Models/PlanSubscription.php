@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
+use BadMethodCallException;
 use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
+use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
 use Carbon\Carbon;
 use DB;
-use http\Exception\BadMethodCallException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,7 +20,7 @@ use LogicException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan, HasPricing;
+    use BelongsToPlan, HasFeatures, HasPricing;
 
     /**
      * {@inheritdoc}
@@ -139,17 +140,24 @@ class PlanSubscription extends Model
      */
     public function features(): HasMany
     {
-        return $this->hasMany(config('subby.models.plan_subscription_feature'), 'subscription_id', 'id');
+        return $this->hasMany(config('subby.models.plan_subscription_feature'), 'plan_subscription_id', 'id');
     }
 
     /**
      * The subscription may have many usage.
      *
-     * @return HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function usage(): hasMany
+    public function usage(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
     {
-        return $this->hasMany(config('subby.models.plan_subscription_usage'), 'subscription_id', 'id');
+        return $this->hasManyThrough(
+            config('subby.models.plan_subscription_usage'),
+            config('subby.models.plan_subscription_feature'),
+            'plan_subscription_id',
+            'plan_subscription_feature_id',
+            'id',
+            'id'
+        );
     }
 
     /**
@@ -263,6 +271,7 @@ class PlanSubscription extends Model
      * @param bool $clearUsage Clear subscription usage
      * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
      * @return $this
+     * @throws \Exception
      */
     public function changePlan(Plan $plan, bool $clearUsage = true, bool $syncInvoicing = true)
     {
@@ -367,7 +376,7 @@ class PlanSubscription extends Model
             $this->features()->updateOrCreate(
                 ['tag' => $planFeature->tag],
                 [
-                    'feature_id' => $planFeature->id,
+                    'plan_feature_id' => $planFeature->id,
                     'name' => $planFeature->name,
                     'description' => $planFeature->description,
                     'value' => $planFeature->value,
@@ -513,12 +522,13 @@ class PlanSubscription extends Model
      */
     public function recordFeatureUsage(string $featureTag, int $uses = 1, bool $incremental = true)
     {
-        $feature = $this->features()->where('tag', $featureTag)->first();
+        $feature = $this->getFeatureByTag($featureTag);
+
 
         $usage = $this->usage()->firstOrNew([
-            'subscription_id' => $this->getKey(),
-            'feature_id' => $feature->getKey(),
+            'plan_subscription_feature_id' => $feature->getKey()
         ]);
+
 
         if ($feature->resettable_period) {
             // Set expiration date when the usage record is new or doesn't have one.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
+use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Plan extends Model
 {
-    use SoftDeletes, HasPricing;
+    use SoftDeletes, HasFeatures, HasPricing;
 
     /**
      * {@inheritdoc}
@@ -114,18 +115,6 @@ class Plan extends Model
     public function hasTrial(): bool
     {
         return $this->trial_period && $this->trial_interval;
-    }
-
-    /**
-     * Get plan feature by the given tag.
-     *
-     * @param string $featureTag
-     *
-     * @return PlanFeature|Model|HasMany|object|null
-     */
-    public function getFeatureByTag(string $featureTag)
-    {
-        return $this->features()->where('tag', $featureTag)->first();
     }
 
     /**
