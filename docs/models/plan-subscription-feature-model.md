@@ -67,6 +67,42 @@ $user->subscription('main')->getFeatureByTag('pictures_per_social_profile')
 
 Just like that, our user will be always capable of using 60 pictures, no matter what the plan feature limit is.
 
+## Revert all changes and sync to plan
+
+You can revert all your changes to a subscription an return to a clean copy of current subscription's Plan Features.
+
+```php
+// Resync features with subscription's current plan
+$user->subscription('main')->syncPlanFeatures();
+```
+
+`syncPlanFeatures` accepts one parameter `Plan`, in case you want a clean copy of another plan that is not current plan.
+
+## Revert one change
+
+You can revert one feature to a subscription and return to a clean copy of current subscription's Plan Feature or
+current
+`Plan Feature` in case it's not the same.
+
+#### Revert to Subscription's Plan value
+
+It will sync your subscription's feature retrieving your Plan Feature via Plan in Subscription related
+in `subscription_id`.
+
+```php
+// Resync feature with subscription's current plan
+$user->subscription('main')->getFeatureByTag('pictures_per_social_profile')->syncPlanSubscription();
+```
+
+#### Revert to Subscription's Feature Plan Feature value
+
+It will sync your subscription's feature retrieving your Plan Feature via Plan Feature in `plan_feature_id`.
+
+```php
+// Resync feature with subscription's current plan
+$user->subscription('main')->getFeatureByTag('pictures_per_social_profile')->syncPlanFeature();
+```
+
 ## Retrieve features without plan
 
 If you manually attached features that were not included in related subscription plan, you can retrieve them via scope.
