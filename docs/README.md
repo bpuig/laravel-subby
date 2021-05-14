@@ -16,6 +16,14 @@ The way this package is made:
    subscriber's subscription stays as it was, price, invoicing and features are "frozen" unless manually synchronized
    with related plan.
 
+## Version Compatibility
+
+Laravel  | Laravel Subby
+:---------|:----------
+8.x    | 4.x
+7.x    | 4.x
+6.x    | 4.x
+
 ## Extensions
 
 - [Laravel Subby Schedule](https://github.com/bpuig/laravel-subby-schedule): For scheduling your plan changes in the

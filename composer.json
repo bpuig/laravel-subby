@@ -24,14 +24,14 @@
     ],
     "require": {
         "php": "^7.2.5|^8.0",
-        "laravel/framework": "^7.0|^8.0",
+        "laravel/framework": "^6.0|^7.0|^8.0",
         "doctrine/dbal": "^2.6|^3.0"
     },
     "require-dev": {
-        "illuminate/console": "^7.0|^8.0",
-        "illuminate/container": "^7.0|^8.0",
-        "phpunit/phpunit": "^8.4|^9.3.3",
-        "orchestra/testbench": "^5.8|^6.8"
+        "illuminate/console": "^6.0|^7.0|^8.0",
+        "illuminate/container": "^6.0|^7.0|^8.0",
+        "phpunit/phpunit": "^7.5.15|^8.4|^9.3.3",
+        "orchestra/testbench": "^4.8|^5.8|^6.8"
     },
     "autoload": {
         "psr-4": {
