@@ -16,6 +16,7 @@ class AlterPlanSubscriptionTable extends Migration
         Schema::table(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
             $table->dropColumn('timezone');
             $table->unsignedInteger('plan_id')->nullable()->change();
+            $table->string('name')->nullable()->change();
 
             $table->decimal('price')->default('0.00')->after('description');
             $table->string('currency', 3);
@@ -46,6 +47,7 @@ class AlterPlanSubscriptionTable extends Migration
         Schema::table(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
             $table->string('timezone')->nullable()->after('canceled_at');
             $table->unsignedInteger('plan_id')->change();
+            $table->string('name')->change();
 
             $table->dropColumn(['price', 'currency', 'invoice_period', 'invoice_interval', 'tier']);
 

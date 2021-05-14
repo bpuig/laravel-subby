@@ -20,7 +20,7 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->string('tag');
             $table->morphs('subscriber');
             $table->unsignedInteger('plan_id')->nullable();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->decimal('price')->default('0.00');
             $table->string('currency', 3);

@@ -121,8 +121,8 @@ trait HasSubscriptions
         } catch (PlanSubscriptionNotFound $e) {
             $subscription = $this->subscriptions()->create([
                 'tag' => $tag,
-                'name' => !$name ? $plan->name : $name,
-                'description' => !$description ? $plan->description : $description,
+                'name' => $name,
+                'description' => $description,
                 'plan_id' => $plan->id,
                 'price' => $plan->price,
                 'currency' => $plan->currency,
