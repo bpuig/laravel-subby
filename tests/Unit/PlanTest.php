@@ -17,8 +17,7 @@ class PlanTest extends TestCase
      */
     public function testUnableToCreatePlanWithExistingTag()
     {
-        $this->expectException('Illuminate\Database\QueryException');
-        $this->expectExceptionMessage('UNIQUE constraint failed: plans.tag');
+        $this->expectException('Bpuig\Subby\Exceptions\PlanTagAlreadyExists');
         Plan::create([
             'tag' => 'basic',
             'name' => 'New Basic Plan',

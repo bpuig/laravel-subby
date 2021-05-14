@@ -18,7 +18,7 @@ class PlanSubscriptionTest extends TestCase
      */
     public function testUnableToCreatePlanSubscriptionWithExistingTag()
     {
-        $this->expectException('Bpuig\Subby\Exceptions\PlanSubscriptionDuplicated');
+        $this->expectException('Bpuig\Subby\Exceptions\PlanSubscriptionTagAlreadyExists');
         $this->testUser->newSubscription('main', $this->testPlanBasic, 'Test');
     }
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Traits;
 
-use Bpuig\Subby\Exceptions\PlanSubscriptionDuplicated;
+use Bpuig\Subby\Exceptions\PlanSubscriptionTagAlreadyExists;
 use Bpuig\Subby\Exceptions\PlanSubscriptionNotFound;
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscription;
@@ -139,7 +139,7 @@ trait HasSubscriptions
             return $subscription;
         }
 
-        throw new PlanSubscriptionDuplicated($tag);
+        throw new PlanSubscriptionTagAlreadyExists($tag);
     }
 }
 

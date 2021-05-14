@@ -6,7 +6,7 @@ namespace Bpuig\Subby\Exceptions;
 
 use Throwable;
 
-class PlanSubscriptionDuplicated extends \InvalidArgumentException
+class PlanSubscriptionTagAlreadyExists extends \InvalidArgumentException
 {
     public function __construct($tag = "", $code = 0, Throwable $previous = null)
     {

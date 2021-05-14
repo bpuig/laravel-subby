@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
+use Bpuig\Subby\Exceptions\PlanTagAlreadyExists;
 use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
 use Illuminate\Database\Eloquent\Model;
@@ -85,6 +86,15 @@ class Plan extends Model
             'invoice_interval' => 'sometimes|in:hour,day,week,month',
             'tier' => 'nullable|integer|max:100000'
         ];
+    }
+
+    public static function create(array $attributes = [])
+    {
+        if (static::where('tag', $attributes['tag'])->first()) {
+            throw new PlanTagAlreadyExists($attributes['tag']);
+        }
+
+        return static::query()->create($attributes);
     }
 
     /**
