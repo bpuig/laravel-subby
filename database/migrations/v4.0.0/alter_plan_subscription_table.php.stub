@@ -30,6 +30,12 @@ class AlterPlanSubscriptionTable extends Migration
                 ->onDelete('set null')->onUpdate('cascade');
         });
 
+        DB::statement('ALTER TABLE ' . config('subby.tables.plan_subscriptions') . ' MODIFY COLUMN trial_ends_at TIMESTAMP NULL');
+        DB::statement('ALTER TABLE ' . config('subby.tables.plan_subscriptions') . ' MODIFY COLUMN starts_at TIMESTAMP NULL');
+        DB::statement('ALTER TABLE ' . config('subby.tables.plan_subscriptions') . ' MODIFY COLUMN ends_at TIMESTAMP NULL');
+        DB::statement('ALTER TABLE ' . config('subby.tables.plan_subscriptions') . ' MODIFY COLUMN cancels_at TIMESTAMP NULL');
+        DB::statement('ALTER TABLE ' . config('subby.tables.plan_subscriptions') . ' MODIFY COLUMN canceled_at TIMESTAMP NULL');
+
         $subscriptions = app(config('subby.models.plan_subscription'))->get();
 
         foreach ($subscriptions as $subscription) {
@@ -48,6 +54,12 @@ class AlterPlanSubscriptionTable extends Migration
             $table->string('timezone')->nullable()->after('canceled_at');
             $table->unsignedInteger('plan_id')->change();
             $table->string('name')->change();
+
+            $table->dateTime('trial_ends_at')->nullable()->change();
+            $table->dateTime('starts_at')->nullable()->change();
+            $table->dateTime('ends_at')->nullable()->change();
+            $table->dateTime('cancels_at')->nullable()->change();
+            $table->dateTime('canceled_at')->nullable()->change();
 
             $table->dropColumn(['price', 'currency', 'invoice_period', 'invoice_interval', 'tier']);
 

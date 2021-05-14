@@ -27,12 +27,12 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->unsignedSmallInteger('invoice_period')->default(1);
             $table->string('invoice_interval')->default('month');
             $table->unsignedMediumInteger('tier')->default(0);
-            $table->dateTime('trial_ends_at')->nullable();
-            $table->dateTime('starts_at')->nullable();
-            $table->dateTime('ends_at')->nullable();
-            $table->dateTime('cancels_at')->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->timestamp('starts_at')->nullable();
+            $table->timestamp('ends_at')->nullable();
+            $table->timestamp('cancels_at')->nullable();
             $table->timestamps();
-            $table->dateTime('canceled_at')->nullable();
+            $table->timestamp('canceled_at')->nullable();
 
             // Indexes
             $table->unique(['tag', 'subscriber_id', 'subscriber_type'], 'unique_plan_subscription');

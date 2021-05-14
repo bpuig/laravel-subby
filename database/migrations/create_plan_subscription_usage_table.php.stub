@@ -19,7 +19,7 @@ class CreatePlanSubscriptionUsageTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('plan_subscription_feature_id')->unique();
             $table->integer('used')->unsigned();
-            $table->dateTime('valid_until')->nullable();
+            $table->timestamp('valid_until')->nullable();
             $table->timestamps();
 
             $table->foreign('plan_subscription_feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))

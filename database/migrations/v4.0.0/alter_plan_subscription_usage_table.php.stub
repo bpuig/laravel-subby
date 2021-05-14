@@ -24,6 +24,8 @@ class AlterPlanSubscriptionUsageTable extends Migration
             $table->foreign('plan_subscription_feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))
                             ->onDelete('cascade')->onUpdate('cascade');
         });
+
+        DB::statement('ALTER TABLE ' . config('subby.tables.plan_subscription_usage') . ' MODIFY COLUMN valid_until TIMESTAMP NULL');
     }
 
     /**
@@ -37,6 +39,7 @@ class AlterPlanSubscriptionUsageTable extends Migration
             $table->renameColumn('plan_subscription_feature_id', 'subscription_id');
             $table->renameColumn('feature_id', 'plan_feature_id');
             $table->string('timezone')->nullable()->after('valid_until');
+            $table->dateTime('valid_until')->nullable()->change();
 
             $table->dropForeign(['plan_feature_id']);
             $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))
