@@ -114,4 +114,12 @@ class PlanSubscriptionTest extends TestCase
         $this->assertTrue($this->testUser->subscription('main')->isAltered());
     }
 
+    /**
+     * Test non existing subscription exception
+     */
+    public function testNonExistingSubscriptionException()
+    {
+        $this->expectException('InvalidArgumentException');
+        $this->testUser->subscription('secondary');
+    }
 }

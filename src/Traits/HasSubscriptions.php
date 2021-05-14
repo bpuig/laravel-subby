@@ -10,6 +10,7 @@ use Bpuig\Subby\Services\Period;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use InvalidArgumentException;
 
 trait HasSubscriptions
 {
@@ -57,7 +58,17 @@ trait HasSubscriptions
     {
         $subscriptionTag = $subscriptionTag ?? config('subby.main_subscription_tag');
 
-        return $this->subscriptions()->where('tag', $subscriptionTag)->first();
+        if (!$subscriptionTag) {
+            throw new InvalidArgumentException('Subscription tag not provided and default config is empty.');
+        }
+
+        $subscription = $this->subscriptions()->where('tag', $subscriptionTag)->first();
+
+        if (!$subscription) {
+            throw new InvalidArgumentException("Subscription {$subscriptionTag} does not exist");
+        }
+
+        return $subscription;
     }
 
     /**
@@ -91,14 +102,14 @@ trait HasSubscriptions
      *
      * @param string $tag Identifier tag for the subscription
      * @param \Bpuig\Subby\Models\Plan $plan
-     * @param string|null $name Human readable name for your subscriber's subscription
+     * @param string $name Human readable name for your subscriber's subscription
      * @param string|null $description
      * @param \Carbon\Carbon|null $startDate
      *
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function newSubscription(string $tag, Plan $plan, string $name = null, string $description = null, Carbon $startDate = null)
+    public function newSubscription(string $tag, Plan $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null)
     {
         $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
         $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());

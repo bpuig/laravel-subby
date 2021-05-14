@@ -33,6 +33,7 @@ class TestCase extends Orchestra
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('subby', [
+            'main_subscription_tag' => 'main',
             // Database Tables
             'tables' => [
                 'plans' => 'plans',
