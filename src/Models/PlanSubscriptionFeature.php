@@ -7,6 +7,7 @@ namespace Bpuig\Subby\Models;
 use Bpuig\Subby\Traits\HasResetDate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 
 /**
@@ -66,7 +67,10 @@ class PlanSubscriptionFeature extends Model
         return [
             'tag' => [
                 'required',
-                'max:150'
+                'max:150',
+                Rule::unique(config('subby.tables.plan_subscription_features'))->where(function ($query) {
+                    return $query->where('id', '!=', $this->id)->where('plan_subscription_id', $this->plan_subscription_id);
+                }),
             ],
             'plan_subscription_id' => 'required|integer|exists:' . config('subby.tables.plan_subscriptions') . ',id',
             'plan_feature_id' => 'nullable|integer',
