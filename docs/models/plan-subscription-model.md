@@ -119,10 +119,10 @@ Then:
 
 ```php
 // This:
-$user->mainSubscription();
+$user->subscription();
 
 // Equals
-$user->subscription('main');
+$user->subscription('main'); // Or $user->subscription(config('subby.main_subscription_tag'));
 ```
 
 ## Subscription Feature Usage
