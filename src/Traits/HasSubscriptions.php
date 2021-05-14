@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Traits;
 
+use Bpuig\Subby\Exceptions\PlanSubscriptionDuplicated;
+use Bpuig\Subby\Exceptions\PlanSubscriptionNotFound;
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscription;
 use Bpuig\Subby\Services\Period;
@@ -65,7 +67,7 @@ trait HasSubscriptions
         $subscription = $this->subscriptions()->where('tag', $subscriptionTag)->first();
 
         if (!$subscription) {
-            throw new InvalidArgumentException("Subscription {$subscriptionTag} does not exist");
+            throw new PlanSubscriptionNotFound($subscriptionTag);
         }
 
         return $subscription;
@@ -101,10 +103,10 @@ trait HasSubscriptions
      * Subscribe subscriber to a new plan.
      *
      * @param string $tag Identifier tag for the subscription
-     * @param \Bpuig\Subby\Models\Plan $plan
-     * @param string $name Human readable name for your subscriber's subscription
-     * @param string|null $description
-     * @param \Carbon\Carbon|null $startDate
+     * @param \Bpuig\Subby\Models\Plan $plan Related plan
+     * @param string|null $name Human readable name for your subscriber's subscription
+     * @param string|null $description Description for the subscription
+     * @param \Carbon\Carbon|null $startDate When will the subscription start
      *
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
@@ -114,24 +116,30 @@ trait HasSubscriptions
         $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
         $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());
 
-        $subscription = $this->subscriptions()->create([
-            'tag' => $tag,
-            'name' => !$name ? $plan->name : $name,
-            'description' => !$description ? $plan->description : $description,
-            'plan_id' => $plan->id,
-            'price' => $plan->price,
-            'currency' => $plan->currency,
-            'tier' => $plan->tier,
-            'invoice_interval' => $plan->invoice_interval,
-            'invoice_period' => $plan->invoice_period,
-            'trial_ends_at' => $trial->getEndDate(),
-            'starts_at' => $period->getStartDate(),
-            'ends_at' => $period->getEndDate(),
-        ]);
+        try {
+            $this->subscription($tag);
+        } catch (PlanSubscriptionNotFound $e) {
+            $subscription = $this->subscriptions()->create([
+                'tag' => $tag,
+                'name' => !$name ? $plan->name : $name,
+                'description' => !$description ? $plan->description : $description,
+                'plan_id' => $plan->id,
+                'price' => $plan->price,
+                'currency' => $plan->currency,
+                'tier' => $plan->tier,
+                'invoice_interval' => $plan->invoice_interval,
+                'invoice_period' => $plan->invoice_period,
+                'trial_ends_at' => $trial->getEndDate(),
+                'starts_at' => $period->getStartDate(),
+                'ends_at' => $period->getEndDate(),
+            ]);
 
-        $subscription->syncPlanFeatures($plan);
+            $subscription->syncPlanFeatures($plan);
 
-        return $subscription;
+            return $subscription;
+        }
+
+        throw new PlanSubscriptionDuplicated($tag);
     }
 }
 

@@ -18,8 +18,7 @@ class PlanSubscriptionTest extends TestCase
      */
     public function testUnableToCreatePlanSubscriptionWithExistingTag()
     {
-        $this->expectException(QueryException::class);
-        $this->expectExceptionMessage('UNIQUE constraint failed: plan_subscriptions.tag, plan_subscriptions.subscriber_id, plan_subscriptions.subscriber_type');
+        $this->expectException('Bpuig\Subby\Exceptions\PlanSubscriptionDuplicated');
         $this->testUser->newSubscription('main', $this->testPlanBasic, 'Test');
     }
 
@@ -119,7 +118,7 @@ class PlanSubscriptionTest extends TestCase
      */
     public function testNonExistingSubscriptionException()
     {
-        $this->expectException('InvalidArgumentException');
+        $this->expectException('Bpuig\Subby\Exceptions\PlanSubscriptionNotFound');
         $this->testUser->subscription('secondary');
     }
 }
