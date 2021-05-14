@@ -62,11 +62,13 @@ trait HasSubscriptions
      *
      * @return PlanSubscription|\Illuminate\Database\Eloquent\Model|MorphMany|null
      */
-    public function subscription(string $subscriptionTag)
+    public function subscription(?string $subscriptionTag = null)
     {
+        $subscriptionTag = $subscriptionTag ?? config('subby.main_subscription_tag');
+
         return $this->subscriptions()->where('tag', $subscriptionTag)->first();
     }
-
+    
     /**
      * Get subscribed plans.
      *
