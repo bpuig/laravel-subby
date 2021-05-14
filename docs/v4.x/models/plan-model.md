@@ -1,7 +1,7 @@
 # Plan Model
 
 This is the main model of the package, there is nothing without plans. After creating a plan, you
-can [attach it to a subscription](/models/plan-subscription-model.md#create-a-subscription).
+can [attach it to a subscription](plan-subscription-model.md#create-a-subscription).
 
 ## Create a Plan
 
@@ -50,7 +50,7 @@ or `$plan->getFeatureByTag('social_profiles')`.
 
 Also read:
 
-- [Get Plan Feature value](/models/plan-feature-model.md#get-plan-feature-value)
+- [Get Plan Feature value](plan-feature-model.md#get-plan-feature-value)
 
 ## Tiers
 

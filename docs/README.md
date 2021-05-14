@@ -1,50 +1,32 @@
+<img src="https://repository-images.githubusercontent.com/312531331/83fd5e80-9ec8-11eb-9b6a-210d761a536e" alt="Social Card of Laravel Subby">
+
 # Laravel Subby
 
-**Laravel Subby** is a flexible plans and subscription management system for Laravel. Originally forked
-from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
+**Laravel Subby** is a flexible plans and subscription management system for Laravel. You can also schedule plan
+changes.
 
-## What it does
-
-The way this package is made:
-
-1. There are [plans](/models/plan-model.md) that have [features](/models/plan-feature-model.md).
-2. There is an entity (morph) receiving the
-   trait `HasSubscriptions` ([subscriptions](/models/plan-subscription-model.md)). It can be a user, a team, whatever
-   you want; see [Attach Subscriptions to model](/install/#attach-subscription).
-3. This entity can have many subscriptions to one or more plans and use their features and other features not attached
-   to a plan. The subscription is made as a "snapshot" of current plan details. If plan is modified in the future,
-   subscriber's subscription stays as it was, price, invoicing and features are "frozen" unless manually synchronized
-   with related plan.
+Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
 
 ## Version Compatibility
 
 Laravel  | Laravel Subby
 :---------|:----------
-8.x    | 4.x
-7.x    | 4.x
-6.x    | 4.x
-
-## Extensions
-
-- [Laravel Subby Schedule](https://github.com/bpuig/laravel-subby-schedule): For scheduling your plan changes in the
-  future.
-
-## Considerations
-
-- Payments and translations are out of scope for this package.
-- You may want to extend some core models, in case you need to override the logic behind some helper methods
-  like `renew()`, `cancel()` etc. E.g.: when cancelling a subscription you may want to also cancel the recurring payment
-  attached.
+8.x    | [v3.x](/v3.x/), [v4.x](/v4.x/)
+7.x    | [v4.x](/v4.x/)
+6.x    | [v4.x](/v4.x/)
 
 ## Changelog
 
-Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
+Refer to the [Changelog](https://bpuig.github.io/laravel-subby/CHANGELOG.html) for a full history of the project.
 
 ## License
 
 Forked originally from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions). Thank you for
 creating the original!
 
-This software is released under [The MIT License (MIT)](LICENSE.md).
+This software is released under [The MIT License (MIT)](LICENSE).
 
-&copy; 2020-2021 B. Puig, Some rights reserved.
+&copy; 2020 - 2021 B. Puig, Some rights reserved.
+
+
+

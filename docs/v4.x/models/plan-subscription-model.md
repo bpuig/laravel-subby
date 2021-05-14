@@ -12,8 +12,7 @@ features. When you create a subscription a copy of the Plan Features is made int
 
 If related plan is modified in the future, subscriber's subscription stays as it was, price, invoicing and features
 are "frozen" unless
-[manually synchronized](/models/plan-subscription-model.md#revert-overridden-plan-subscription-features) with related
-plan.
+[manually synchronized](plan-subscription-model.md#revert-overridden-plan-subscription-features) with related plan.
 
 ```php
 $user = User::find(1);

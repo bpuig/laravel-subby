@@ -4,8 +4,8 @@ This model relates to which features has a Subscription.
 
 ## How does it work?
 
-A [subscription](/models/plan-subscription-model.md) has features that can be used. Subscription Features are related
-but independent from Plan Features. When a subscription is created or a feature is attached, it makes a copy so it's
+A [subscription](plan-subscription-model.md) has features that can be used. Subscription Features are related but
+independent from Plan Features. When a subscription is created or a feature is attached, it makes a copy so it's
 decoupled and changes to related plan will not be applied automatically.
 
 ## How do Subscription Features relate to Plan Features?
