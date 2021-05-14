@@ -203,6 +203,20 @@ $user->subscription('main')->isOnTrial();
 $user->subscription('main')->isAltered();
 ```
 
+### Remaining price prorate
+
+You can get what is the remaining prorated amount until subscription invoice period ends.
+
+```php
+$user->subscription('main')->getRemainingPriceProrate(); // Ex: 10 day subscription of price 10.00, on day 6, returns 4
+```
+
+### Other
+
+```php
+$user->subscription('main')->getDaysUntilRenewal(); // Returns number of days until renewal
+```
+
 ## Revert overridden plan subscription features
 
 You can revert all feature changes made to subscription that are related to a plan.

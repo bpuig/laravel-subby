@@ -653,4 +653,23 @@ class PlanSubscription extends Model
 
         return $feature->value ?? null;
     }
+
+    /**
+     * Days until subscription renews
+     */
+    public function getDaysUntilRenewal(): int
+    {
+        return Carbon::now()->diffInDays($this->ends_at);
+    }
+
+    /**
+     * Get prorated price of subscription value
+     * @return float
+     */
+    public function getRemainingPriceProrate(): float
+    {
+        $totalDurationInDays = Carbon::make($this->starts_at)->diffInDays($this->ends_at);
+
+        return round($this->price - (($this->price / $totalDurationInDays) * ($totalDurationInDays - $this->getDaysUntilRenewal())), 2);
+    }
 }
