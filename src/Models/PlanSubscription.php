@@ -657,9 +657,17 @@ class PlanSubscription extends Model
     /**
      * Days until subscription renews
      */
-    public function getDaysUntilRenewal(): int
+    public function getDaysUntilEnds(): int
     {
         return Carbon::now()->diffInDays($this->ends_at);
+    }
+
+    /**
+     * Days until subscription trial ends
+     */
+    public function getDaysUntilTrialEnds(): int
+    {
+        return Carbon::now()->diffInDays($this->trial_ends_at);
     }
 
     /**
@@ -670,6 +678,6 @@ class PlanSubscription extends Model
     {
         $totalDurationInDays = Carbon::make($this->starts_at)->diffInDays($this->ends_at);
 
-        return round($this->price - (($this->price / $totalDurationInDays) * ($totalDurationInDays - $this->getDaysUntilRenewal())), 2);
+        return round($this->price - (($this->price / $totalDurationInDays) * ($totalDurationInDays - $this->getDaysUntilEnds())), 2);
     }
 }

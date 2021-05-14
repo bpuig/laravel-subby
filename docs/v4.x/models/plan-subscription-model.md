@@ -214,7 +214,8 @@ $user->subscription('main')->getRemainingPriceProrate(); // Ex: 10 day subscript
 ### Other
 
 ```php
-$user->subscription('main')->getDaysUntilRenewal(); // Returns number of days until renewal
+$user->subscription('main')->getDaysUntilEnds(); // Returns number of days until subscription ends
+$user->subscription('main')->getDaysUntilTrialEnds(); // Returns number of days until subscription trial ends
 ```
 
 ## Revert overridden plan subscription features

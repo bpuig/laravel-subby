@@ -16,6 +16,14 @@ class PlanSubscriptionTest extends TestCase
     /**
      * Test Subscription to already existing tag
      */
+    public function testAAAA()
+    {
+        dd($this->testUser->subscription()->getDaysUntilRenewal());
+    }
+
+    /**
+     * Test Subscription to already existing tag
+     */
     public function testUnableToCreatePlanSubscriptionWithExistingTag()
     {
         $this->expectException('Bpuig\Subby\Exceptions\PlanSubscriptionTagAlreadyExists');
