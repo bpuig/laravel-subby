@@ -4,25 +4,24 @@ All notable changes to `laravel-subby` will be documented in this file.
 
 ## 4.0.0
 
-### New
+### Plans
 
-- Added Plan Subscription Features, this is a snapshot of the features parent plan han at the moment of creation.
-- Added method `isAltered()` on subscription to know if features are the same as in plan.
-
-### Breaking Changes
-
-#### Plans
+#### Breaking Changes
 
 - Removed `hasGrace()` method from plan and it's database related columns.
 - Removed columns from database that had no logic implemented:
     - `prorate_day`, `prorate_period`, `prorate_extend_due`, `active_subscribers_limit`, `grace_period`
       , `grace_interval`, `timezone`
 
-#### Plan features
+### Plan features
+
+#### Breaking Changes
 
 - Removed `usage()` method.
 
-#### Plan subscription
+### Plan subscription
+
+#### New
 
 - Dettached plan subscriptions from plans, now they are their own replica of the plan. This makes the legal part of the
   subscription easier since when someone subscribes to a plan, and then you change the plan, it will affect existing
@@ -30,11 +29,20 @@ All notable changes to `laravel-subby` will be documented in this file.
   reference features.
     - Now plan subscription clones plan columns `price`, `currency`, `invoice_period`, `invoice_interval` and `tier`.
       They will stay like that even when you change parent plan prices.
-- Add method `isFree()`.
+- Add method `isFree()`, `getDaysUntilEnds()`, `getDaysUntilTrialEnds()`, `getRemainingPriceProrate()`
+- Add method `isAltered()` to know if features are the same as in plan.
+- Add method `getDaysUntilEnds()` to get number of days until subscription ends.
+- Add method `getDaysUntilTrialEnds()` to get number of days until subscription trial ends.
+- Add method `getRemainingPriceProrate()` to retrieve remaining price amount that would have not been consumed.
+
+#### Breaking Changes
+
 - `newSubscription()` method fourth parameter is `$description` instead of `$startDate`. By default, it takes plan's
   description.
 
-#### Plan subscription usage
+### Plan subscription usage
+
+#### Breaking Changes
 
 - Removed `subscription` relationship.
 - Removed columns from database that had no logic implemented:
@@ -43,52 +51,14 @@ All notable changes to `laravel-subby` will be documented in this file.
     - `subscription_id` to `plan_subscription_id`
     - `feature_id` to `plan_subscription_feature_id`
 
-#### Plan subscription Schedule
+### Plan subscription features
 
-- Now schedules are separated in their own extension, which allows use of Laravel 7.
+#### New
 
-## 3.0.2
+- Dettached subscription features from plans, now they are their own replica of the plan features.
 
-## Fix
+### Plan subscription Schedule
 
-- Update docs broken link
-- Remove art from repo, use external url
+#### Breaking Changes
 
-## 3.0.1
-
-### Fix
-
-- Removed whitespace at the end of migration filename
-
-## 3.0.0
-
-### Breaking Changes
-
-- Rename `User` to `Subscriber` for a more generic use. Was not thought that a subscriber could be a customer, team,
-  account... etc
-- `ofUser()` method in `PlanSubscription` now is `ofSubscriber()`
-
-Changed method names to avoid confusion with possible scopes.
-
-```php
-$user->subscribedTo($planId);
-$user->subscription('main')->active();
-$user->subscription('main')->canceled();
-$user->subscription('main')->ended();
-$user->subscription('main')->onTrial();
-```
-
-Now are:
-
-```php
-$user->isSubscribedTo($planId);
-$user->subscription('main')->isActive();
-$user->subscription('main')->isCanceled();
-$user->subscription('main')->hasEnded();
-$user->subscription('main')->isOnTrial();
-```
-
-### Changes
-
-- Default value in *plans* table for `invoice_period` is now 1.
-- Removed softDeletes
+- Now schedules are separated in their own extension, which allows use of Laravel 7 and 6.
