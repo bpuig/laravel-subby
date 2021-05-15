@@ -655,7 +655,17 @@ class PlanSubscription extends Model
     }
 
     /**
+     * Get subscription duration in days
+     * @return int
+     */
+    public function getTotalDurationInDays(): int
+    {
+        return Carbon::make($this->starts_at)->diffInDays($this->ends_at);
+    }
+
+    /**
      * Days until subscription renews
+     * @return int
      */
     public function getDaysUntilEnds(): int
     {
@@ -664,10 +674,20 @@ class PlanSubscription extends Model
 
     /**
      * Days until subscription trial ends
+     * @return int
      */
     public function getDaysUntilTrialEnds(): int
     {
         return Carbon::now()->diffInDays($this->trial_ends_at);
+    }
+
+    /**
+     * Get the proportion of the remaining billing period
+     * @return float
+     */
+    public function getRemainingPeriodProportion(): float
+    {
+        return round($this->getDaysUntilEnds() / $this->getTotalDurationInDays(), 4);
     }
 
     /**
@@ -676,8 +696,6 @@ class PlanSubscription extends Model
      */
     public function getRemainingPriceProrate(): float
     {
-        $totalDurationInDays = Carbon::make($this->starts_at)->diffInDays($this->ends_at);
-
-        return round($this->price - (($this->price / $totalDurationInDays) * ($totalDurationInDays - $this->getDaysUntilEnds())), 2);
+        return round($this->price * $this->getRemainingPeriodProportion(), 2);
     }
 }
