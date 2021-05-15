@@ -90,11 +90,11 @@ class Plan extends Model
 
     public static function create(array $attributes = [])
     {
-        if (static::where('tag', $attributes['tag'])->first()) {
-            throw new PlanTagAlreadyExists($attributes['tag']);
+        try {
+            return static::query()->create($attributes);
+        } catch (\Exception $e) {
+            throw new PlanTagAlreadyExists($attributes['tag'] ?? '<unknown tag>');
         }
-
-        return static::query()->create($attributes);
     }
 
     /**
