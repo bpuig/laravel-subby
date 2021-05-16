@@ -31,8 +31,8 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('ends_at')->nullable();
             $table->timestamp('cancels_at')->nullable();
-            $table->timestamps();
             $table->timestamp('canceled_at')->nullable();
+            $table->timestamps();
 
             // Indexes
             $table->unique(['tag', 'subscriber_id', 'subscriber_type'], 'unique_plan_subscription');
