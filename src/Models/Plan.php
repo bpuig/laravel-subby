@@ -103,7 +103,7 @@ class Plan extends Model
      * @param string $tag
      * @return null|$this
      */
-    static public function findByTag(string $tag): ?Plan
+    static public function getByTag(string $tag): ?Plan
     {
         return static::where('tag', $tag)->first();
     }

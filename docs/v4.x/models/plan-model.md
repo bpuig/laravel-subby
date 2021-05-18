@@ -31,7 +31,7 @@ You can query the plan for further details as follows:
 $plan = Plan::find(1);
 
 // Or querying by tag
-$plan = Plan::findByTag('basic');
+$plan = Plan::getByTag('basic');
 
 // Get all plan features                
 $plan->features;
