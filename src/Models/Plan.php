@@ -98,6 +98,17 @@ class Plan extends Model
     }
 
     /**
+     * Get plan by the given tag.
+     *
+     * @param string $tag
+     * @return null|$this
+     */
+    static public function findByTag(string $tag): ?Plan
+    {
+        return static::where('tag', $tag)->first();
+    }
+
+    /**
      * The plan may have many features.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

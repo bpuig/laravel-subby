@@ -30,6 +30,9 @@ You can query the plan for further details as follows:
 ```php
 $plan = Plan::find(1);
 
+// Or querying by tag
+$plan = Plan::findByTag('basic');
+
 // Get all plan features                
 $plan->features;
 
