@@ -229,7 +229,7 @@ class PlanSubscription extends Model
      *
      * @return $this
      */
-    public function cancel($immediately = false)
+    public function cancel(bool $immediately = false): PlanSubscription
     {
         $this->canceled_at = Carbon::now();
 
@@ -254,7 +254,7 @@ class PlanSubscription extends Model
      *
      * @return $this
      */
-    public function uncancel()
+    public function uncancel(): PlanSubscription
     {
         $this->canceled_at = null;
         $this->cancels_at = null;
@@ -273,7 +273,7 @@ class PlanSubscription extends Model
      * @return $this
      * @throws \Exception
      */
-    public function changePlan(Plan $plan, bool $clearUsage = true, bool $syncInvoicing = true)
+    public function changePlan(Plan $plan, bool $clearUsage = true, bool $syncInvoicing = true): PlanSubscription
     {
         // Sometimes you want to keep usage
         // E.g. of false: Renew plan at day 6 of subscription,
@@ -340,8 +340,10 @@ class PlanSubscription extends Model
             $plan = $this->plan;
         }
 
-        $this->deleteFeaturesNotInPlan($plan);
-        $this->updatePlanFeatures($plan);
+        DB::transaction(function () use ($plan) {
+            $this->deleteFeaturesNotInPlan($plan);
+            $this->updatePlanFeatures($plan);
+        });
 
         return $this;
     }
@@ -399,7 +401,7 @@ class PlanSubscription extends Model
      * @throws \LogicException
      *
      */
-    public function renew()
+    public function renew(): PlanSubscription
     {
         if ($this->isCanceled()) {
             throw new LogicException('Unable to renew canceled subscription.');
@@ -498,7 +500,7 @@ class PlanSubscription extends Model
      * @return $this
      * @throws \Exception
      */
-    protected function setNewPeriod($invoice_interval = '', $invoice_period = '', $start = '')
+    protected function setNewPeriod($invoice_interval = '', $invoice_period = '', $start = ''): PlanSubscription
     {
         if (empty($invoice_interval)) {
             $invoice_interval = $this->invoice_interval;
