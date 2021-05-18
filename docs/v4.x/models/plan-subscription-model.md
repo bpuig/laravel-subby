@@ -269,6 +269,14 @@ subscription _immediately_:
 $user->subscription('main')->cancel(true);
 ```
 
+## Uncancel a subscription
+
+To uncancel a subscription, simply use the `uncancel` method on the user's subscription:
+
+```php
+$user->subscription('main')->uncancel();
+```
+
 ## Scopes
 
 ```php
