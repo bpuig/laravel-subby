@@ -311,7 +311,12 @@ class PlanSubscription extends Model
         $this->tier = $plan->tier;
 
         if ($syncInvoicing) {
+            // Set new start and end date
             $this->setNewPeriod($plan->invoice_interval, $plan->invoice_period);
+
+            // Set same invoicing as selected plan
+            $this->invoice_interval = $plan->invoice_interval;
+            $this->invoice_period = $plan->invoice_period;
         }
 
         $this->save();
@@ -327,7 +332,7 @@ class PlanSubscription extends Model
      * Synchronize features with current plan
      * @param Plan|null $plan
      */
-    public function syncPlanFeatures(Plan $plan = null)
+    public function syncPlanFeatures(Plan $plan = null): PlanSubscription
     {
         if (!$plan && !$this->plan) {
             throw new BadMethodCallException('Default plan not set.');
