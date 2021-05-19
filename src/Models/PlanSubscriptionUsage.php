@@ -25,7 +25,6 @@ class PlanSubscriptionUsage extends Model
      * {@inheritdoc}
      */
     protected $casts = [
-        'plan_subscription_id' => 'integer',
         'used' => 'integer',
         'valid_until' => 'datetime',
     ];

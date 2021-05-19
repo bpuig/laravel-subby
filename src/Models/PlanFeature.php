@@ -33,7 +33,6 @@ class PlanFeature extends Model
      */
     protected $casts = [
         'tag' => 'string',
-        'plan_id' => 'integer',
         'value' => 'string',
         'resettable_period' => 'integer',
         'resettable_interval' => 'string',

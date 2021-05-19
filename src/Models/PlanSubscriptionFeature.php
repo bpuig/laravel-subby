@@ -38,8 +38,6 @@ class PlanSubscriptionFeature extends Model
      */
     protected $casts = [
         'tag' => 'string',
-        'plan_subscription_id' => 'integer',
-        'plan_feature_id' => 'integer',
         'value' => 'string',
         'resettable_period' => 'integer',
         'resettable_interval' => 'string',

@@ -49,9 +49,7 @@ class PlanSubscription extends Model
      */
     protected $casts = [
         'tag' => 'string',
-        'subscriber_id' => 'integer',
         'subscriber_type' => 'string',
-        'plan_id' => 'integer',
         'price' => 'float',
         'currency' => 'string',
         'invoice_period' => 'integer',
