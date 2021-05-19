@@ -105,6 +105,16 @@ class PlanSubscriptionFeature extends Model
     }
 
     /**
+     * The subscription feature has one usage
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function usage()
+    {
+        return $this->hasOne(config('subby.models.plan_subscription_usage'), 'plan_subscription_feature_id', 'id');
+    }
+
+    /**
      * Show features that are not inherited by subscription's plan relation
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder

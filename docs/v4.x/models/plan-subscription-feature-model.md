@@ -50,6 +50,7 @@ $user->subscription('main')->features()->create([
     'resettable_interval' => 'month'
 ]);
 ```
+
 Now user can also make use of the `pictures_per_social_profile` feature, and it will be reset monthly.
 
 ### Override existing feature values
@@ -110,4 +111,14 @@ If you manually attached features that were not included in related subscription
 ```php 
 // Retrieve features that are not tied in any form to a plan
 $user->subscription('main')->features()->withoutPlan()->get();
+```
+
+## Feature usage
+
+See also [subscription feature usage](models/plan-subscription-model.html#subscription-feature-usage).
+
+Plan subscription feature usage can also be retrieved via `usage()` relationship:
+
+```php
+$user->subscription('main')->getFeatureUsage('social_profiles')->usage;
 ```
