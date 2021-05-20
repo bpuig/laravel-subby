@@ -4,7 +4,11 @@ This model relates to which features has a Plan. This features will be attached 
 
 ## Create plan features
 
-Features are things that you plan allows you to do. They can be resettable or a fixed value.
+Features are things that your plan allows subscribers to do. The obligatory fields are: `tag`, `name`, and `value`. The
+value of the feature tells if or how many times the subscriber is allowed to use it. When setting a feature that should
+be active or not, use written strings 'true' or 'false', otherwise use an integer to tell how many times it can be used.
+If in the higher plan you want to give unlimited access to the "counted" feature, use 'true' as well. If you want the
+usage of features to be reset on a regular basis, provide optional `resettable_period` and `resettable_interval` fields.
 
 ```php
 use Bpuig\Subby\Models\Plan;
