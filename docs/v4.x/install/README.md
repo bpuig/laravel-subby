@@ -29,6 +29,38 @@ php artisan migrate
 Since usually projects work with only one subscription or one primary, you have to set the tag for it in the
 config `main_subscription_tag`. By default is `main`.
 
+## Translations
+
+The library does not have native translation support. If you need to display translated names/descriptions for the plans/features you can just create `subby.php` files in the `resources/lang/LANG/` folders like below and use Laravel's `trans('subby.features.analytics.description');` or `trans("subby.features.$featureTag.description");` if needed.
+
+```php
+<?php
+
+return [
+    'plans' => [
+        'basic' => [
+            'name'        => 'Basic Plan',
+            'description' => 'For small businesses',
+        ],
+        'middle' => [
+            'name'        => 'Mid Plan',
+            'description' => 'For medium businesses',
+        ],
+    ],
+
+    'features' => [
+        'social_profiles' => [
+            'name'        => 'Your number of social profiles',
+            'description' => 'Tells how many profiles you may use per month',
+        ],
+        'analytics' => [
+            'name'        => 'Analytics',
+            'description' => 'Access to the Analytics module',
+        ],
+    ],
+];
+```
+
 # Upgrade from v3.x to v4.x
 
 This package need to be upgraded version by version to apply database changes.
@@ -44,7 +76,7 @@ php artisan migrate
 
 Find breaking changes in [changelog](../CHANGELOG.md).
 
-## Attach Subscriptions to model
+# Attach Subscriptions to model
 
 **Laravel Subby** has been specially made for Eloquent. To add Subscription functionality to your User model just use
 the `\Bpuig\Subby\Traits\HasSubscriptions` trait like this:
