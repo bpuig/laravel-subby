@@ -4,7 +4,7 @@ This model relates to which features has a Plan. This features will be attached 
 
 ## Create plan features
 
-Features are things that you plan allows you to do. They can be resettable or a fixed value.
+Features are things that your plan allows subscribers to do. The obligatory fields are: `tag`, `name`, and `value`. The value of the feature tells if or how many times the subscriber is allowed to use it. When setting a feature that should be active or not, use written strings 'true' or 'false', otherwise use an integer to tell how many times it can be used. If you want the usage of features to be reset on a regular basis, provide optional `resettable_period` and `resettable_interval` fields.
 
 ```php
 use Bpuig\Subby\Models\Plan;
@@ -12,11 +12,36 @@ use Bpuig\Subby\Models\Plan;
 $plan = Plan::find(1);
 
 // Create multiple plan features at once
-$plan->features()->saveMany([
-    new PlanFeature(['tag' => 'social_profiles', 'name' => 'Social profiles available', 'value' => 3, 'sort_order' => 1]),
-    new PlanFeature(['tag' => 'posts_per_social_profile', 'name' => 'Scheduled posts per profile', 'value' => 30, 'sort_order' => 10, 'resettable_period' => 1, 'resettable_interval' => 'month']),
-    new PlanFeature(['tag' => 'analytics', 'name' => 'Analytics', 'value' => true, 'sort_order' => 15])
-]);
+$plan->features()->saveMany(
+    [
+        new PlanFeature(
+            [
+                'tag'        => 'social_profiles',
+                'name'       => 'Social profiles available',
+                'value'      => 3,
+                'sort_order' => 1,
+            ]
+        ),
+        new PlanFeature(
+            [
+                'tag'                 => 'posts_per_social_profile',
+                'name'                => 'Scheduled posts per profile',
+                'value'               => 30,
+                'sort_order'          => 10,
+                'resettable_period'   => 1,
+                'resettable_interval' => 'month',
+            ]
+        ),
+        new PlanFeature(
+            [
+                'tag'        => 'analytics',
+                'name'       => 'Analytics',
+                'value'      => 'true', // writen 'true' value
+                'sort_order' => 15,
+            ]
+        )
+    ]
+);
 ```
 
 ## Get Plan Feature value
