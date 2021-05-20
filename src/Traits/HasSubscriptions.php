@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Traits;
 
+use Bpuig\Subby\Exceptions\PlanSubscriptionTagAlreadyExists;
+use Bpuig\Subby\Exceptions\PlanSubscriptionNotFound;
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscription;
 use Bpuig\Subby\Services\Period;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use InvalidArgumentException;
 
 trait HasSubscriptions
 {
@@ -53,9 +56,21 @@ trait HasSubscriptions
      *
      * @return PlanSubscription|\Illuminate\Database\Eloquent\Model|MorphMany|null
      */
-    public function subscription(string $subscriptionTag)
+    public function subscription(?string $subscriptionTag = null)
     {
-        return $this->subscriptions()->where('tag', $subscriptionTag)->first();
+        $subscriptionTag = $subscriptionTag ?? config('subby.main_subscription_tag');
+
+        if (!$subscriptionTag) {
+            throw new InvalidArgumentException('Subscription tag not provided and default config is empty.');
+        }
+
+        $subscription = $this->subscriptions()->where('tag', $subscriptionTag)->first();
+
+        if (!$subscription) {
+            throw new PlanSubscriptionNotFound($subscriptionTag);
+        }
+
+        return $subscription;
     }
 
     /**
@@ -88,25 +103,43 @@ trait HasSubscriptions
      * Subscribe subscriber to a new plan.
      *
      * @param string $tag Identifier tag for the subscription
-     * @param \Bpuig\Subby\Models\Plan $plan
-     * @param string $name Human readable name for your subscriber's subscription
-     * @param \Carbon\Carbon|null $startDate
+     * @param \Bpuig\Subby\Models\Plan $plan Related plan
+     * @param string|null $name Human readable name for your subscriber's subscription
+     * @param string|null $description Description for the subscription
+     * @param \Carbon\Carbon|null $startDate When will the subscription start
      *
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function newSubscription(string $tag, Plan $plan, string $name, Carbon $startDate = null)
+    public function newSubscription(string $tag, Plan $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null)
     {
         $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
         $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());
 
-        return $this->subscriptions()->create([
-            'tag' => $tag,
-            'name' => $name,
-            'plan_id' => $plan->getKey(),
-            'trial_ends_at' => $trial->getEndDate(),
-            'starts_at' => $period->getStartDate(),
-            'ends_at' => $period->getEndDate(),
-        ]);
+        try {
+            $this->subscription($tag);
+        } catch (PlanSubscriptionNotFound $e) {
+            $subscription = $this->subscriptions()->create([
+                'tag' => $tag,
+                'name' => $name,
+                'description' => $description,
+                'plan_id' => $plan->id,
+                'price' => $plan->price,
+                'currency' => $plan->currency,
+                'tier' => $plan->tier,
+                'invoice_interval' => $plan->invoice_interval,
+                'invoice_period' => $plan->invoice_period,
+                'trial_ends_at' => $trial->getEndDate(),
+                'starts_at' => $period->getStartDate(),
+                'ends_at' => $period->getEndDate(),
+            ]);
+
+            $subscription->syncPlanFeatures($plan);
+
+            return $subscription;
+        }
+
+        throw new PlanSubscriptionTagAlreadyExists($tag);
     }
 }
+

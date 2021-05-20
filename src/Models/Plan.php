@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
+use Bpuig\Subby\Exceptions\PlanTagAlreadyExists;
+use Bpuig\Subby\Traits\HasFeatures;
+use Bpuig\Subby\Traits\HasPricing;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Plan extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFeatures, HasPricing;
 
     /**
      * {@inheritdoc}
@@ -31,12 +34,6 @@ class Plan extends Model
         'trial_interval',
         'invoice_period',
         'invoice_interval',
-        'grace_period',
-        'grace_interval',
-        'prorate_day',
-        'prorate_period',
-        'prorate_extend_due',
-        'active_subscribers_limit',
         'tier',
     ];
 
@@ -53,12 +50,6 @@ class Plan extends Model
         'trial_interval' => 'string',
         'invoice_period' => 'integer',
         'invoice_interval' => 'string',
-        'grace_period' => 'integer',
-        'grace_interval' => 'string',
-        'prorate_day' => 'integer',
-        'prorate_period' => 'integer',
-        'prorate_extend_due' => 'integer',
-        'active_subscribers_limit' => 'integer',
         'tier' => 'integer',
         'deleted_at' => 'datetime',
     ];
@@ -93,14 +84,28 @@ class Plan extends Model
             'trial_interval' => 'sometimes|in:hour,day,week,month',
             'invoice_period' => 'sometimes|integer|max:100000',
             'invoice_interval' => 'sometimes|in:hour,day,week,month',
-            'grace_period' => 'sometimes|integer|max:100000',
-            'grace_interval' => 'sometimes|in:hour,day,week,month',
-            'tier' => 'nullable|integer|max:100000',
-            'prorate_day' => 'nullable|integer|max:150',
-            'prorate_period' => 'nullable|integer|max:150',
-            'prorate_extend_due' => 'nullable|integer|max:150',
-            'active_subscribers_limit' => 'nullable|integer|max:100000',
+            'tier' => 'nullable|integer|max:100000'
         ];
+    }
+
+    public static function create(array $attributes = [])
+    {
+        if (static::where('tag', $attributes['tag'])->first()) {
+            throw new PlanTagAlreadyExists($attributes['tag']);
+        }
+
+        return static::query()->create($attributes);
+    }
+
+    /**
+     * Get plan by the given tag.
+     *
+     * @param string $tag
+     * @return null|$this
+     */
+    static public function getByTag(string $tag): ?Plan
+    {
+        return static::where('tag', $tag)->first();
     }
 
     /**
@@ -124,16 +129,6 @@ class Plan extends Model
     }
 
     /**
-     * Check if is free.
-     *
-     * @return bool
-     */
-    public function isFree(): bool
-    {
-        return (float)$this->price <= 0.00;
-    }
-
-    /**
      * Check if plan has trial.
      *
      * @return bool
@@ -141,28 +136,6 @@ class Plan extends Model
     public function hasTrial(): bool
     {
         return $this->trial_period && $this->trial_interval;
-    }
-
-    /**
-     * Check if plan has grace.
-     *
-     * @return bool
-     */
-    public function hasGrace(): bool
-    {
-        return $this->grace_period && $this->grace_interval;
-    }
-
-    /**
-     * Get plan feature by the given tag.
-     *
-     * @param string $featureTag
-     *
-     * @return PlanFeature|Model|HasMany|object|null
-     */
-    public function getFeatureByTag(string $featureTag)
-    {
-        return $this->features()->where('tag', $featureTag)->first();
     }
 
     /**

@@ -17,17 +17,12 @@ class CreatePlanSubscriptionUsageTable extends Migration
     {
         Schema::create(config('subby.tables.plan_subscription_usage'), function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('subscription_id')->unsigned();
-            $table->integer('feature_id')->unsigned();
+            $table->unsignedInteger('plan_subscription_feature_id')->unique();
             $table->integer('used')->unsigned();
-            $table->dateTime('valid_until')->nullable();
-            $table->string('timezone')->nullable();
+            $table->timestamp('valid_until')->nullable();
             $table->timestamps();
 
-            $table->unique(['subscription_id', 'feature_id']);
-            $table->foreign('subscription_id')->references('id')->on(config('subby.tables.plan_subscriptions'))
-                ->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('feature_id')->references('id')->on(config('subby.tables.plan_features'))
+            $table->foreign('plan_subscription_feature_id')->references('id')->on(config('subby.tables.plan_subscription_features'))
                 ->onDelete('cascade')->onUpdate('cascade');
         });
     }

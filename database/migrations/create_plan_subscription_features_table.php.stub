@@ -1,25 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlanFeaturesTable extends Migration
+class CreatePlanSubscriptionFeaturesTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create(config('subby.tables.plan_features'), function (Blueprint $table) {
-            // Columns
+        Schema::create(config('subby.tables.plan_subscription_features'), function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('plan_subscription_id');
+            $table->unsignedInteger('plan_feature_id')->nullable();
             $table->string('tag');
-            $table->unsignedInteger('plan_id');
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('value');
@@ -28,10 +26,13 @@ class CreatePlanFeaturesTable extends Migration
             $table->unsignedMediumInteger('sort_order')->default(0);
             $table->timestamps();
 
-            // Indexes
-            $table->unique(['tag', 'plan_id']);
-            $table->foreign('plan_id')->references('id')->on(config('subby.tables.plans'))
+            $table->unique(['plan_subscription_id', 'tag']);
+
+            $table->foreign('plan_subscription_id')->references('id')->on(config('subby.tables.plan_subscriptions'))
                 ->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('plan_feature_id')->references('id')->on(config('subby.tables.plan_features'))
+                ->onDelete('set null')->onUpdate('cascade');
         });
     }
 
@@ -40,8 +41,8 @@ class CreatePlanFeaturesTable extends Migration
      *
      * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists(config('subby.tables.plan_features'));
+        Schema::dropIfExists(config('subby.tables.plan_subscription_features'));
     }
 }

@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
-use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
-use Carbon\Carbon;
+use Bpuig\Subby\Traits\HasResetDate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\Rule;
 
 class PlanFeature extends Model
 {
-    use BelongsToPlan;
+    use BelongsToPlan, HasResetDate;
 
     /**
      * {@inheritdoc}
@@ -34,7 +33,6 @@ class PlanFeature extends Model
      */
     protected $casts = [
         'tag' => 'string',
-        'plan_id' => 'integer',
         'value' => 'string',
         'resettable_period' => 'integer',
         'resettable_interval' => 'string',
@@ -75,30 +73,5 @@ class PlanFeature extends Model
             'resettable_interval' => 'sometimes|in:hour,day,week,month',
             'sort_order' => 'nullable|integer|max:100000',
         ];
-    }
-
-    /**
-     * The plan feature may have many subscription usage.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function usage(): HasMany
-    {
-        return $this->hasMany(config('subby.models.plan_subscription_usage'), 'feature_id', 'id');
-    }
-
-    /**
-     * Get feature's reset date.
-     *
-     * @param string $dateFrom
-     *
-     * @return \Carbon\Carbon
-     * @throws \Exception
-     */
-    public function getResetDate(Carbon $dateFrom): Carbon
-    {
-        $period = new Period($this->resettable_interval, $this->resettable_period, $dateFrom ?? now());
-
-        return $period->getEndDate();
     }
 }

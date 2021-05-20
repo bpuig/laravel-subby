@@ -1,34 +1,32 @@
+<img src="https://repository-images.githubusercontent.com/312531331/83fd5e80-9ec8-11eb-9b6a-210d761a536e" alt="Social Card of Laravel Subby">
+
 # Laravel Subby
 
-**Laravel Subby** is a flexible plans and subscription management system for Laravel. Originally forked
-from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
+**Laravel Subby** is a flexible plans and subscription management system for Laravel. You can also schedule plan
+changes.
 
-## What it does
+Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
 
-The way this package is made, there are [plans](/models/plan-model.md) that
-have [features](/models/plan-feature-model.md), and then there is an entity receiving the trait of
-having [subscriptions](/models/plan-subscription-model.md). It can be an user, a team, whatever you want;
-see [Attach Subscriptions to model](/install/#attach-subscription). This entity can be subscribed to one or more plans
-and use its features.
+## Version Compatibility
 
-With the [scheduling extra](/extras/plan-subscription-schedule.md), you can schedule your plan changes in the future.
+Laravel  | Laravel Subby
+:---------|:----------
+8.x    | [v3.x](/v3.x/), [v4.x](/v4.x/)
+7.x    | [v4.x](/v4.x/)
+6.x    | [v4.x](/v4.x/)
 
-## Considerations
+## Changelog
 
-- Payments and translations are out of scope for this package.
-- You may want to extend some core models, in case you need to override the logic behind some helper methods
-  like `renew()`, `cancel()` etc. E.g.: when cancelling a subscription you may want to also cancel the recurring payment
-  attached.
+Refer to the [Changelog](https://bpuig.github.io/laravel-subby/CHANGELOG.html) for a full history of the project.
 
-## Changelog<a name="changelog"></a>
-
-Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
-
-## License<a name="license"></a>
+## License
 
 Forked originally from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions). Thank you for
 creating the original!
 
-This software is released under [The MIT License (MIT)](LICENSE.md).
+This software is released under [The MIT License (MIT)](LICENSE).
 
-&copy; 2020-2021 B. Puig, Some rights reserved.
+&copy; 2020 - 2021 B. Puig, Some rights reserved.
+
+
+

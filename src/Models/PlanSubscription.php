@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
+use BadMethodCallException;
 use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
+use Bpuig\Subby\Traits\HasFeatures;
+use Bpuig\Subby\Traits\HasPricing;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,7 +20,7 @@ use LogicException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan;
+    use BelongsToPlan, HasFeatures, HasPricing;
 
     /**
      * {@inheritdoc}
@@ -29,6 +32,11 @@ class PlanSubscription extends Model
         'plan_id',
         'name',
         'description',
+        'price',
+        'currency',
+        'invoice_period',
+        'invoice_interval',
+        'tier',
         'trial_ends_at',
         'starts_at',
         'ends_at',
@@ -41,9 +49,12 @@ class PlanSubscription extends Model
      */
     protected $casts = [
         'tag' => 'string',
-        'subscriber_id' => 'integer',
         'subscriber_type' => 'string',
-        'plan_id' => 'integer',
+        'price' => 'float',
+        'currency' => 'string',
+        'invoice_period' => 'integer',
+        'invoice_interval' => 'string',
+        'tier' => 'integer',
         'trial_ends_at' => 'datetime',
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
@@ -79,11 +90,16 @@ class PlanSubscription extends Model
                         ->where('subscriber_id', $this->subscriber_id);
                 }),
             ],
-            'name' => 'required|string|max:150',
-            'description' => 'nullable|string|max:32768',
-            'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
             'subscriber_id' => 'required|integer',
             'subscriber_type' => 'required|string|max:150',
+            'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
+            'name' => 'required|string|max:150',
+            'description' => 'nullable|string|max:32768',
+            'price' => 'required|numeric',
+            'currency' => 'required|alpha|size:3',
+            'invoice_period' => 'sometimes|integer|max:100000',
+            'invoice_interval' => 'sometimes|in:hour,day,week,month',
+            'tier' => 'nullable|integer|max:100000',
             'trial_ends_at' => 'nullable|date',
             'starts_at' => 'required|date',
             'ends_at' => 'required|date',
@@ -117,13 +133,29 @@ class PlanSubscription extends Model
     }
 
     /**
-     * The subscription may have many usage.
-     *
+     * Get subscription features
      * @return HasMany
      */
-    public function usage(): hasMany
+    public function features(): HasMany
     {
-        return $this->hasMany(config('subby.models.plan_subscription_usage'), 'subscription_id', 'id');
+        return $this->hasMany(config('subby.models.plan_subscription_feature'), 'plan_subscription_id', 'id');
+    }
+
+    /**
+     * The subscription may have many usage.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function usage(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    {
+        return $this->hasManyThrough(
+            config('subby.models.plan_subscription_usage'),
+            config('subby.models.plan_subscription_feature'),
+            'plan_subscription_id',
+            'plan_subscription_feature_id',
+            'id',
+            'id'
+        );
     }
 
     /**
@@ -177,13 +209,25 @@ class PlanSubscription extends Model
     }
 
     /**
+     * Check if subscription features have been altered
+     * @return bool
+     */
+    public function isAltered(): bool
+    {
+        $planFeatures = collect($this->plan->features()->select('tag', 'value', 'resettable_period', 'resettable_interval')->get());
+        $currentFeatures = collect($this->features()->select('tag', 'value', 'resettable_period', 'resettable_interval')->get());
+
+        return $currentFeatures->diff($planFeatures)->count() > 0;
+    }
+
+    /**
      * Cancel subscription.
      *
      * @param bool $immediately
      *
      * @return $this
      */
-    public function cancel($immediately = false)
+    public function cancel(bool $immediately = false): PlanSubscription
     {
         $this->canceled_at = Carbon::now();
 
@@ -208,7 +252,7 @@ class PlanSubscription extends Model
      *
      * @return $this
      */
-    public function uncancel()
+    public function uncancel(): PlanSubscription
     {
         $this->canceled_at = null;
         $this->cancels_at = null;
@@ -223,31 +267,129 @@ class PlanSubscription extends Model
      *
      * @param \Bpuig\Subby\Models\Plan $plan
      * @param bool $clearUsage Clear subscription usage
-     *
+     * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
      * @return $this
+     * @throws \Exception
      */
-    public function changePlan(Plan $plan, bool $clearUsage = true)
+    public function changePlan(Plan $plan, bool $clearUsage = true, bool $syncInvoicing = true): PlanSubscription
     {
-        // If plans does not have the same billing frequency
-        // (e.g., invoice_interval and invoice_period) we will update
-        // the billing dates starting today, and since we are basically creating
-        // a new billing cycle, the usage data will be cleared.
-        if ($this->plan->invoice_interval !== $plan->invoice_interval || $this->plan->invoice_period !== $plan->invoice_period) {
-            $this->setNewPeriod($plan->invoice_interval, $plan->invoice_period);
-            // Sometimes you want to keep usage
-            // E.g. of false: Renew plan at day 6 of subscription,
-            // and if you consumed 2 resources, you keep having 2 consumed of
-            // the new limit
-            if ($clearUsage) {
-                $this->usage()->delete();
-            }
+        // Sometimes you want to keep usage
+        // E.g. of false: Renew plan at day 6 of subscription,
+        // and if you consumed 2 resources, you keep having 2 consumed of
+        // the new limit
+        if ($clearUsage) {
+            $this->usage()->delete();
         }
 
-        // Attach new plan to subscription
-        $this->plan_id = $plan->getKey();
-        $this->save();
+        // Synchronize subscription data with plan
+        $this->syncPlan($plan, $syncInvoicing, true);
 
         return $this;
+    }
+
+    /**
+     * Synchronize subscription data with plan
+     * @param Plan|null $plan Plan to be synchronized
+     * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
+     * @param bool $syncFeatures
+     * @return PlanSubscription
+     * @throws \Exception
+     */
+    public function syncPlan(Plan $plan = null, bool $syncInvoicing = true, bool $syncFeatures = false): PlanSubscription
+    {
+        if (!$plan && !$this->plan) {
+            throw new BadMethodCallException('Default plan not set.');
+        } elseif (!$plan) {
+            $plan = $this->plan;
+        }
+
+        $this->plan_id = $plan->id;
+        $this->price = $plan->price;
+        $this->currency = $plan->currency;
+        $this->tier = $plan->tier;
+
+        if ($syncInvoicing) {
+            // Set new start and end date
+            $this->setNewPeriod($plan->invoice_interval, $plan->invoice_period);
+
+            // Set same invoicing as selected plan
+            $this->invoice_interval = $plan->invoice_interval;
+            $this->invoice_period = $plan->invoice_period;
+        }
+
+        $this->save();
+
+        if ($syncFeatures) {
+            $this->syncPlanFeatures($plan);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Synchronize features with current plan
+     * @param Plan|null $plan
+     */
+    public function syncPlanFeatures(Plan $plan = null): PlanSubscription
+    {
+        if (!$plan && !$this->plan) {
+            throw new BadMethodCallException('Default plan not set.');
+        } elseif (!$plan) {
+            $plan = $this->plan;
+        }
+
+        DB::transaction(function () use ($plan) {
+            $this->deleteFeaturesNotInPlan($plan);
+            $this->updatePlanFeatures($plan);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Remove features that have plan related but are no longer in selected plan
+     * @param Plan $plan Plan to be compared
+     */
+    private function deleteFeaturesNotInPlan(Plan $plan)
+    {
+        // Retrieve current features that are not related to a plan
+        $featuresWithPlan = $this->features()->withoutPlan()->get();
+
+        // Retrieve selected plan features
+        $planFeatures = $plan->features();
+
+        // Use tags to find which features are no longer in selected plan
+        $featuresWithPlanTags = $featuresWithPlan->pluck('tag');
+        $planFeatureTags = $planFeatures->pluck('tag');
+
+        $featuresWithoutPlan = $featuresWithPlanTags->diff($planFeatureTags);
+
+        // Delete not found features
+        $this->features()->whereIn('tag', $featuresWithoutPlan->all())->delete();
+    }
+
+    /**
+     * Update subscription features to have same features as selected plan
+     * @param Plan $plan Plan to be compared
+     */
+    private function updatePlanFeatures(Plan $plan)
+    {
+        // Update selected plan features
+        // if they do not exist, will be created
+        // if they exist but are update to another feature_id or detached from feature, will be attached to plan feature
+        foreach ($plan->features as $planFeature) {
+            $this->features()->updateOrCreate(
+                ['tag' => $planFeature->tag],
+                [
+                    'plan_feature_id' => $planFeature->id,
+                    'name' => $planFeature->name,
+                    'description' => $planFeature->description,
+                    'value' => $planFeature->value,
+                    'resettable_period' => $planFeature->resettable_period,
+                    'resettable_interval' => $planFeature->resettable_interval,
+                    'sort_order' => $planFeature->sort_order,
+                ]);
+        }
     }
 
     /**
@@ -257,7 +399,7 @@ class PlanSubscription extends Model
      * @throws \LogicException
      *
      */
-    public function renew()
+    public function renew(): PlanSubscription
     {
         if ($this->isCanceled()) {
             throw new LogicException('Unable to renew canceled subscription.');
@@ -354,15 +496,16 @@ class PlanSubscription extends Model
      * @param string $start
      *
      * @return $this
+     * @throws \Exception
      */
-    protected function setNewPeriod($invoice_interval = '', $invoice_period = '', $start = '')
+    protected function setNewPeriod($invoice_interval = '', $invoice_period = '', $start = ''): PlanSubscription
     {
         if (empty($invoice_interval)) {
-            $invoice_interval = $this->plan->invoice_interval;
+            $invoice_interval = $this->invoice_interval;
         }
 
         if (empty($invoice_period)) {
-            $invoice_period = $this->plan->invoice_period;
+            $invoice_period = $this->invoice_period;
         }
 
         $period = new Period($invoice_interval, $invoice_period, $start);
@@ -382,18 +525,15 @@ class PlanSubscription extends Model
      * @param bool $incremental
      * @return PlanSubscriptionUsage|Model
      */
-    public function recordFeatureUsage(
-        string $featureTag,
-        int $uses = 1,
-        bool $incremental = true
-    )
+    public function recordFeatureUsage(string $featureTag, int $uses = 1, bool $incremental = true)
     {
-        $feature = $this->plan->features()->where('tag', $featureTag)->first();
+        $feature = $this->getFeatureByTag($featureTag);
+
 
         $usage = $this->usage()->firstOrNew([
-            'subscription_id' => $this->getKey(),
-            'feature_id' => $feature->getKey(),
+            'plan_subscription_feature_id' => $feature->getKey()
         ]);
+
 
         if ($feature->resettable_period) {
             // Set expiration date when the usage record is new or doesn't have one.
@@ -514,8 +654,53 @@ class PlanSubscription extends Model
      */
     public function getFeatureValue(string $featureTag)
     {
-        $feature = $this->plan->features()->where('tag', $featureTag)->first();
+        $feature = $this->features()->where('tag', $featureTag)->first();
 
         return $feature->value ?? null;
+    }
+
+    /**
+     * Get subscription duration in days
+     * @return int
+     */
+    public function getTotalDurationInDays(): int
+    {
+        return Carbon::make($this->starts_at)->diffInDays($this->ends_at);
+    }
+
+    /**
+     * Days until subscription renews
+     * @return int
+     */
+    public function getDaysUntilEnds(): int
+    {
+        return Carbon::now()->diffInDays($this->ends_at);
+    }
+
+    /**
+     * Days until subscription trial ends
+     * @return int
+     */
+    public function getDaysUntilTrialEnds(): int
+    {
+        return Carbon::now()->diffInDays($this->trial_ends_at);
+    }
+
+    /**
+     * Get the proportion of the remaining billing period
+     * @return float
+     */
+    public function getRemainingPeriodProportion(): float
+    {
+        return round($this->getDaysUntilEnds() / $this->getTotalDurationInDays(), 4);
+    }
+
+    /**
+     * Get prorated price of subscription value
+     * @return float
+     */
+    public function getRemainingPriceProrate(): float
+    {
+        return round($this->price * $this->getRemainingPeriodProportion(), 2);
     }
 }

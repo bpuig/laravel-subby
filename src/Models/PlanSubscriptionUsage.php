@@ -16,8 +16,7 @@ class PlanSubscriptionUsage extends Model
      * {@inheritdoc}
      */
     protected $fillable = [
-        'subscription_id',
-        'feature_id',
+        'plan_subscription_feature_id',
         'used',
         'valid_until',
     ];
@@ -26,8 +25,6 @@ class PlanSubscriptionUsage extends Model
      * {@inheritdoc}
      */
     protected $casts = [
-        'subscription_id' => 'integer',
-        'feature_id' => 'integer',
         'used' => 'integer',
         'valid_until' => 'datetime',
     ];
@@ -51,36 +48,20 @@ class PlanSubscriptionUsage extends Model
     public function getRules(): array
     {
         return [
-            'subscription_id' => 'required|integer|exists:' . config('subby.tables.plan_subscriptions') . ',id',
-            'feature_id' => 'required|integer|exists:' . config('subby.tables.plan_features') . ',id',
+            'plan_subscription_feature_id' => 'required|integer|exists:' . config('subby.tables.plan_features') . ',id',
             'used' => 'required|integer',
             'valid_until' => 'nullable|date',
         ];
     }
 
     /**
-     * Subscription usage always belongs to a plan feature.
+     * Subscription usage always belongs to a plan subscription feature.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function feature(): BelongsTo
     {
-        return $this->belongsTo(config('subby.models.plan_feature'), 'feature_id', 'id', 'feature');
-    }
-
-    /**
-     * Subscription usage always belongs to a plan subscription.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function subscription(): BelongsTo
-    {
-        return $this->belongsTo(
-            config('subby.models.plan_subscription'),
-            'subscription_id',
-            'id',
-            'subscription'
-        );
+        return $this->belongsTo(config('subby.models.plan_subscription_feature'), 'plan_subscription_feature_id', 'id', 'feature');
     }
 
     /**
@@ -93,9 +74,9 @@ class PlanSubscriptionUsage extends Model
      */
     public function scopeByFeatureTag(Builder $builder, string $featureTag): Builder
     {
-        $feature = PlanFeature::where('tag', $featureTag)->first();
-
-        return $builder->where('feature_id', $feature->getKey() ?? null);
+        return $builder->whereHas('feature', function (Builder $query) use ($featureTag) {
+            $query->where('tag', $featureTag);
+        });
     }
 
     /**

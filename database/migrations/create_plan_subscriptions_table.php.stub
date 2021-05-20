@@ -19,21 +19,25 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->increments('id');
             $table->string('tag');
             $table->morphs('subscriber');
-            $table->integer('plan_id')->unsigned();
-            $table->string('name');
+            $table->unsignedInteger('plan_id')->nullable();
+            $table->string('name')->nullable();
             $table->string('description')->nullable();
-            $table->dateTime('trial_ends_at')->nullable();
-            $table->dateTime('starts_at')->nullable();
-            $table->dateTime('ends_at')->nullable();
-            $table->dateTime('cancels_at')->nullable();
-            $table->dateTime('canceled_at')->nullable();
-            $table->string('timezone')->nullable();
+            $table->decimal('price')->default('0.00');
+            $table->string('currency', 3);
+            $table->unsignedSmallInteger('invoice_period')->default(1);
+            $table->string('invoice_interval')->default('month');
+            $table->unsignedMediumInteger('tier')->default(0);
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->timestamp('starts_at')->nullable();
+            $table->timestamp('ends_at')->nullable();
+            $table->timestamp('cancels_at')->nullable();
+            $table->timestamp('canceled_at')->nullable();
             $table->timestamps();
 
             // Indexes
             $table->unique(['tag', 'subscriber_id', 'subscriber_type'], 'unique_plan_subscription');
             $table->foreign('plan_id')->references('id')->on(config('subby.tables.plans'))
-                ->onDelete('cascade')->onUpdate('cascade');
+                ->onDelete('set null')->onUpdate('cascade');
         });
     }
 
