@@ -588,8 +588,8 @@ class PlanSubscription extends Model
      */
     public function canUseFeature(string $featureTag): bool
     {
-        // If subscription has ended, cannot use
-        if ($this->hasEnded()) {
+        // If subscription is not active (on trial or on period before end date), cannot use
+        if (!$this->isActive()) {
             return false;
         }
 
