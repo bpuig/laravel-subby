@@ -122,3 +122,7 @@ Plan subscription feature usage can also be retrieved via `usage()` relationship
 ```php
 $user->subscription('main')->getFeatureUsage('social_profiles')->usage;
 ```
+To get all the subscription features along with their usage:
+```php
+$user->subscription('main')->features()->with('usage')->get();
+```
