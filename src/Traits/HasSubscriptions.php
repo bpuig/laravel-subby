@@ -58,14 +58,12 @@ trait HasSubscriptions
      */
     public function subscription(?string $subscriptionTag = null)
     {
-        $subscriptionTag = $subscriptionTag ?? config('subby.main_subscription_tag');
-
-        if (!$subscriptionTag) {
-            throw new InvalidArgumentException('Subscription tag not provided and default config is empty.');
-        }
-
-        $subscription = $this->subscriptions()->where('tag', $subscriptionTag)->first();
-
+        $subscription = $this->subscriptions()
+            ->when($subscriptionTag !== null, function ($q) use ($subscriptionTag) {
+                return $q->where('tag', $subscriptionTag);
+            })
+            ->first();
+        
         if (!$subscription) {
             throw new PlanSubscriptionNotFound($subscriptionTag);
         }
