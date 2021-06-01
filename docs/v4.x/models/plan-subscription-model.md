@@ -300,4 +300,7 @@ $subscriptions = PlanSubscription::findEndingPeriod(3)->get();
 
 // Get subscriptions with ended period
 $subscriptions = PlanSubscription::findEndedPeriod()->get();
+
+// Get subscriptions with period ending in 3 days filtered by the subscription tag
+$subscriptions = PlanSubscription::getByTag('company')->findEndingPeriod(3)->get();
 ```
