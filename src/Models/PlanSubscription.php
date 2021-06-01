@@ -411,6 +411,11 @@ class PlanSubscription extends Model
             // Clear usage data
             $subscription->usage()->delete();
 
+            // End trial
+            if ($subscription->isOnTrial()) {
+                $subscription->trial_ends_at = Carbon::now();
+            }
+
             // Renew period
             $subscription->setNewPeriod();
             $subscription->save();
