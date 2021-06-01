@@ -252,7 +252,9 @@ new `ends_at` date based on the selected plan and _will clear the usage data_ of
 $user->subscription('main')->renew();
 ```
 
-_Canceled subscriptions with an ended period can't be renewed._
+Canceled subscriptions with an ended period can't be renewed.
+
+Renewing a subscription with trial period ends it.
 
 ## Cancel a Subscription
 
