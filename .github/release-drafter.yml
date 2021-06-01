@@ -3,15 +3,10 @@ tag-template: 'v$RESOLVED_VERSION'
 categories:
     -   title: 'Features'
         labels:
-            - 'feature'
             - 'enhancement'
     -   title: 'Bug Fixes'
         labels:
-            - 'fix'
-            - 'bugfix'
             - 'bug'
-    -   title: 'Maintenance'
-        label: 'chore'
     -   title: 'Documentation'
         label: 'documentation'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
