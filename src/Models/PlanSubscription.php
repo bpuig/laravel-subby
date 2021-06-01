@@ -494,6 +494,19 @@ class PlanSubscription extends Model
     }
 
     /**
+     * Scope subscriptions by tag.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param string $tag
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeGetByTag(Builder $builder, string $tag): Builder
+    {
+        return $builder->where('tag', $tag);
+    }
+    
+    /**
      * Set new subscription period.
      *
      * @param string $invoice_interval
