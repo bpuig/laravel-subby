@@ -2,8 +2,29 @@
 
 All notable changes to `laravel-subby` will be documented in this file.
 
-## 4.0.0
+## 4.0.2
 
+## Changes
+
+- Subscription tag scope @boryn (#69)
+
+## Bug Fixes
+
+- End trial when subscription is renewed. @bpuig (#68)
+
+## 4.0.1
+
+## Changes
+
+## Bug Fixes
+
+- canUseFeature also on trial @bpuig (#65)
+
+## Documentation
+
+- updated plan-subscription-feature-model.md @boryn (#64)
+
+## 4.0.0
 ### Plans
 
 #### Breaking Changes
