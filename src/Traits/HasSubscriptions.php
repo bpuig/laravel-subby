@@ -58,6 +58,16 @@ trait HasSubscriptions
      */
     public function subscription(?string $subscriptionTag = null)
     {
+        if ($subscriptionTag === null) {
+            $count = $this->subscriptions()->count();
+
+            if ($count === 1) {
+                return $this->subscriptions()->first();
+            } elseif ($count === 0) {
+                throw new PlanSubscriptionNotFound($subscriptionTag);
+            }
+        }
+
         $subscriptionTag = $subscriptionTag ?? config('subby.main_subscription_tag');
 
         if (!$subscriptionTag) {

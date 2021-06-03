@@ -99,12 +99,13 @@ $user->subscriptions;
 $user->activeSubscriptions;
 ```
 
-## Subscriber's main subscription
+## Subscriber's main or only subscription
 
 Since usually projects work with only one subscription or one primary, you have to set the tag for it in the
 config `main_subscription_tag`.
 
-By default is `main`.
+If your user only has one subscription, `subscription()` will return the only one the subscriber has. If has more, it
+will fall to default. Default is `main`.
 
 ```php
 // config/subby.php
@@ -117,11 +118,8 @@ return [
 Then:
 
 ```php
-// This:
+// This retrieves user's only one subscription or 'main' from config:
 $user->subscription();
-
-// Equals
-$user->subscription('main'); // Or $user->subscription(config('subby.main_subscription_tag'));
 ```
 
 ## Subscription Feature Usage
