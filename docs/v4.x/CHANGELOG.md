@@ -24,6 +24,7 @@ All notable changes to `laravel-subby` will be documented in this file.
 
 - updated plan-subscription-feature-model.md @boryn (#64)
 
+## 4.0.0
 ### Plans
 
 #### Breaking Changes
