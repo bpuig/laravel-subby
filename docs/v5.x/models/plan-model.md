@@ -3,6 +3,8 @@
 This is the main model of the package, there is nothing without plans. After creating a plan, you
 can [attach it to a subscription](plan-subscription-model.md#create-a-subscription).
 
+[[toc]]
+
 ## Create a Plan
 
 ```php
@@ -17,6 +19,7 @@ $plan = Plan::create([
     'invoice_period' => 1,
     'invoice_interval' => 'month',
     'trial_period' => 15,
+    'trial_mode' => 'prepend',
     'trial_interval' => 'day',
     'tier' => 1,
     'currency' => 'EUR',
@@ -54,6 +57,28 @@ or `$plan->getFeatureByTag('social_profiles')`.
 Also read:
 
 - [Get Plan Feature value](plan-feature-model.md#get-plan-feature-value)
+
+## Trial mode
+
+Plans allow 3 trial modes, those are `prepend`, `in_period` and `detach`.
+
+### Prepend
+
+With `prepend` mode, trial period will be placed **before** starting subscription.
+
+*Example:* 7 days trial + 30 day subscription. 7 days of trial will be placed before 30 day subscription starts.
+
+### In period
+
+With `in_period` mode, trial period will elapse **during** subscriptions period.
+
+*Example:* 7 days trial + 30 day subscription. 7 days of trial will be placed inside the 30 day subscription.
+
+### Detach
+
+With `detach` mode, trial period will end and no subscription will be made.
+
+*Example:* 7 days trial + 30 day subscription. 7 days of trial. Then subscription should be renewed to start.
 
 ## Tiers
 

@@ -44,7 +44,6 @@ class Period
      * @param string $start
      *
      * @return void
-     * @throws \Exception
      */
     public function __construct($interval = 'month', $count = 1, $start = '')
     {
