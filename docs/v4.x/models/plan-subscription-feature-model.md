@@ -117,10 +117,10 @@ $user->subscription('main')->features()->withoutPlan()->get();
 
 See also [subscription feature usage](models/plan-subscription-model.html#subscription-feature-usage).
 
-Plan subscription feature usage can also be retrieved via `usage()` relationship:
+Plan subscription feature usage object can be retrieved via `usage()` relationship:
 
 ```php
-$user->subscription('main')->getFeatureUsage('social_profiles')->usage;
+$user->subscription('main')->getFeatureByTag('social_profiles')->usage;
 ```
 To get all the subscription features along with their usage:
 ```php
