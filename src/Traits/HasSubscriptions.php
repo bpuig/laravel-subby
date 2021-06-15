@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Traits;
 
-use Bpuig\Subby\Exceptions\PlanSubscriptionTagAlreadyExists;
 use Bpuig\Subby\Exceptions\PlanSubscriptionNotFound;
+use Bpuig\Subby\Exceptions\PlanSubscriptionTagAlreadyExists;
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscription;
-use Bpuig\Subby\Services\Period;
+use Bpuig\Subby\Services\SubscriptionPeriod;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -124,9 +124,8 @@ trait HasSubscriptions
     public function newSubscription(?string $tag, Plan $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null)
     {
         $tag = $tag ?? config('subby.main_subscription_tag');
-        
-        $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
-        $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());
+
+        $subscriptionPeriod = new SubscriptionPeriod($plan, $startDate ?? now());
 
         try {
             $this->subscription($tag);
@@ -141,9 +140,9 @@ trait HasSubscriptions
                 'tier' => $plan->tier,
                 'invoice_interval' => $plan->invoice_interval,
                 'invoice_period' => $plan->invoice_period,
-                'trial_ends_at' => $trial->getEndDate(),
-                'starts_at' => $period->getStartDate(),
-                'ends_at' => $period->getEndDate(),
+                'trial_ends_at' => $subscriptionPeriod->getTrialEndDate(),
+                'starts_at' => $subscriptionPeriod->getStartDate(),
+                'ends_at' => $subscriptionPeriod->getEndDate(),
             ]);
 
             $subscription->syncPlanFeatures($plan);
