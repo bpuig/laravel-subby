@@ -195,6 +195,7 @@ Alternatively you can use the following methods available in the subscription mo
 $user->subscription('main')->isActive();
 $user->subscription('main')->isCanceled();
 $user->subscription('main')->hasEnded();
+$user->subscription('main')->hasEndedTrial();
 $user->subscription('main')->isOnTrial();
 
 // To know if subscription has the same values as related plan or has been changed

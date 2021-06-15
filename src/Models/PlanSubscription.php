@@ -109,20 +109,6 @@ class PlanSubscription extends Model
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function (self $model) {
-            if (!$model->starts_at || !$model->ends_at) {
-                $model->setNewPeriod();
-            }
-        });
-    }
-
-    /**
      * Get the owning subscriber.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -205,7 +191,21 @@ class PlanSubscription extends Model
      */
     public function hasEnded(): bool
     {
-        return $this->ends_at ? Carbon::now()->gte($this->ends_at) : false;
+        if ($this->hasEndedTrial()) {
+            return !$this->ends_at || Carbon::now()->gte($this->ends_at);
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if subscription trial has ended.
+     *
+     * @return bool
+     */
+    public function hasEndedTrial(): bool
+    {
+        return !$this->trial_ends_at || Carbon::now()->gte($this->trial_ends_at);
     }
 
     /**
@@ -505,7 +505,7 @@ class PlanSubscription extends Model
     {
         return $builder->where('tag', $tag);
     }
-    
+
     /**
      * Set new subscription period.
      *
