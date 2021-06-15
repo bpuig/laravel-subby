@@ -405,13 +405,23 @@ class PlanSubscription extends Model
             // Clear usage data
             $subscription->usage()->delete();
 
+            // Renew period
+            if ($subscription->plan->trial_mode === 'inside') {
+                // If trial time is considered time of subscription
+                // we renew subscription and set the start date the date
+                // when trial started
+                $startDate = Carbon::make($subscription->trial_ends_at)
+                    ->sub($subscription->plan->trial_interval, $subscription->plan->trial_period);
+            } else {
+                $startDate = Carbon::now();
+            }
+
             // End trial
             if ($subscription->isOnTrial()) {
                 $subscription->trial_ends_at = Carbon::now();
             }
 
-            // Renew period
-            $subscription->setNewPeriod();
+            $subscription->setNewPeriod(null, null, $startDate);
             $subscription->save();
         });
 
@@ -503,20 +513,20 @@ class PlanSubscription extends Model
     /**
      * Set new subscription period.
      *
-     * @param string $invoice_interval
-     * @param string $invoice_period
-     * @param string $start
+     * @param string|null $invoice_interval
+     * @param int|null $invoice_period
+     * @param Carbon|null $start
      *
      * @return $this
      * @throws \Exception
      */
-    protected function setNewPeriod($invoice_interval = '', $invoice_period = '', $start = ''): PlanSubscription
+    protected function setNewPeriod(?string $invoice_interval = null, ?int $invoice_period = null, ?Carbon $start = null): PlanSubscription
     {
-        if (empty($invoice_interval)) {
+        if (!$invoice_interval) {
             $invoice_interval = $this->invoice_interval;
         }
 
-        if (empty($invoice_period)) {
+        if (!$invoice_period) {
             $invoice_period = $this->invoice_period;
         }
 
