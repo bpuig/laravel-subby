@@ -172,7 +172,7 @@ class PlanSubscription extends Model
      */
     public function isOnTrial(): bool
     {
-        return $this->trial_ends_at ? Carbon::now()->lt($this->trial_ends_at) : false;
+        return $this->trial_ends_at && Carbon::now()->lt($this->trial_ends_at);
     }
 
     /**
@@ -192,21 +192,11 @@ class PlanSubscription extends Model
      */
     public function hasEnded(): bool
     {
-        if ($this->hasEndedTrial()) {
+        if (!$this->isOnTrial()) {
             return !$this->ends_at || Carbon::now()->gte($this->ends_at);
         }
 
         return false;
-    }
-
-    /**
-     * Check if subscription trial has ended.
-     *
-     * @return bool
-     */
-    public function hasEndedTrial(): bool
-    {
-        return !$this->trial_ends_at || Carbon::now()->gte($this->trial_ends_at);
     }
 
     /**
@@ -234,11 +224,15 @@ class PlanSubscription extends Model
 
         // If cancel is immediate, set end date
         if ($immediately) {
+            // Cancel trial
+            if ($this->isOnTrial()) $this->trial_ends_at = $this->canceled_at;
+
+            // Cancel subscription
             $this->cancels_at = $this->canceled_at;
             $this->ends_at = $this->canceled_at;
         } else {
-            // If cancel is not immediate, it will be cancelled at period end
-            $this->cancels_at = $this->ends_at;
+            // If cancel is not immediate, it will be cancelled at trial or period end
+            $this->cancels_at = ($this->isOnTrial()) ? $this->trial_ends_at : $this->ends_at;
         }
 
         $this->save();
