@@ -35,7 +35,6 @@ class PlanSubscriptionTrialTest extends TestCase
 
         // Subscription is not on trial and trial has ended because it never had one
         $this->assertFalse($user->subscription('main')->isOnTrial());
-        $this->assertTrue($user->subscription('main')->hasEndedTrial());
 
         // Subscription is active, since when it does not have trial a subscription is directly made
         $this->assertTrue($user->subscription('main')->isActive());
@@ -72,7 +71,6 @@ class PlanSubscriptionTrialTest extends TestCase
         // Subscription is on trial and trial, hence it has not ended and its active
         $this->assertTrue($user->subscription('main')->isOnTrial());
         $this->assertTrue($user->subscription('main')->isActive());
-        $this->assertFalse($user->subscription('main')->hasEndedTrial());
         $this->assertFalse($user->subscription('main')->hasEnded());
 
         // Go to trial end
@@ -80,7 +78,6 @@ class PlanSubscriptionTrialTest extends TestCase
 
         // Subscription is no more on trial
         $this->assertFalse($user->subscription('main')->isOnTrial());
-        $this->assertTrue($user->subscription('main')->hasEndedTrial());
 
         // And since we did not renew, subscription is no longer active
         $this->assertFalse($user->subscription('main')->isActive());
