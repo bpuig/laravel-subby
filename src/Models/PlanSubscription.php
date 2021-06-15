@@ -172,7 +172,7 @@ class PlanSubscription extends Model
      */
     public function isOnTrial(): bool
     {
-        return $this->trial_ends_at && Carbon::now()->lt($this->trial_ends_at);
+        return $this->trial_ends_at ? Carbon::now()->lt($this->trial_ends_at) : false;
     }
 
     /**
@@ -192,11 +192,21 @@ class PlanSubscription extends Model
      */
     public function hasEnded(): bool
     {
-        if (!$this->isOnTrial()) {
+        if ($this->hasEndedTrial()) {
             return !$this->ends_at || Carbon::now()->gte($this->ends_at);
         }
 
         return false;
+    }
+
+    /**
+     * Check if subscription trial has ended.
+     *
+     * @return bool
+     */
+    public function hasEndedTrial(): bool
+    {
+        return !$this->trial_ends_at || Carbon::now()->gte($this->trial_ends_at);
     }
 
     /**
@@ -224,15 +234,11 @@ class PlanSubscription extends Model
 
         // If cancel is immediate, set end date
         if ($immediately) {
-            // Cancel trial
-            if ($this->isOnTrial()) $this->trial_ends_at = $this->canceled_at;
-
-            // Cancel subscription
             $this->cancels_at = $this->canceled_at;
             $this->ends_at = $this->canceled_at;
         } else {
-            // If cancel is not immediate, it will be cancelled at trial or period end
-            $this->cancels_at = ($this->isOnTrial()) ? $this->trial_ends_at : $this->ends_at;
+            // If cancel is not immediate, it will be cancelled at period end
+            $this->cancels_at = $this->ends_at;
         }
 
         $this->save();
@@ -403,25 +409,16 @@ class PlanSubscription extends Model
         $subscription = $this;
 
         DB::transaction(function () use ($subscription) {
-            // Clear usage data only if has been subscribed sometime (to avoid clear trial usage)
-            if ($subscription->starts_at) {
-                $subscription->usage()->delete();
-            }
-
-            // Renew period
-            $startDate = Carbon::now();
-            if (!$subscription->starts_at && $subscription->plan->trial_mode === 'inside') {
-                // If trial time is considered time of subscription
-                // we renew subscription and substract from period used days
-                $startDate->subDays($subscription->getDaysUntilTrialEnds());
-            }
+            // Clear usage data
+            $subscription->usage()->delete();
 
             // End trial
             if ($subscription->isOnTrial()) {
                 $subscription->trial_ends_at = Carbon::now();
             }
 
-            $subscription->setNewPeriod(null, null, $startDate);
+            // Renew period
+            $subscription->setNewPeriod();
             $subscription->save();
         });
 
@@ -513,20 +510,20 @@ class PlanSubscription extends Model
     /**
      * Set new subscription period.
      *
-     * @param string|null $invoice_interval
-     * @param int|null $invoice_period
-     * @param Carbon|null $start
+     * @param string $invoice_interval
+     * @param string $invoice_period
+     * @param string $start
      *
      * @return $this
      * @throws \Exception
      */
-    protected function setNewPeriod(?string $invoice_interval = null, ?int $invoice_period = null, ?Carbon $start = null): PlanSubscription
+    protected function setNewPeriod($invoice_interval = '', $invoice_period = '', $start = ''): PlanSubscription
     {
-        if (!$invoice_interval) {
+        if (empty($invoice_interval)) {
             $invoice_interval = $this->invoice_interval;
         }
 
-        if (!$invoice_period) {
+        if (empty($invoice_period)) {
             $invoice_period = $this->invoice_period;
         }
 
