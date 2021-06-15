@@ -629,8 +629,6 @@ class PlanSubscription extends Model
             // If feature usage does not exist, it means it has never been used
             // so subscriber has all usage available, since usage is inserted by recordFeatureUsage
             return true;
-        } elseif ($usage->hasExpired()) {
-            return false;
         }
 
         // Check for available uses
