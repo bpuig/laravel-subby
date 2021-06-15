@@ -403,11 +403,13 @@ class PlanSubscription extends Model
         $subscription = $this;
 
         DB::transaction(function () use ($subscription) {
-            // Clear usage data
-            $subscription->usage()->delete();
+            // Clear usage data only if has been subscribed sometime (to avoid clear trial usage)
+            if ($subscription->starts_at) {
+                $subscription->usage()->delete();
+            }
 
             // Renew period
-            if ($subscription->plan->trial_mode === 'inside') {
+            if (!$subscription->starts_at && $subscription->plan->trial_mode === 'inside') {
                 // If trial time is considered time of subscription
                 // we renew subscription and set the start date the date
                 // when trial started
