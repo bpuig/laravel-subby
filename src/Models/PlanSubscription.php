@@ -409,14 +409,11 @@ class PlanSubscription extends Model
             }
 
             // Renew period
+            $startDate = Carbon::now();
             if (!$subscription->starts_at && $subscription->plan->trial_mode === 'inside') {
                 // If trial time is considered time of subscription
-                // we renew subscription and set the start date the date
-                // when trial started
-                $startDate = Carbon::make($subscription->trial_ends_at)
-                    ->sub($subscription->plan->trial_interval, $subscription->plan->trial_period);
-            } else {
-                $startDate = Carbon::now();
+                // we renew subscription and substract from period used days
+                $startDate->subDays($subscription->getDaysUntilTrialEnds());
             }
 
             // End trial
