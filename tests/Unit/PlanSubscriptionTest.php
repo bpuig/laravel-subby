@@ -49,7 +49,7 @@ class PlanSubscriptionTest extends TestCase
         $subscription->changePlan($this->testPlanPro);
 
         // Plan has been changed
-        $this->assertTrue($this->testUser->subscription('main')->plan_id === $this->testPlanPro->id);
+        $this->assertTrue($this->testUser->subscription('main')->plan->is($this->testPlanPro));
 
         // No previous plan features still attached and related to plan
         $this->assertTrue($subscription->features()->whereHas('feature', function (Builder $query) {
