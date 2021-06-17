@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bpuig\Subby\Models;
 
 use BadMethodCallException;
+use Bpuig\Subby\Exceptions\PlanSubscriptionFeatureUsageDenied;
 use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasFeatures;
@@ -505,7 +506,7 @@ class PlanSubscription extends Model
     {
         return $builder->where('tag', $tag);
     }
-    
+
     /**
      * Set new subscription period.
      *
@@ -545,6 +546,10 @@ class PlanSubscription extends Model
      */
     public function recordFeatureUsage(string $featureTag, int $uses = 1, bool $incremental = true)
     {
+        if (!$this->canUseFeature($featureTag)) {
+            throw new PlanSubscriptionFeatureUsageDenied($featureTag);
+        }
+
         $feature = $this->getFeatureByTag($featureTag);
 
 
@@ -584,9 +589,9 @@ class PlanSubscription extends Model
      */
     public function reduceFeatureUsage(string $featureTag, int $uses = 1): ?PlanSubscriptionUsage
     {
-        $usage = $this->usage()->byFeatureTag($featureTag)->first();
+        $usage = $this->getUsageByFeatureTag($featureTag);
 
-        if (is_null($usage)) {
+        if (!$usage) {
             return null;
         }
 
@@ -614,23 +619,21 @@ class PlanSubscription extends Model
         $featureValue = $this->getFeatureValue($featureTag);
 
         if ($featureValue === 'true') {
-            // If feature value exists and has a written true value
+            // If feature value exists and has a written "true" value
             return true;
         } elseif (is_null($featureValue) || $featureValue === '0' || $featureValue === 'false') {
-            // If feature does not exist, it's 0 or written false
+            // If feature does not exist, it's 0 or written "false"
             return false;
         }
 
         // Now that we know feature exists in plan, and does not meet any of
         // previous requirements, check for usage
-        $usage = $this->usage()->byFeatureTag($featureTag)->first();
+        $usage = $this->getUsageByFeatureTag($featureTag);
 
         if (!$usage) {
             // If feature usage does not exist, it means it has never been used
             // so subscriber has all usage available, since usage is inserted by recordFeatureUsage
             return true;
-        } elseif ($usage->hasExpired()) {
-            return false;
         }
 
         // Check for available uses
@@ -646,9 +649,21 @@ class PlanSubscription extends Model
      */
     public function getFeatureUsage(string $featureTag): int
     {
-        $usage = $this->usage()->byFeatureTag($featureTag)->first();
+        $usage = $this->getUsageByFeatureTag($featureTag);
 
         return (!$usage || $usage->hasExpired()) ? 0 : $usage->used;
+    }
+
+    /**
+     * Get feature usage
+     *
+     * @param string $featureTag
+     *
+     * @return mixed
+     */
+    private function getUsageByFeatureTag(string $featureTag)
+    {
+        return $this->usage()->byFeatureTag($featureTag)->first();
     }
 
     /**
