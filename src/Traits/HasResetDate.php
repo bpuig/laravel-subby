@@ -12,14 +12,18 @@ trait HasResetDate
     /**
      * Get feature's reset date.
      *
-     * @param string $dateFrom
+     * @param Carbon|null $dateFrom
      *
      * @return \Carbon\Carbon
      * @throws \Exception
      */
-    public function getResetDate(Carbon $dateFrom): Carbon
+    public function getResetDate(?Carbon $dateFrom = null): Carbon
     {
-        $period = new Period($this->resettable_interval, $this->resettable_period, $dateFrom ?? now());
+        $today = Carbon::now();
+
+        do {
+            $period = new Period($this->resettable_interval, $this->resettable_period, $dateFrom ?? $today);
+        } while ($period->getEndDate()->lt($today));
 
         return $period->getEndDate();
     }

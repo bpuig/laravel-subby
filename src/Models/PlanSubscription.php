@@ -670,7 +670,7 @@ class PlanSubscription extends Model
      *
      * @return mixed
      */
-    private function getUsageByFeatureTag(string $featureTag)
+    public function getUsageByFeatureTag(string $featureTag)
     {
         return $this->usage()->byFeatureTag($featureTag)->first();
     }
