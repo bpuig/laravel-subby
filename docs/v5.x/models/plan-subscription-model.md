@@ -250,13 +250,18 @@ $user->isSubscribedTo($planId);
 
 Canceled subscriptions with an active trial or `ends_at` in the future are considered active.
 
-## Renew a Subscription
+## Renew a Subscription <Badge text="updated in v5.0" type="tip"/>
+::: tip New in 5.0
+Now you can multiply the times the period is renewed
+:::
 
 To renew a subscription you may use the `renew` method available in the subscription model. This will set a
-new `ends_at` date based on the selected plan and _will clear the usage data_ of the subscription.
+new `ends_at` date based on the selected plan.
 
 ```php
 $user->subscription('main')->renew();
+
+$user->subscription('main')->renew(3); // This will triple the periods. CAUTION: If your subscription is 2 'month', you'll get 6 'month'
 ```
 
 Canceled subscriptions with an ended period can't be renewed.
