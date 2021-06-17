@@ -172,7 +172,7 @@ class PlanSubscription extends Model
      */
     public function isOnTrial(): bool
     {
-        return $this->trial_ends_at ? Carbon::now()->lt($this->trial_ends_at) : false;
+        return $this->trial_ends_at && Carbon::now()->lt($this->trial_ends_at);
     }
 
     /**
@@ -192,21 +192,11 @@ class PlanSubscription extends Model
      */
     public function hasEnded(): bool
     {
-        if ($this->hasEndedTrial()) {
+        if (!$this->isOnTrial()) {
             return !$this->ends_at || Carbon::now()->gte($this->ends_at);
         }
 
         return false;
-    }
-
-    /**
-     * Check if subscription trial has ended.
-     *
-     * @return bool
-     */
-    public function hasEndedTrial(): bool
-    {
-        return !$this->trial_ends_at || Carbon::now()->gte($this->trial_ends_at);
     }
 
     /**
@@ -234,11 +224,15 @@ class PlanSubscription extends Model
 
         // If cancel is immediate, set end date
         if ($immediately) {
+            // Cancel trial
+            if ($this->isOnTrial()) $this->trial_ends_at = $this->canceled_at;
+
+            // Cancel subscription
             $this->cancels_at = $this->canceled_at;
             $this->ends_at = $this->canceled_at;
         } else {
-            // If cancel is not immediate, it will be cancelled at period end
-            $this->cancels_at = $this->ends_at;
+            // If cancel is not immediate, it will be cancelled at trial or period end
+            $this->cancels_at = ($this->isOnTrial()) ? $this->trial_ends_at : $this->ends_at;
         }
 
         $this->save();
@@ -409,16 +403,28 @@ class PlanSubscription extends Model
         $subscription = $this;
 
         DB::transaction(function () use ($subscription) {
-            // Clear usage data
-            $subscription->usage()->delete();
+            // Renew period
+            $startDate = Carbon::now();
+            $remainingTrialDays = $subscription->getDaysUntilTrialEnds();
+            $isNew = !$subscription->starts_at; // Has never been subscribed
+
+            $subscription->setNewPeriod($this->invoice_interval, $this->invoice_period, $startDate);
 
             // End trial
             if ($subscription->isOnTrial()) {
                 $subscription->trial_ends_at = Carbon::now();
             }
 
-            // Renew period
-            $subscription->setNewPeriod();
+            // Adjust ending dates depending on trial modes
+            if ($isNew && $subscription->plan->trial_mode === 'inside') {
+                // If trial time is considered time of subscription
+                // we renew subscription and substract from period used days
+                $subscription->ends_at->subDays($remainingTrialDays);
+            } else if ($isNew && $subscription->plan->trial_mode === 'outside') {
+                // Don't penalize early buyers
+                $subscription->ends_at->addDays($remainingTrialDays);
+            }
+
             $subscription->save();
         });
 
@@ -510,20 +516,20 @@ class PlanSubscription extends Model
     /**
      * Set new subscription period.
      *
-     * @param string $invoice_interval
-     * @param string $invoice_period
-     * @param string $start
+     * @param string|null $invoice_interval
+     * @param int|null $invoice_period
+     * @param Carbon|null $start
      *
      * @return $this
      * @throws \Exception
      */
-    protected function setNewPeriod($invoice_interval = '', $invoice_period = '', $start = ''): PlanSubscription
+    protected function setNewPeriod(?string $invoice_interval = null, ?int $invoice_period = null, ?Carbon $start = null): PlanSubscription
     {
-        if (empty($invoice_interval)) {
+        if (!$invoice_interval) {
             $invoice_interval = $this->invoice_interval;
         }
 
-        if (empty($invoice_period)) {
+        if (!$invoice_period) {
             $invoice_period = $this->invoice_period;
         }
 
@@ -626,13 +632,13 @@ class PlanSubscription extends Model
             return false;
         }
 
-        // Now that we know feature exists in plan, and does not meet any of
+        // Now that we know feature exists in the plan and does not meet any of
         // previous requirements, check for usage
         $usage = $this->getUsageByFeatureTag($featureTag);
 
         if (!$usage) {
-            // If feature usage does not exist, it means it has never been used
-            // so subscriber has all usage available, since usage is inserted by recordFeatureUsage
+            // If feature usage does not exist in usage, it means it has never been used
+            // so subscriber has all of its usage available, since usage is inserted by recordFeatureUsage
             return true;
         }
 
