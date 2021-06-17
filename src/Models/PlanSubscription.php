@@ -390,11 +390,11 @@ class PlanSubscription extends Model
     /**
      * Renew subscription period.
      *
+     * @param int $periods Number of periods to renew
      * @return $this
-     * @throws \LogicException
-     *
+     * @throws \Exception
      */
-    public function renew(): PlanSubscription
+    public function renew(int $periods = 1): PlanSubscription
     {
         if ($this->isCanceled()) {
             throw new LogicException('Unable to renew canceled subscription.');
@@ -402,13 +402,13 @@ class PlanSubscription extends Model
 
         $subscription = $this;
 
-        DB::transaction(function () use ($subscription) {
+        DB::transaction(function () use ($subscription, $periods) {
             // Renew period
             $startDate = Carbon::now();
             $remainingTrialDays = $subscription->getDaysUntilTrialEnds();
             $isNew = !$subscription->starts_at; // Has never been subscribed
 
-            $subscription->setNewPeriod($this->invoice_interval, $this->invoice_period, $startDate);
+            $subscription->setNewPeriod($this->invoice_interval, $this->invoice_period * $periods, $startDate);
 
             // End trial
             if ($subscription->isOnTrial()) {
