@@ -23,9 +23,10 @@ class PlanSubscriptionUsageTest extends TestCase
     /**
      * Consume all of a feature and check next period
      */
-    public function testConsumeAllFeatureAndRenewToNextPeriod()
+    public function testConsumeAllFeatureAndMoveToNextPeriod()
     {
         $this->testUser->subscription('main')->recordFeatureUsage('posts_per_social_profile', 30);
+        $this->travelTo($this->testUser->subscription('main')->getFeatureByTag('posts_per_social_profile')->valid_until->addSecond());
         $this->testUser->subscription('main')->renew();
         $this->assertTrue($this->testUser->subscription('main')->canUseFeature('posts_per_social_profile'));
     }
