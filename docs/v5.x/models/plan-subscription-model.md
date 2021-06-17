@@ -146,8 +146,8 @@ Other feature methods on the user subscription instance are:
 All methods share the same signature: e.g. `$user->subscription('main')->getFeatureUsage('social_profiles');`.
 
 ### Record Feature Usage <Badge text="updated in v5.0" type="tip"/>
-
-> New in 5.0: Record feature check if can be used
+::: tip New in 5.0 Check if subscriber can use feature before recording use
+:::
 
 In order to effectively use the ability methods you will need to keep track of every usage of each feature (or at least
 those that require it). You may use the `recordFeatureUsage` method available through the user `subscription()` method:
