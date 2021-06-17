@@ -124,15 +124,14 @@ $user->subscription();
 
 ## Subscription Feature Usage
 
-There are multiple ways to determine the usage and ability of a particular feature in the subscriber's subscription, the
-most common one is `canUseFeature`:
+You can determine the usage and ability of a particular feature in the subscriber's subscription with `canUseFeature`:
 
 The `canUseFeature` method returns `true` or `false` depending on multiple factors:
 
-- Subscription has not ended.
-- Feature _is enabled_.
+- Subscription is active (on trial or currently in period).
+- Feature _is enabled_ (`true`).
 - Feature value isn't `0`/`false`/`NULL`.
-- Or feature has remaining uses available.
+- Feature has remaining uses available.
 
 ```php
 $user->subscription('main')->canUseFeature('social_profiles');
@@ -144,9 +143,11 @@ Other feature methods on the user subscription instance are:
 - `getFeatureRemainings`: returns available uses for a particular feature.
 - `getFeatureValue`: returns the feature value.
 
-> All methods share the same signature: e.g. `$user->subscription('main')->getFeatureUsage('social_profiles');`.
+All methods share the same signature: e.g. `$user->subscription('main')->getFeatureUsage('social_profiles');`.
 
-### Record Feature Usage
+### Record Feature Usage <Badge text="updated in v5.0" type="tip"/>
+
+> New in 5.0: Record feature check if can be used
 
 In order to effectively use the ability methods you will need to keep track of every usage of each feature (or at least
 those that require it). You may use the `recordFeatureUsage` method available through the user `subscription()` method:
@@ -155,9 +156,14 @@ those that require it). You may use the `recordFeatureUsage` method available th
 $user->subscription('main')->recordFeatureUsage('social_profiles');
 ```
 
+When recording feature `canUseFeature` is already called within the function, so you do not have to check every time.
+Exception is thrown if subscriber cannot use the feature.
+
 The `recordFeatureUsage` method accepts 3 parameters: the first one is the feature's tag, the second one is the quantity
 of uses to add (default is `1`), and the third one indicates if the addition should be incremental (default behavior),
-when disabled the usage will be overridden by the quantity provided. E.g.:
+when disabled the usage will be overridden by the quantity provided.
+
+::: details Click me to view example code
 
 ```php
 // Increment by 1
@@ -167,6 +173,7 @@ $user->subscription('main')->recordFeatureUsage('social_profiles', 1);
 $user->subscription('main')->recordFeatureUsage('social_profiles', 3, false);
 ```
 
+:::
 ### Reduce Feature Usage
 
 Reducing the feature usage is _almost_ the same as incrementing it. Here we only _substract_ a given quantity (default
@@ -239,7 +246,7 @@ $user->subscription('main')->isFree();
 $user->isSubscribedTo($planId);
 ```
 
-> Canceled subscriptions with an active trial or `ends_at` in the future are considered active.
+Canceled subscriptions with an active trial or `ends_at` in the future are considered active.
 
 ## Renew a Subscription
 
