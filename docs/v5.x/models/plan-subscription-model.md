@@ -217,12 +217,19 @@ You can get what is the remaining prorated amount until subscription invoice per
 $user->subscription('main')->getRemainingPriceProrate(); // Ex: 10 day subscription of price 10.00, on day 6, returns 4
 ```
 
-### Other
+### Trial period time related functions <Badge text="updated in v5.0" type="tip"/>
+::: danger Breaking change in v5.0
+Deprecated `getDaysUntilTrialEnds`
+:::
+
+You can get some information about duration in your trial with:
 
 ```php
-$user->subscription('main')->getDaysUntilEnds(); // Returns number of days until subscription ends
-$user->subscription('main')->getDaysUntilTrialEnds(); // Returns number of days until subscription trial ends
+$user->subscription('main')->getTrialTotalDurationIn('day'); // Returns number of days trial lasts
+$user->subscription('main')->getTrialRemainingDurationIn('day'); // Returns number of days until subscription trial ends
 ```
+
+You can use Carbon accepted intervals (in singular): `year`,`month`,`day`,`hour`,`minute`,`second`,`microsecond`...
 
 ## Revert overridden plan subscription features
 

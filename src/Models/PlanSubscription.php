@@ -10,6 +10,7 @@ use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
+use Bpuig\Subby\Traits\HasTrialPeriod;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +22,7 @@ use LogicException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan, HasFeatures, HasPricing;
+    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriod;
 
     /**
      * {@inheritdoc}
@@ -708,15 +709,6 @@ class PlanSubscription extends Model
     public function getDaysUntilEnds(): int
     {
         return Carbon::now()->diffInDays($this->ends_at);
-    }
-
-    /**
-     * Days until subscription trial ends
-     * @return int
-     */
-    public function getDaysUntilTrialEnds(): int
-    {
-        return Carbon::now()->diffInDays($this->trial_ends_at);
     }
 
     /**
