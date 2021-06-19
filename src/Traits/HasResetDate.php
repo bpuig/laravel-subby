@@ -23,6 +23,7 @@ trait HasResetDate
 
         do {
             $period = new Period($this->resettable_interval, $this->resettable_period, $dateFrom ?? $today);
+            $dateFrom = $period->getEndDate();
         } while ($period->getEndDate()->lt($today));
 
         return $period->getEndDate();
