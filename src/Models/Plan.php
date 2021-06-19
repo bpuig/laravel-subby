@@ -7,6 +7,8 @@ namespace Bpuig\Subby\Models;
 use Bpuig\Subby\Exceptions\PlanTagAlreadyExists;
 use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
+use Bpuig\Subby\Traits\HasSubscriptionPeriod;
+use Bpuig\Subby\Traits\HasTrialPeriod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Plan extends Model
 {
-    use SoftDeletes, HasFeatures, HasPricing;
+    use SoftDeletes, HasFeatures, HasPricing, HasTrialPeriod, HasSubscriptionPeriod;
 
     /**
      * {@inheritdoc}
@@ -126,16 +128,6 @@ class Plan extends Model
     public function subscriptions(): HasMany
     {
         return $this->hasMany(config('subby.models.plan_subscription'), 'plan_id', 'id');
-    }
-
-    /**
-     * Check if plan has trial.
-     *
-     * @return bool
-     */
-    public function hasTrial(): bool
-    {
-        return $this->trial_period && $this->trial_interval;
     }
 
     /**

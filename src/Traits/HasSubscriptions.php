@@ -124,7 +124,7 @@ trait HasSubscriptions
     public function newSubscription(?string $tag, Plan $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null)
     {
         $tag = $tag ?? config('subby.main_subscription_tag');
-        
+
         $trial = new Period($plan->trial_interval, $plan->trial_period, $startDate ?? now());
         $period = new Period($plan->invoice_interval, $plan->invoice_period, $trial->getEndDate());
 
@@ -139,6 +139,8 @@ trait HasSubscriptions
                 'price' => $plan->price,
                 'currency' => $plan->currency,
                 'tier' => $plan->tier,
+                'trial_interval' => $plan->trial_interval,
+                'trial_period' => $plan->trial_period,
                 'invoice_interval' => $plan->invoice_interval,
                 'invoice_period' => $plan->invoice_period,
                 'trial_ends_at' => $trial->getEndDate(),

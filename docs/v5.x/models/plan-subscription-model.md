@@ -209,20 +209,47 @@ $user->subscription('main')->isOnTrial();
 $user->subscription('main')->isAltered();
 ```
 
-### Remaining price prorate
+### Remaining price prorate <Badge text="updated in v5.0" type="tip"/>
+::: danger Breaking change in v5.0
+Renamed `getRemainingPriceProrate` to  `getSubscriptionRemainingUsagePriceProrate`
+:::
 
 You can get what is the remaining prorated amount until subscription invoice period ends.
 
 ```php
-$user->subscription('main')->getRemainingPriceProrate(); // Ex: 10 day subscription of price 10.00, on day 6, returns 4
+$user->subscription('main')->getSubscriptionRemainingUsagePriceProrate(); // Ex: 10 day subscription of price 10.00, on day 6, returns 4
 ```
 
-### Other
+### Trial period time related functions <Badge text="updated in v5.0" type="tip"/>
+::: danger Breaking change in v5.0
+Renamed `getDaysUntilTrialEnds` to `getTrialPeriodRemainingUsageIn`
+:::
+
+You can get some information about duration in your trial with:
 
 ```php
-$user->subscription('main')->getDaysUntilEnds(); // Returns number of days until subscription ends
-$user->subscription('main')->getDaysUntilTrialEnds(); // Returns number of days until subscription trial ends
+$user->subscription('main')->getTrialStartDate(); // When did the trial start
+$user->subscription('main')->getTrialTotalDurationIn('day'); // Returns number of days trial lasts
+$user->subscription('main')->getTrialPeriodUsageIn('day'); // Returns number of days of trial consumed
+$user->subscription('main')->getTrialPeriodRemainingUsageIn('day'); // Returns number of days until subscription trial ends
 ```
+
+You can use Carbon accepted intervals (in singular): `year`,`month`,`day`,`hour`,`minute`,`second`,`microsecond`...
+
+### Subscription period time related functions <Badge text="updated in v5.0" type="tip"/>
+::: danger Breaking change in v5.0
+Renamed `getTotalDurationInDays` to `getSubscriptionTotalDurationIn`, `getDaysUntilEnds` to `getSubscriptionPeriodRemainingUsageIn`
+:::
+
+You can get some information about duration in your subscription with:
+
+```php
+$user->subscription('main')->getSubscriptionTotalDurationIn('day'); // Returns number of days subscription lasts
+$user->subscription('main')->getSubscriptionPeriodUsageIn('day'); // Returns number of days of subscription consumed
+$user->subscription('main')->getSubscriptionPeriodRemainingUsageIn('day'); // Returns number of days until subscription ends
+```
+
+You can use Carbon accepted intervals (in singular): `year`,`month`,`day`,`hour`,`minute`,`second`,`microsecond`...
 
 ## Revert overridden plan subscription features
 
