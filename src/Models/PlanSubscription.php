@@ -413,8 +413,8 @@ class PlanSubscription extends Model
         DB::transaction(function () use ($subscription, $periods) {
             // Renew period
             $startDate = Carbon::now();
-            $remainingTrialDays = $subscription->getDaysUntilTrialEnds();
-            $isNew = !$subscription->starts_at; // Has never been subscribed
+            $remainingTrialDays = $subscription->getTrialPeriodRemainingUsageIn('day');
+            $isNew = !$subscription->getTrialStartDate(); // Has never been subscribed
             $subscription->setNewPeriod($this->invoice_interval, $this->invoice_period * $periods, $startDate);
 
             // End trial
@@ -426,11 +426,7 @@ class PlanSubscription extends Model
             if ($isNew && $subscription->plan->trial_mode === 'inside') {
                 // If trial time is considered time of subscription
                 // we renew subscription and substract from period used days
-
-                $trialPeriod = new Period($subscription->plan->trial_interval, $subscription->plan->trial_period);
-                $trialDayLength = $trialPeriod->getStartDate()->diffInDays($trialPeriod->getEndDate());
-
-                $subscription->ends_at->subDays($trialDayLength - $remainingTrialDays);
+                $subscription->ends_at->subDays($this->getTrialPeriodUsageIn('day'));
             } else if ($isNew && $subscription->plan->trial_mode === 'outside') {
                 // Don't penalize early buyers
                 $subscription->ends_at->addDays($remainingTrialDays);
