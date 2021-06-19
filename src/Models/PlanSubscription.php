@@ -10,6 +10,8 @@ use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
+use Bpuig\Subby\Traits\HasSubscriptionPeriodUsage;
+use Bpuig\Subby\Traits\HasTrialPeriodUsage;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +23,7 @@ use LogicException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan, HasFeatures, HasPricing;
+    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage;
 
     /**
      * {@inheritdoc}
@@ -35,6 +37,8 @@ class PlanSubscription extends Model
         'description',
         'price',
         'currency',
+        'trial_period',
+        'trial_interval',
         'invoice_period',
         'invoice_interval',
         'tier',
@@ -53,6 +57,8 @@ class PlanSubscription extends Model
         'subscriber_type' => 'string',
         'price' => 'float',
         'currency' => 'string',
+        'trial_period' => 'integer',
+        'trial_interval' => 'string',
         'invoice_period' => 'integer',
         'invoice_interval' => 'string',
         'tier' => 'integer',
@@ -98,6 +104,8 @@ class PlanSubscription extends Model
             'description' => 'nullable|string|max:32768',
             'price' => 'required|numeric',
             'currency' => 'required|alpha|size:3',
+            'trial_period' => 'sometimes|integer|max:100000',
+            'trial_interval' => 'sometimes|in:hour,day,week,month',
             'invoice_period' => 'sometimes|integer|max:100000',
             'invoice_interval' => 'sometimes|in:hour,day,week,month',
             'tier' => 'nullable|integer|max:100000',
@@ -699,50 +707,5 @@ class PlanSubscription extends Model
         $feature = $this->features()->where('tag', $featureTag)->first();
 
         return $feature->value ?? null;
-    }
-
-    /**
-     * Get subscription duration in days
-     * @return int
-     */
-    public function getTotalDurationInDays(): int
-    {
-        return Carbon::make($this->starts_at)->diffInDays($this->ends_at);
-    }
-
-    /**
-     * Days until subscription renews
-     * @return int
-     */
-    public function getDaysUntilEnds(): int
-    {
-        return Carbon::now()->diffInDays($this->ends_at);
-    }
-
-    /**
-     * Days until subscription trial ends
-     * @return int
-     */
-    public function getDaysUntilTrialEnds(): int
-    {
-        return Carbon::now()->diffInDays($this->trial_ends_at);
-    }
-
-    /**
-     * Get the proportion of the remaining billing period
-     * @return float
-     */
-    public function getRemainingPeriodProportion(): float
-    {
-        return round($this->getDaysUntilEnds() / $this->getTotalDurationInDays(), 4);
-    }
-
-    /**
-     * Get prorated price of subscription value
-     * @return float
-     */
-    public function getRemainingPriceProrate(): float
-    {
-        return round($this->price * $this->getRemainingPeriodProportion(), 2);
     }
 }

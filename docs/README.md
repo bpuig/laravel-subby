@@ -8,16 +8,19 @@ changes.
 Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
 
 ## Version Compatibility
+::: tip CURRENT VERSION
+Current version is v4.0
+:::
 
 Laravel  | Laravel Subby
 :---------|:----------
-8.x    | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x](/v5.x/)
+8.x    | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x (in development)](/v5.x/)
 7.x    | [v4.x](/v4.x/)
 6.x    | [v4.x](/v4.x/)
 
 ## Changelog
 
-Refer to the [Changelog](https://bpuig.github.io/laravel-subby/CHANGELOG.html) for a full history of the project.
+Refer to the [Releases](https://github.com/bpuig/laravel-subby/releases) for a changelog of the project.
 
 ## License
 
