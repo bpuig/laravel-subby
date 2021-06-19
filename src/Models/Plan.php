@@ -7,6 +7,7 @@ namespace Bpuig\Subby\Models;
 use Bpuig\Subby\Exceptions\PlanTagAlreadyExists;
 use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
+use Bpuig\Subby\Traits\HasSubscriptionPeriod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Plan extends Model
 {
-    use SoftDeletes, HasFeatures, HasPricing;
+    use SoftDeletes, HasFeatures, HasPricing, HasSubscriptionPeriod;
 
     /**
      * {@inheritdoc}
