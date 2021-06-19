@@ -693,22 +693,4 @@ class PlanSubscription extends Model
 
         return $feature->value ?? null;
     }
-
-    /**
-     * Get the proportion of the remaining billing period
-     * @return float
-     */
-    public function getRemainingPeriodProportion(): float
-    {
-        return round($this->getSubscriptionPeriodRemainingUsageIn('day') / $this->getSubscriptionTotalDurationIn('day'), 4);
-    }
-
-    /**
-     * Get prorated price of subscription value
-     * @return float
-     */
-    public function getRemainingPriceProrate(): float
-    {
-        return round($this->price * $this->getRemainingPeriodProportion(), 2);
-    }
 }

@@ -209,17 +209,20 @@ $user->subscription('main')->isOnTrial();
 $user->subscription('main')->isAltered();
 ```
 
-### Remaining price prorate
+### Remaining price prorate <Badge text="updated in v5.0" type="tip"/>
+::: danger Breaking change in v5.0
+Renamed `getRemainingPriceProrate` to  `getSubscriptionRemainingUsagePriceProrate`
+:::
 
 You can get what is the remaining prorated amount until subscription invoice period ends.
 
 ```php
-$user->subscription('main')->getRemainingPriceProrate(); // Ex: 10 day subscription of price 10.00, on day 6, returns 4
+$user->subscription('main')->getSubscriptionRemainingUsagePriceProrate(); // Ex: 10 day subscription of price 10.00, on day 6, returns 4
 ```
 
 ### Trial period time related functions <Badge text="updated in v5.0" type="tip"/>
 ::: danger Breaking change in v5.0
-Deprecated `getDaysUntilTrialEnds`
+Renamed `getDaysUntilTrialEnds` to `getTrialPeriodRemainingUsageIn`
 :::
 
 You can get some information about duration in your trial with:
@@ -235,7 +238,7 @@ You can use Carbon accepted intervals (in singular): `year`,`month`,`day`,`hour`
 
 ### Subscription period time related functions <Badge text="updated in v5.0" type="tip"/>
 ::: danger Breaking change in v5.0
-Deprecated `getTotalDurationInDays`, `getDaysUntilEnds`
+Renamed `getTotalDurationInDays` to `getSubscriptionTotalDurationIn`, `getDaysUntilEnds` to `getSubscriptionPeriodRemainingUsageIn`
 :::
 
 You can get some information about duration in your subscription with:

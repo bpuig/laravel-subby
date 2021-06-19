@@ -31,4 +31,25 @@ trait HasSubscriptionPeriodUsage
     {
         return Carbon::now()->{CarbonHelper::diffIn($interval)}($this->ends_at);
     }
+
+
+    /**
+     * Get the proportion of the remaining billing period
+     * @return float
+     * @throws \Exception
+     */
+    public function getRemainingSubscriptionPeriodProportion(): float
+    {
+        return round($this->getSubscriptionPeriodRemainingUsageIn('second') / $this->getSubscriptionTotalDurationIn('second'), 4);
+    }
+
+    /**
+     * Get prorated price of subscription value
+     * @return float
+     * @throws \Exception
+     */
+    public function getSubscriptionRemainingUsagePriceProrate(): float
+    {
+        return round($this->price * $this->getRemainingSubscriptionPeriodProportion(), 2);
+    }
 }
