@@ -225,7 +225,9 @@ Deprecated `getDaysUntilTrialEnds`
 You can get some information about duration in your trial with:
 
 ```php
+$user->subscription('main')->getTrialStartDate(); // When did the trial start
 $user->subscription('main')->getTrialTotalDurationIn('day'); // Returns number of days trial lasts
+$user->subscription('main')->getTrialConsumedDurationIn('day'); // Returns number of days of trial consumed
 $user->subscription('main')->getTrialRemainingDurationIn('day'); // Returns number of days until subscription trial ends
 ```
 
