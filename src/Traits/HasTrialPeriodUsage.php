@@ -10,17 +10,7 @@ use Illuminate\Support\Carbon;
 
 trait HasTrialPeriodUsage
 {
-    /**
-     * Trial total duration in specified interval
-     * @param string $interval
-     * @return int
-     * @throws \Exception
-     */
-    public function getTrialTotalDurationIn(string $interval) :int
-    {
-        $trialPeriod = new Period($this->plan->trial_interval, $this->plan->trial_period);
-        return $trialPeriod->getStartDate()->{CarbonHelper::diffIn($interval)}($trialPeriod->getEndDate());
-    }
+    use HasTrialPeriod;
 
     /**
      * Trial start date function
