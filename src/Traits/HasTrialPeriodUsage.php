@@ -8,7 +8,7 @@ use Bpuig\Subby\Helpers\CarbonHelper;
 use Bpuig\Subby\Services\Period;
 use Illuminate\Support\Carbon;
 
-trait HasTrialPeriod
+trait HasTrialPeriodUsage
 {
     /**
      * Trial total duration in specified interval
@@ -32,11 +32,12 @@ trait HasTrialPeriod
     }
 
     /**
+     * Trial period usage
      * @param string $interval
      * @return int
      * @throws \Exception
      */
-    public function getTrialConsumedDurationIn(string $interval) :int
+    public function getTrialPeriodUsageIn(string $interval) :int
     {
         $diff = $this->getTrialStartDate()->{CarbonHelper::diffIn($interval)}(Carbon::now());
 
@@ -44,11 +45,11 @@ trait HasTrialPeriod
     }
 
     /**
-     * Return remaining trial duration
+     * Remaining trial period usage
      * @param string $interval
      * @return int
      */
-    public function getTrialRemainingDurationIn(string $interval): int
+    public function getTrialPeriodRemainingUsageIn(string $interval): int
     {
         return Carbon::now()->{CarbonHelper::diffIn($interval)}($this->trial_ends_at);
     }
