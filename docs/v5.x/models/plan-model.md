@@ -138,3 +138,23 @@ if ($user->subscription('main')->tier < $newPlan->tier) {
     myDowngradeFunction();
 }
 ```
+
+## Trial period time related functions <Badge text="new in v5.0" type="tip"/>
+
+You can get some information about duration of your trial with:
+
+```php
+$plan->getTrialTotalDurationIn('day'); // Returns number of days trial lasts
+```
+
+You can use Carbon accepted intervals (in singular): `year`,`month`,`day`,`hour`,`minute`,`second`,`microsecond`...
+
+## Subscription period time related functions <Badge text="new in v5.0" type="tip"/>
+
+You can get some information about duration of the subscription with:
+
+```php
+$plan->getSubscriptionTotalDurationIn('day'); // Returns number of days subscription lasts
+```
+
+You can use Carbon accepted intervals (in singular): `year`,`month`,`day`,`hour`,`minute`,`second`,`microsecond`...

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Traits;
 
-use Bpuig\Subby\Exceptions\PlanSubscriptionNotFound;
 use Bpuig\Subby\Exceptions\PlanSubscriptionTagAlreadyExists;
+use Bpuig\Subby\Exceptions\PlanSubscriptionNotFound;
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscription;
 use Bpuig\Subby\Services\SubscriptionPeriod;
@@ -138,6 +138,8 @@ trait HasSubscriptions
                 'price' => $plan->price,
                 'currency' => $plan->currency,
                 'tier' => $plan->tier,
+                'trial_interval' => $plan->trial_interval,
+                'trial_period' => $plan->trial_period,
                 'invoice_interval' => $plan->invoice_interval,
                 'invoice_period' => $plan->invoice_period,
                 'trial_ends_at' => $subscriptionPeriod->getTrialEndDate(),

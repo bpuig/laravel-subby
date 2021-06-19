@@ -30,7 +30,7 @@ The way this package is made:
 
 ## Changelog
 
-Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
+Refer to the [Releases](https://github.com/bpuig/laravel-subby/releases) for a changelog of the project.
 
 ## License
 

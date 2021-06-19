@@ -16,3 +16,25 @@ Publish v5 migrations
 php artisan vendor:publish --tag=subby.migrations.v5.0.0
 php artisan migrate
 ```
+
+## Breaking changes
+
+### `getDaysUntilTrialEnds` method in subscription
+
+Is now named `getTrialPeriodRemainingUsageIn('day')` and accepts new parameters.
+
+### `getTotalDurationInDays` method in subscription
+
+Is now named `getSubscriptionTotalDurationIn('day')` and accepts new parameters.
+
+### `getDaysUntilEnds` method in subscription
+
+Is now named `getSubscriptionPeriodRemainingUsageIn('day')` and accepts new parameters.
+
+### `getRemainingPeriodProportion` method in subscription
+
+Is now named `getRemainingSubscriptionPeriodProportion()` and accepts new parameters.
+
+### `getRemainingPriceProrate` method in subscription
+
+Is now named `getSubscriptionRemainingUsagePriceProrate()` and accepts new parameters.

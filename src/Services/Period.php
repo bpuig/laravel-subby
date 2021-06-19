@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Services;
 
+use Bpuig\Subby\Helpers\CarbonHelper;
 use Carbon\Carbon;
 
 class Period
@@ -61,8 +62,7 @@ class Period
         $this->period = $count;
 
         $start = clone $this->start;
-        $method = 'add' . ucfirst($this->interval) . 's';
-        $this->end = $start->{$method}($this->period);
+        $this->end = $start->{CarbonHelper::actionIn('add', $this->interval)}($this->period);
     }
 
     /**
