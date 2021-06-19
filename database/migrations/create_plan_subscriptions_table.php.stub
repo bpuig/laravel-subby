@@ -24,6 +24,8 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->string('description')->nullable();
             $table->decimal('price')->default('0.00');
             $table->string('currency', 3);
+            $table->unsignedSmallInteger('trial_period')->default(0);
+            $table->string('trial_interval')->default('day');
             $table->unsignedSmallInteger('invoice_period')->default(1);
             $table->string('invoice_interval')->default('month');
             $table->unsignedMediumInteger('tier')->default(0);
