@@ -10,7 +10,8 @@ use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
-use Bpuig\Subby\Traits\HasTrialPeriod;
+use Bpuig\Subby\Traits\HasSubscriptionPeriodUsage;
+use Bpuig\Subby\Traits\HasTrialPeriodUsage;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +23,7 @@ use LogicException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriod;
+    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage;
 
     /**
      * {@inheritdoc}
@@ -694,30 +695,12 @@ class PlanSubscription extends Model
     }
 
     /**
-     * Get subscription duration in days
-     * @return int
-     */
-    public function getTotalDurationInDays(): int
-    {
-        return Carbon::make($this->starts_at)->diffInDays($this->ends_at);
-    }
-
-    /**
-     * Days until subscription renews
-     * @return int
-     */
-    public function getDaysUntilEnds(): int
-    {
-        return Carbon::now()->diffInDays($this->ends_at);
-    }
-
-    /**
      * Get the proportion of the remaining billing period
      * @return float
      */
     public function getRemainingPeriodProportion(): float
     {
-        return round($this->getDaysUntilEnds() / $this->getTotalDurationInDays(), 4);
+        return round($this->getSubscriptionPeriodRemainingUsageIn('day') / $this->getSubscriptionTotalDurationIn('day'), 4);
     }
 
     /**
