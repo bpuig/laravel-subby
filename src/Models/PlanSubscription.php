@@ -68,6 +68,17 @@ class PlanSubscription extends Model
         'cancels_at' => 'datetime',
         'canceled_at' => 'datetime'
     ];
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected $appends = [
+        'is_active',
+        'is_on_trial',
+        'is_canceled',
+        'has_ended',
+        'is_altered',
+    ];
 
     /**
      * Create a new Eloquent model instance.
@@ -176,6 +187,11 @@ class PlanSubscription extends Model
     {
         return !$this->hasEnded() || $this->isOnTrial();
     }
+    
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->isActive();
+    }    
 
     /**
      * Check if subscription is inactive.
@@ -196,6 +212,11 @@ class PlanSubscription extends Model
     {
         return $this->trial_ends_at ? Carbon::now()->lt($this->trial_ends_at) : false;
     }
+    
+    public function getIsOnTrialAttribute(): bool
+    {
+        return $this->isOnTrial();
+    }
 
     /**
      * Check if subscription is canceled.
@@ -206,6 +227,11 @@ class PlanSubscription extends Model
     {
         return $this->canceled_at ? Carbon::now()->gte($this->canceled_at) : false;
     }
+    
+    public function getIsCanceledAttribute(): bool
+    {
+        return $this->isCanceled();
+    }
 
     /**
      * Check if subscription period has ended.
@@ -215,6 +241,11 @@ class PlanSubscription extends Model
     public function hasEnded(): bool
     {
         return $this->ends_at ? Carbon::now()->gte($this->ends_at) : false;
+    }
+    
+    public function getHasEndedAttribute(): bool
+    {
+        return $this->hasEnded();
     }
 
     /**
@@ -227,6 +258,11 @@ class PlanSubscription extends Model
         $currentFeatures = collect($this->features()->select('tag', 'value', 'resettable_period', 'resettable_interval')->get());
 
         return $currentFeatures->diff($planFeatures)->count() > 0;
+    }
+    
+    public function getIsAlteredAttribute(): bool
+    {
+        return $this->isAltered();
     }
 
     /**
