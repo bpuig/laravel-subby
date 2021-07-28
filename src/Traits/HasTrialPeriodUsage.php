@@ -27,7 +27,7 @@ trait HasTrialPeriodUsage
      * @return int
      * @throws \Exception
      */
-    public function getTrialPeriodUsageIn(string $interval) :int
+    public function getTrialPeriodUsageIn(string $interval): int
     {
         $diff = $this->getTrialStartDate()->{CarbonHelper::diffIn($interval)}(Carbon::now());
 
@@ -44,5 +44,13 @@ trait HasTrialPeriodUsage
         return Carbon::now()->{CarbonHelper::diffIn($interval)}($this->trial_ends_at);
     }
 
-
+    /**
+     * Check if entity has ended trial
+     *
+     * @return bool
+     */
+    public function hasEndedTrial(): bool
+    {
+        return !$this->trial_ends_at || \Carbon\Carbon::now()->gte($this->trial_ends_at);
+    }
 }
