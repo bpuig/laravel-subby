@@ -38,3 +38,6 @@ Is now named `getRemainingSubscriptionPeriodProportion()` and accepts new parame
 ### `getRemainingPriceProrate` method in subscription
 
 Is now named `getSubscriptionRemainingUsagePriceProrate()` and accepts new parameters.
+
+### `setNewPeriod` method in subscription
+`setNewPeriod` has been removed.
