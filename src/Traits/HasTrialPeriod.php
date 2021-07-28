@@ -6,6 +6,7 @@ namespace Bpuig\Subby\Traits;
 
 use Bpuig\Subby\Helpers\CarbonHelper;
 use Bpuig\Subby\Services\Period;
+use Carbon\Carbon;
 
 trait HasTrialPeriod
 {
@@ -29,5 +30,15 @@ trait HasTrialPeriod
     public function hasTrial(): bool
     {
         return $this->trial_period && $this->trial_interval;
+    }
+
+    /**
+     * Check if entity has ended trial
+     *
+     * @return bool
+     */
+    public function hasEndedTrial(): bool
+    {
+        return !$this->trial_ends_at || Carbon::now()->gte($this->trial_ends_at);
     }
 }
