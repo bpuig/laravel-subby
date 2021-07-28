@@ -313,7 +313,10 @@ class PlanSubscription extends Model
 
         if ($syncInvoicing) {
             // Set new start and end date
-            $this->setNewPeriod($plan->invoice_interval, $plan->invoice_period);
+            $period = new Period($plan->invoice_interval, $plan->invoice_period);
+
+            $this->starts_at = $period->getStartDate();
+            $this->ends_at = $period->getEndDate();
 
             // Set same invoicing as selected plan
             $this->invoice_interval = $plan->invoice_interval;
@@ -408,31 +411,43 @@ class PlanSubscription extends Model
             throw new LogicException('Unable to renew canceled subscription.');
         }
 
-        $subscription = $this;
-
-        DB::transaction(function () use ($subscription, $periods) {
-            // Renew period
-            $startDate = Carbon::now();
-            $remainingTrialDays = $subscription->getTrialPeriodRemainingUsageIn('day');
-            $isNew = !$subscription->getTrialStartDate(); // Has never been subscribed
-            $subscription->setNewPeriod($this->invoice_interval, $this->invoice_period * $periods, $startDate);
-
+        DB::transaction(function () use ($periods) {
             // End trial
-            if ($subscription->isOnTrial()) {
-                $subscription->trial_ends_at = Carbon::now();
+            if ($this->isOnTrial()) {
+                $this->trial_ends_at = Carbon::now();
             }
 
-            // Adjust ending dates depending on trial modes
-            if ($isNew && $subscription->plan->trial_mode === 'inside') {
-                // If trial time is considered time of subscription
-                // we renew subscription and substract from period used days
-                $subscription->ends_at->subDays($this->getTrialPeriodUsageIn('day'));
-            } else if ($isNew && $subscription->plan->trial_mode === 'outside') {
-                // Don't penalize early buyers
-                $subscription->ends_at->addDays($remainingTrialDays);
+            $isNew = !$this->starts_at; // Has never started subscription, so is new
+
+            if ($isNew) {
+                $period = new Period($this->invoice_interval, $this->invoice_period * $periods, Carbon::now());
+
+                // If is new, period will need to have start and end date
+                $this->starts_at = $period->getStartDate();
+                $this->ends_at = $period->getEndDate();
+
+                // Adjust ending dates depending on trial modes
+                if ($this->plan->trial_mode === 'inside') {
+                    // If trial time is considered time of subscription
+                    // we renew subscription and substract from period used days
+                    $this->ends_at->subDays($this->getTrialPeriodUsageIn('day'));
+                } else if ($this->plan->trial_mode === 'outside') {
+                    // Don't penalize early buyers
+                    $this->ends_at->addDays($this->getTrialPeriodRemainingUsageIn('day'));
+                }
+            } else {
+                // If it's not a new subscription, there are two options about renewal
+                // 1. Period was ended sometime ago and did not renew: Set again start and end date, so there
+                // is no confusion about if the user had subscription active during the months that was inactive
+                // 2. Period is ongoing: Set end date to calculated end period
+                $startDate = $this->hasEnded() ? Carbon::now() : $this->ends_at;
+                $period = new Period($this->invoice_interval, $this->invoice_period * $periods, $startDate);
+
+                if ($this->hasEnded()) $this->starts_at = $period->getStartDate();
+                $this->ends_at = $period->getEndDate();
             }
 
-            $subscription->save();
+            $this->save();
         });
 
         return $this;
@@ -518,34 +533,6 @@ class PlanSubscription extends Model
     public function scopeGetByTag(Builder $builder, string $tag): Builder
     {
         return $builder->where('tag', $tag);
-    }
-
-    /**
-     * Set new subscription period.
-     *
-     * @param string|null $invoice_interval
-     * @param int|null $invoice_period
-     * @param Carbon|null $start
-     *
-     * @return $this
-     * @throws \Exception
-     */
-    protected function setNewPeriod(?string $invoice_interval = null, ?int $invoice_period = null, ?Carbon $start = null): PlanSubscription
-    {
-        if (!$invoice_interval) {
-            $invoice_interval = $this->invoice_interval;
-        }
-
-        if (!$invoice_period) {
-            $invoice_period = $this->invoice_period;
-        }
-
-        $period = new Period($invoice_interval, $invoice_period, $start);
-
-        $this->starts_at = $period->getStartDate();
-        $this->ends_at = $period->getEndDate();
-
-        return $this;
     }
 
     /**
