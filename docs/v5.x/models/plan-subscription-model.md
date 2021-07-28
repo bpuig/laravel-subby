@@ -292,9 +292,10 @@ $user->subscription('main')->renew();
 $user->subscription('main')->renew(3); // This will triple the periods. CAUTION: If your subscription is 2 'month', you'll get 6 'month'
 ```
 
-Canceled subscriptions with an ended period can't be renewed.
+Canceled subscriptions can't be renewed. Renewing a subscription with trial period ends it.
 
-Renewing a subscription with trial period ends it.
+When a subscription has already ended time ago and now is renewed, period will be set as if subscription started today, but when
+a subscription is still ongoing and renewed, start date is kept and end date is extended by the amount of periods specified.
 
 ## Cancel a Subscription
 
