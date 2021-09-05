@@ -6,6 +6,7 @@ namespace Bpuig\Subby\Traits;
 
 use Bpuig\Subby\Helpers\CarbonHelper;
 use Bpuig\Subby\Services\Period;
+use Carbon\Carbon;
 
 trait HasTrialPeriod
 {

@@ -34,6 +34,7 @@ class Plan extends Model
         'currency',
         'trial_period',
         'trial_interval',
+        'trial_mode',
         'invoice_period',
         'invoice_interval',
         'tier',
@@ -50,6 +51,7 @@ class Plan extends Model
         'currency' => 'string',
         'trial_period' => 'integer',
         'trial_interval' => 'string',
+        'trial_mode' => 'string',
         'invoice_period' => 'integer',
         'invoice_interval' => 'string',
         'tier' => 'integer',
@@ -84,6 +86,7 @@ class Plan extends Model
             'currency' => 'required|alpha|size:3',
             'trial_period' => 'sometimes|integer|max:100000',
             'trial_interval' => 'sometimes|in:hour,day,week,month',
+            'trial_mode' => 'required|in:inside,outside',
             'invoice_period' => 'sometimes|integer|max:100000',
             'invoice_interval' => 'sometimes|in:hour,day,week,month',
             'tier' => 'nullable|integer|max:100000'

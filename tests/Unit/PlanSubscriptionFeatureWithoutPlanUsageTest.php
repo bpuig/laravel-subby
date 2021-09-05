@@ -39,13 +39,13 @@ class PlanSubscriptionFeatureWithoutPlanUsageTest extends TestCase
     }
 
     /**
-     * Consume all of a feature and check next period
+     * Consume all of a feature and renew
      */
-    public function testConsumeAllFeatureAndRenewToNextPeriod()
+    public function testConsumeAllFeatureAndRenew()
     {
         $this->testUser->subscription('main')->recordFeatureUsage('social_cat_profiles', 10);
         $this->testUser->subscription('main')->renew();
-        $this->assertTrue($this->testUser->subscription('main')->canUseFeature('social_cat_profiles'));
+        $this->assertFalse($this->testUser->subscription('main')->canUseFeature('social_cat_profiles'));
     }
 
     /**

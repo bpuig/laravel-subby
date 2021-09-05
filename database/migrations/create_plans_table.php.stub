@@ -27,6 +27,7 @@ class CreatePlansTable extends Migration
             $table->string('currency', 3);
             $table->unsignedSmallInteger('trial_period')->default(0);
             $table->string('trial_interval')->default('day');
+            $table->string('trial_mode')->default('outside');
             $table->unsignedSmallInteger('invoice_period')->default(1);
             $table->string('invoice_interval')->default('month');
             $table->unsignedMediumInteger('tier')->default(0);

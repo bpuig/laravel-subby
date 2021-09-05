@@ -1,5 +1,7 @@
 # Plan Model
 
+[[toc]]
+
 This is the main model of the package, there is nothing without plans. After creating a plan, you
 can [attach it to a subscription](plan-subscription-model.md#create-a-subscription).
 
@@ -54,6 +56,53 @@ or `$plan->getFeatureByTag('social_profiles')`.
 Also read:
 
 - [Get Plan Feature value](plan-feature-model.md#get-plan-feature-value)
+
+## Trial modes
+
+There are two available trial modes: `inside` or `outside`. This defines how the trial will be counted when renewal time
+is due.
+
+**USAGE WILL NOT BE CLEARED** when user has had trial time. This is what gives sense to both methods.
+
+When a **new subscription** to a plan is made:
+
+### If plan has trial
+
+If plan has trial, subscriber does not have subscription but only a trial. Subscription period starts and ends at `null`
+and this is considered subscription is not made. Because in a real case scenario, when a subscriber has a trial it does
+not have a subscription yet, so the invoice period is made and charged after the trial has ended.
+
+#### Renewal when trial is "inside"
+
+If trial mode is `inside`; when trial ends and is renewed invoice period will have substracted the days of trial that
+have been used.
+
+*Example:* 7 day trial in a 30 day subscription period.
+
+- User uses 3 days, likes the app them and renews the subscription. **Result:** The next subscription renewal will be in
+  27 days.
+- User uses all 7 day trial. Forgets about the app and comes back a week later. **Result:** The next subscription
+  renewal will be in 23 days.
+
+In summary: this is **NOT** a free trial. User always ends up paying the full price for full period.
+
+#### Renewal when trial is "outside"
+
+If trial mode is `outside`; when trial ends and is renewed, invoice period will start at the moment it's renewed.
+
+*Example:* 7 day trial in a 30 day subscription period.
+
+- User uses 3 days, likes the app them and renews the subscription. **Result:** The next subscription renewal will be in
+  30 days. User got 3 days for free.
+- User uses all 7 day trial. Forgets about the app and comes back a week later. **Result:** The next subscription
+  renewal will be in 30 days. User got 7 days for free.
+
+In summary: this is **IS** a free trial. User does not pay for the trial period, but for the next subscription period.
+
+### If plan does not have trial
+
+If plan does not have trial, subscriber has subscription. Because when a plan does not have trial, a new subscription
+activates a new invoicing period.
 
 ## Tiers
 
