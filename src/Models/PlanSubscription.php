@@ -12,6 +12,7 @@ use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
 use Bpuig\Subby\Traits\HasSubscriptionPeriodUsage;
 use Bpuig\Subby\Traits\HasTrialPeriodUsage;
+use Bpuig\Subby\Traits\HasSchedules;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,7 +25,7 @@ use UnexpectedValueException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage;
+    use BelongsToPlan, HasSchedules, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage;
 
     /**
      * {@inheritdoc}

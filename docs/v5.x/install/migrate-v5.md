@@ -14,6 +14,25 @@ New lines in config:
 'fallback_plan_tag' => null,
 ```
 
+### Schedule configuration
+
+Merge this lines into your current config.
+
+```php
+// Database Tables
+'tables' => [
+    'plan_subscription_schedules' => 'plan_subscription_schedules'
+],
+'models' => [
+    'plan_subscription_schedule' => \Bpuig\Subby\Models\PlanSubscriptionSchedule::class,
+],
+'services' => [
+    'schedule' => [
+        'default' => \Bpuig\Subby\Services\ScheduleService::class
+    ]
+]
+```
+
 ## Migrations
 
 Publish v5 migrations
