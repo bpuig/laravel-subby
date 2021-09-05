@@ -1,4 +1,11 @@
 # Plan Subscription Schedule
+::: danger Breaking changes in v5.0
+There are some things different to  [Laravel Subby Schedule](https://github.com/bpuig/laravel-subby-schedule). In the
+rare event that you were using the package, please review the docs.
+- Limits were removed
+- Methods were renamed: `usingService` was `service`
+- IsScheduled trait no longer exists
+:::
 
 Want to change a subscription but not right now? Schedule it at the end of the period? With this model you can
 schedule your subscription plan changes.
