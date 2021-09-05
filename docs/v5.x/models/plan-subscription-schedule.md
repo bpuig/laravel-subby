@@ -26,13 +26,13 @@ $user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->setSched
 
 You can set other options like:
 
-- `service()`: References [service](#services) name in config file.
+- `usingService()`: References [service](#services) name in config file.
 - `timeout()`: Timeout for the job that will launch the service.
 - `tries()`: Number of tries job will be attempted
 
 ```php
 $date = Carbon::now()->add(15, 'day');
-$user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->service('default')->tries(2)->timeout(200)->setSchedule();
+$user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->usingService('default')->tries(2)->timeout(200)->setSchedule();
 ```
 
 ## Scopes
@@ -41,7 +41,7 @@ These are the scopes you can apply to your `PlanSubscriptionSchedule` model.
 
 `unprocessed()` returns all unprocessed schedules (not having success or failure) in the past and in the future.
 
-`pendingToDate()` returns a list of schedules that have not been processed and are due to be processed. To define an ending
+`pending()` returns a list of schedules that have not been processed and are due to be processed. To define an ending
 date, use `Carbon` date as parameter to show pending until specified date. Default returns pending until now.
 
 ## Latest and first schedule to date

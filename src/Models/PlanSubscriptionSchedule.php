@@ -103,7 +103,7 @@ class PlanSubscriptionSchedule extends Model
      * @param Carbon|null $date
      * @return mixed
      */
-    public function scopePendingToDate($query, ?Carbon $date = null)
+    public function scopePending($query, ?Carbon $date = null)
     {
         if (!$date) {
             $date = Carbon::now();

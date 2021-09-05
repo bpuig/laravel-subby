@@ -155,7 +155,7 @@ trait HasSchedules
         }
 
         return app(config('subby.models.plan_subscription_schedule'))
-            ->pendingToDate($date)
+            ->pending($date)
             ->where('subscription_id', $this->id)
             ->orderBy('scheduled_at', 'DESC')
             ->first();

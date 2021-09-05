@@ -45,7 +45,7 @@ class SubscriptionScheduleQueuerJob implements ShouldQueue
     {
         // Get all queues of this job
         $queuedSchedules = $this->planSubscriptionScheduleModel
-            ->pendingToDate($this->processUntil)
+            ->pending($this->processUntil)
             ->orderBy('scheduled_at', 'ASC')
             ->get();
 
