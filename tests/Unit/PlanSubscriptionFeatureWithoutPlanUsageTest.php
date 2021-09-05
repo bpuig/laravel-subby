@@ -6,6 +6,7 @@ namespace Bpuig\Subby\Tests\Unit;
 
 use Bpuig\Subby\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 
 class PlanSubscriptionFeatureWithoutPlanUsageTest extends TestCase
 {
@@ -87,5 +88,43 @@ class PlanSubscriptionFeatureWithoutPlanUsageTest extends TestCase
         $this->assertFalse($this->testUser->subscription('main')->canUseFeature('social_cat_profiles'));
     }
 
+    /**
+     * Cancel subscription without fallback plan
+     */
+    public function testCancelSubscriptionWithoutFallbackPlan()
+    {
+        Config::set('subby.fallback_plan_tag', null);
+        $this->testUser->subscription('main')->cancel();
+        $this->assertNotNull($this->testUser->subscription('main')->canceled_at);
+    }
 
+    /**
+     * Cancel subscription with fallback plan
+     */
+    public function testCancelSubscriptionWithFallbackPlan()
+    {
+        Config::set('subby.fallback_plan_tag', 'pro');
+        $this->testUser->subscription('main')->cancel();
+        $this->assertTrue($this->testUser->subscription('main')->plan->tag === 'pro');
+    }
+
+    /**
+     * Cancel subscription with a fallback plan that does not exist
+     */
+    public function testCancelSubscriptionWithInexistentFallbackPlan()
+    {
+        Config::set('subby.fallback_plan_tag', 'super-pro');
+        $this->expectException('UnexpectedValueException');
+        $this->testUser->subscription('main')->cancel();
+    }
+
+    /**
+     * Cancel subscription with fallback plan and ignore it
+     */
+    public function testCancelSubscriptionAndIgnoreFallbackPlan()
+    {
+        Config::set('subby.fallback_plan_tag', 'pro');
+        $this->testUser->subscription('main')->cancel(false, true);
+        $this->assertTrue($this->testUser->subscription('main')->plan->tag === 'basic');
+    }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'main_subscription_tag' => 'main',
-
+    'fallback_plan_tag' => null,
     // Database Tables
     'tables' => [
         'plans' => 'plans',

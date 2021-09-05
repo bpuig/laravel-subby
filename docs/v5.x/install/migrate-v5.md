@@ -8,6 +8,12 @@ In your composer version, require v4.
 "bpuig/laravel-subby": "^5.0",
 ```
 
+## Config
+New lines in config:
+```php 
+'fallback_plan_tag' => null,
+```
+
 ## Migrations
 
 Publish v5 migrations

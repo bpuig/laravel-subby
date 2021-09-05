@@ -305,11 +305,24 @@ To cancel a subscription, simply use the `cancel` method on the user's subscript
 $user->subscription('main')->cancel();
 ```
 
+### Immediately
 By default the subscription will remain active until the end of the period, you may pass `true` to end the
 subscription _immediately_:
 
 ```php
 $user->subscription('main')->cancel(true);
+```
+
+### Fallback plan
+::: tip New in 5.0
+Now you can specify in config a fallback plan
+:::
+If a `fallback_plan_tag` is not `null` in config, when `cancel` is called, subscription will not be canceled but changed
+to fallback plan.
+
+To cancel subscription and ignore fallback, a second parameter is available on `cancel` method:
+```php
+$user->subscription('main')->cancel(false, true);
 ```
 
 ## Uncancel a subscription

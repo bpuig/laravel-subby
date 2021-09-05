@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Validation\Rule;
 use LogicException;
+use UnexpectedValueException;
 
 class PlanSubscription extends Model
 {
@@ -167,29 +168,38 @@ class PlanSubscription extends Model
 
     /**
      * Cancel subscription.
-     *
+     * When a fallback plan is set in config, subscription will never be cancelled but changed to that plan.
      * @param bool $immediately
-     *
+     * @param bool $ignoreFallback
      * @return $this
+     * @throws \Exception
      */
-    public function cancel(bool $immediately = false): PlanSubscription
+    public function cancel(bool $immediately = false, bool $ignoreFallback = false): PlanSubscription
     {
-        $this->canceled_at = Carbon::now();
-
-        // If cancel is immediate, set end date
-        if ($immediately) {
-            // Cancel trial
-            if ($this->isOnTrial()) $this->trial_ends_at = $this->canceled_at;
-
-            // Cancel subscription
-            $this->cancels_at = $this->canceled_at;
-            $this->ends_at = $this->canceled_at;
+        if (!$ignoreFallback && config('subby.fallback_plan_tag')) { // Do not cancel if a fallback plan is set
+            $plan = Plan::getByTag(config('subby.fallback_plan_tag'));
+            if (!$plan) {
+                throw new UnexpectedValueException('Fallback plan ' . config('subby.fallback_plan_tag') . ' does not exist.');
+            }
+            $this->changePlan($plan);
         } else {
-            // If cancel is not immediate, it will be cancelled at trial or period end
-            $this->cancels_at = ($this->isOnTrial()) ? $this->trial_ends_at : $this->ends_at;
-        }
+            $this->canceled_at = Carbon::now();
 
-        $this->save();
+            // If cancel is immediate, set end date
+            if ($immediately) {
+                // Cancel trial
+                if ($this->isOnTrial()) $this->trial_ends_at = $this->canceled_at;
+
+                // Cancel subscription
+                $this->cancels_at = $this->canceled_at;
+                $this->ends_at = $this->canceled_at;
+            } else {
+                // If cancel is not immediate, it will be cancelled at trial or period end
+                $this->cancels_at = ($this->isOnTrial()) ? $this->trial_ends_at : $this->ends_at;
+            }
+
+            $this->save();
+        }
 
         return $this;
     }
