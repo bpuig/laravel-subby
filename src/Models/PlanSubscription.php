@@ -505,7 +505,7 @@ class PlanSubscription extends Model
     {
         return $builder->where('tag', $tag);
     }
-    
+
     /**
      * Set new subscription period.
      *
@@ -656,11 +656,13 @@ class PlanSubscription extends Model
      *
      * @param string $featureTag
      *
-     * @return int
+     * @return int|null
      */
-    public function getFeatureRemainings(string $featureTag): int
+    public function getFeatureRemainings(string $featureTag): ?int
     {
-        return $this->getFeatureValue($featureTag) - $this->getFeatureUsage($featureTag);
+        $featureValue = $this->getFeatureValue($featureTag);
+
+        return (is_numeric($featureValue)) ? $featureValue - $this->getFeatureUsage($featureTag) : null;
     }
 
     /**
