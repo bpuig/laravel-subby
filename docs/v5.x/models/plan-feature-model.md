@@ -23,6 +23,9 @@ $plan->features()->saveMany([
 ]);
 ```
 
+### Sort order
+`sort_order` column has no logic in package, it is just a field for you to use in your queries. 
+
 ## Get Plan Feature value
 
 Say you want to show the value of the feature _posts_per_social_profile_ from above. You can do so in many ways:
