@@ -87,6 +87,8 @@ class Plan extends Model
             'trial_period' => 'sometimes|integer|max:100000',
             'trial_interval' => 'sometimes|in:hour,day,week,month',
             'trial_mode' => 'required|in:inside,outside',
+            'grace_period' => 'sometimes|integer|max:100000',
+            'grace_interval' => 'sometimes|in:hour,day,week,month',
             'invoice_period' => 'sometimes|integer|max:100000',
             'invoice_interval' => 'sometimes|in:hour,day,week,month',
             'tier' => 'nullable|integer|max:100000'
