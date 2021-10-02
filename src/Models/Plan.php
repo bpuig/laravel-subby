@@ -6,6 +6,7 @@ namespace Bpuig\Subby\Models;
 
 use Bpuig\Subby\Exceptions\DuplicateException;
 use Bpuig\Subby\Traits\HasFeatures;
+use Bpuig\Subby\Traits\HasGracePeriod;
 use Bpuig\Subby\Traits\HasPricing;
 use Bpuig\Subby\Traits\HasSubscriptionPeriod;
 use Bpuig\Subby\Traits\HasTrialPeriod;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Plan extends Model
 {
-    use SoftDeletes, HasFeatures, HasPricing, HasTrialPeriod, HasSubscriptionPeriod;
+    use SoftDeletes, HasFeatures, HasPricing, HasTrialPeriod, HasSubscriptionPeriod, HasGracePeriod;
 
     /**
      * {@inheritdoc}

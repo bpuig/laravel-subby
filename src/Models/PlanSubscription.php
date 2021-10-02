@@ -9,6 +9,7 @@ use Bpuig\Subby\Exceptions\UsageDenied;
 use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasFeatures;
+use Bpuig\Subby\Traits\HasGracePeriodUsage;
 use Bpuig\Subby\Traits\HasPricing;
 use Bpuig\Subby\Traits\HasSubscriptionPeriodUsage;
 use Bpuig\Subby\Traits\HasTrialPeriodUsage;
@@ -24,7 +25,7 @@ use UnexpectedValueException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage;
+    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage, HasGracePeriodUsage;
 
     /**
      * {@inheritdoc}
@@ -268,6 +269,8 @@ class PlanSubscription extends Model
         $this->price = $plan->price;
         $this->currency = $plan->currency;
         $this->tier = $plan->tier;
+        $this->grace_interval = $plan->grace_interval;
+        $this->grace_period = $plan->grace_period;
 
         if ($syncInvoicing) {
             // Set same invoicing as selected plan

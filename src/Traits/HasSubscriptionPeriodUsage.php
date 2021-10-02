@@ -18,7 +18,7 @@ trait HasSubscriptionPeriodUsage
      */
     public function isActive(): bool
     {
-        return !$this->hasEnded() || $this->isOnTrial();
+        return !$this->hasEnded() || $this->isOnTrial() || !$this->hasEndedGrace();
     }
 
     /**
