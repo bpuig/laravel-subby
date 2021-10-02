@@ -268,12 +268,6 @@ class PlanSubscription extends Model
         $this->tier = $plan->tier;
 
         if ($syncInvoicing) {
-            // Set new start and end date
-            $period = new Period($plan->invoice_interval, $plan->invoice_period);
-
-            $this->starts_at = $period->getStartDate();
-            $this->ends_at = $period->getEndDate();
-
             // Set same invoicing as selected plan
             $this->invoice_interval = $plan->invoice_interval;
             $this->invoice_period = $plan->invoice_period;
