@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Bpuig\Subby\Models;
 
 use BadMethodCallException;
-use Bpuig\Subby\Exceptions\PlanSubscriptionFeatureUsageDenied;
+use Bpuig\Subby\Exceptions\UsageDenied;
 use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasFeatures;
@@ -503,7 +503,7 @@ class PlanSubscription extends Model
     public function recordFeatureUsage(string $featureTag, int $uses = 1, bool $incremental = true)
     {
         if (!$this->canUseFeature($featureTag)) {
-            throw new PlanSubscriptionFeatureUsageDenied($featureTag);
+            throw new UsageDenied($featureTag);
         }
 
         $feature = $this->getFeatureByTag($featureTag);

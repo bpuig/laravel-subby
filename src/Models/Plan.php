@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
-use Bpuig\Subby\Exceptions\PlanTagAlreadyExists;
+use Bpuig\Subby\Exceptions\DuplicateException;
 use Bpuig\Subby\Traits\HasFeatures;
 use Bpuig\Subby\Traits\HasPricing;
 use Bpuig\Subby\Traits\HasSubscriptionPeriod;
@@ -96,7 +96,7 @@ class Plan extends Model
     public static function create(array $attributes = [])
     {
         if (static::where('tag', $attributes['tag'])->first()) {
-            throw new PlanTagAlreadyExists($attributes['tag']);
+            throw new DuplicateException();
         }
 
         return static::query()->create($attributes);

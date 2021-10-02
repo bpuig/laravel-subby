@@ -158,7 +158,7 @@ $user->subscription('main')->recordFeatureUsage('social_profiles');
 ```
 
 When recording feature `canUseFeature` is already called within the function, so you do not have to check every time.
-Exception is thrown if subscriber cannot use the feature.
+`UsageDenied` Exception is thrown if subscriber cannot use the feature.
 
 The `recordFeatureUsage` method accepts 3 parameters: the first one is the feature's tag, the second one is the quantity
 of uses to add (default is `1`), and the third one indicates if the addition should be incremental (default behavior),

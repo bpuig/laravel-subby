@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Traits;
 
-use Bpuig\Subby\Exceptions\PlanSubscriptionTagAlreadyExists;
-use Bpuig\Subby\Exceptions\PlanSubscriptionNotFound;
+use Bpuig\Subby\Exceptions\DuplicateException;
+use Bpuig\Subby\Exceptions\InvalidPlanSubscription;
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscription;
 use Bpuig\Subby\Services\SubscriptionPeriod;
@@ -64,7 +64,7 @@ trait HasSubscriptions
             if ($count === 1) {
                 return $this->subscriptions()->first();
             } elseif ($count === 0) {
-                throw new PlanSubscriptionNotFound($subscriptionTag);
+                throw new InvalidPlanSubscription($subscriptionTag);
             }
         }
 
@@ -77,7 +77,7 @@ trait HasSubscriptions
         $subscription = $this->subscriptions()->where('tag', $subscriptionTag)->first();
 
         if (!$subscription) {
-            throw new PlanSubscriptionNotFound($subscriptionTag);
+            throw new InvalidPlanSubscription($subscriptionTag);
         }
 
         return $subscription;
@@ -129,7 +129,7 @@ trait HasSubscriptions
 
         try {
             $this->subscription($tag);
-        } catch (PlanSubscriptionNotFound $e) {
+        } catch (InvalidPlanSubscription $e) {
             $subscription = $this->subscriptions()->create([
                 'tag' => $tag,
                 'name' => $name,
@@ -152,7 +152,7 @@ trait HasSubscriptions
             return $subscription;
         }
 
-        throw new PlanSubscriptionTagAlreadyExists($tag);
+        throw new DuplicateException();
     }
 }
 
