@@ -26,7 +26,7 @@ trait HasGracePeriodUsage
      */
     public function getGraceEndDate()
     {
-        return ($this->getGraceStartDate()) ?? $this->ends_at->add($this->grace_period, $this->grace_interval);
+        return $this->getGraceStartDate()->add($this->grace_period, $this->grace_interval);
     }
 
     /**
