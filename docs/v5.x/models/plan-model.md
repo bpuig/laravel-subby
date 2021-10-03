@@ -20,6 +20,8 @@ $plan = Plan::create([
     'invoice_interval' => 'month',
     'trial_period' => 15,
     'trial_interval' => 'day',
+    'grace_period' => 1,
+    'grace_interval' => 'day',
     'tier' => 1,
     'currency' => 'EUR',
 ]);
@@ -104,6 +106,16 @@ In summary: this is **IS** a free trial. User does not pay for the trial period,
 If plan does not have trial, subscriber has subscription. Because when a plan does not have trial, a new subscription
 activates a new invoicing period.
 
+### Trial period time related functions <Badge text="new in v5.0" type="tip"/>
+
+You can get some information about duration of your trial with:
+
+```php
+$plan->getTrialTotalDurationIn('day'); // Returns number of days trial lasts
+```
+
+You can use Carbon accepted intervals (in singular): `year`,`month`,`day`,`hour`,`minute`,`second`,`microsecond`...
+
 ## Tiers
 
 The use of tiers is **optional**. Usually a tier is a "level" of subscription.
@@ -123,7 +135,7 @@ But... what if there is a promo during some time and the price of **Intermediate
 next month when there is no promo? When you change the subscription plan from your promo **Intermediate** to **Basic**
 normally would be a downgrade, but now prices are reversed and action is an upgrade. Weird, huh?
 
-What if you customize your user subscription and now its somewhere in the middle between **Intermediate** and **Pro**?
+What if you customize your user subscription and now it is somewhere in the middle between **Intermediate** and **Pro**?
 You can change the tier to a number in between, so you know what to do when changing (downgrading) to existing
 Intermediate or upgrading to Pro.
 
@@ -139,15 +151,16 @@ if ($user->subscription('main')->tier < $newPlan->tier) {
 }
 ```
 
-## Trial period time related functions <Badge text="new in v5.0" type="tip"/>
+## Grace <Badge text="new in v5.0" type="tip"/>
+Grace period is the extra time the subscription will be considered active after it has ended. By default is disabled, 
+you can set it when creating the plan with a `grace_period` and `grace_interval`. It will be inherited by new subscriptions
+and also will be synchronized when using `syncPlan`.
 
-You can get some information about duration of your trial with:
-
+### Grace related functions
 ```php
-$plan->getTrialTotalDurationIn('day'); // Returns number of days trial lasts
+$plan->hasGrace(); // Returns boolean indicating if plan has grace period
+$plan->getGraceTotalDurationIn('day'); // Returns duration integer in set Carbon interval (second, day, month...)
 ```
-
-You can use Carbon accepted intervals (in singular): `year`,`month`,`day`,`hour`,`minute`,`second`,`microsecond`...
 
 ## Subscription period time related functions <Badge text="new in v5.0" type="tip"/>
 

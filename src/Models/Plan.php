@@ -6,6 +6,7 @@ namespace Bpuig\Subby\Models;
 
 use Bpuig\Subby\Exceptions\DuplicateException;
 use Bpuig\Subby\Traits\HasFeatures;
+use Bpuig\Subby\Traits\HasGracePeriod;
 use Bpuig\Subby\Traits\HasPricing;
 use Bpuig\Subby\Traits\HasSubscriptionPeriod;
 use Bpuig\Subby\Traits\HasTrialPeriod;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Plan extends Model
 {
-    use SoftDeletes, HasFeatures, HasPricing, HasTrialPeriod, HasSubscriptionPeriod;
+    use SoftDeletes, HasFeatures, HasPricing, HasTrialPeriod, HasSubscriptionPeriod, HasGracePeriod;
 
     /**
      * {@inheritdoc}
@@ -35,6 +36,8 @@ class Plan extends Model
         'trial_period',
         'trial_interval',
         'trial_mode',
+        'grace_period',
+        'grace_interval',
         'invoice_period',
         'invoice_interval',
         'tier',
@@ -52,6 +55,8 @@ class Plan extends Model
         'trial_period' => 'integer',
         'trial_interval' => 'string',
         'trial_mode' => 'string',
+        'grace_period' => 'integer',
+        'grace_interval' => 'string',
         'invoice_period' => 'integer',
         'invoice_interval' => 'string',
         'tier' => 'integer',
@@ -87,6 +92,8 @@ class Plan extends Model
             'trial_period' => 'sometimes|integer|max:100000',
             'trial_interval' => 'sometimes|in:hour,day,week,month',
             'trial_mode' => 'required|in:inside,outside',
+            'grace_period' => 'sometimes|integer|max:100000',
+            'grace_interval' => 'sometimes|in:hour,day,week,month',
             'invoice_period' => 'sometimes|integer|max:100000',
             'invoice_interval' => 'sometimes|in:hour,day,week,month',
             'tier' => 'nullable|integer|max:100000'

@@ -15,6 +15,8 @@ class AlterPlansTableV5 extends Migration
     {
         Schema::table(config('subby.tables.plans'), function (Blueprint $table) {
             $table->string('trial_mode')->default('outside')->after('trial_interval');
+            $table->unsignedSmallInteger('grace_period')->default(0)->after('trial_mode');
+            $table->string('grace_interval')->default('day')>after('grace_period');
         });
 
         app()->make(config('subby.models.plan'))->query()->update(['trial_mode' => 'outside']);
@@ -28,7 +30,7 @@ class AlterPlansTableV5 extends Migration
     public function down()
     {
         Schema::table(config('subby.tables.plans'), function (Blueprint $table) {
-            $table->dropColumn('trial_mode');
+            $table->dropColumn(['trial_mode', 'grace_period', 'grace_interval']);
         });
     }
 }
