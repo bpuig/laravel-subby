@@ -60,9 +60,24 @@ class PlanGraceTest extends TestCase
         $user = UserFactory::new()->create();
         $user->newSubscription('grace', $plan);
 
-        dd($user->subscription('grace')->getGraceEndDate());
-
+        // Travel one second after subscription ends
         $this->travelTo($user->subscription('grace')->ends_at->addSecond());
         $this->assertTrue($user->subscription('grace')->isActive());
+    }
+
+    /**
+     * Test Subscription is not active on ending grace period
+     * @depends testPlanHasGrace
+     */
+    public function testSubscriptionIsNotActiveOnGraceEnd($plan): void
+    {
+        $user = UserFactory::new()->create();
+        $user->newSubscription('grace', $plan);
+
+        $graceSubscription = $user->subscription('grace');
+
+        // Travel one second after period ends
+        $this->travelTo($graceSubscription->ends_at->add($graceSubscription->grace_period, $graceSubscription->grace_interval)->addSecond());
+        $this->assertFalse($graceSubscription->isActive());
     }
 }

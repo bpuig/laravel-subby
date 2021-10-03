@@ -67,6 +67,6 @@ trait HasGracePeriodUsage
      */
     public function hasEndedGrace(): bool
     {
-        return !$this->getGraceStartDate() || \Carbon\Carbon::now()->gte($this->getGraceEndDate());
+        return !$this->getGraceStartDate() || \Carbon\Carbon::now()->gt($this->getGraceEndDate());
     }
 }
