@@ -9,6 +9,7 @@ use Bpuig\Subby\Exceptions\UsageDenied;
 use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasFeatures;
+use Bpuig\Subby\Traits\HasGracePeriod;
 use Bpuig\Subby\Traits\HasGracePeriodUsage;
 use Bpuig\Subby\Traits\HasPricing;
 use Bpuig\Subby\Traits\HasSubscriptionPeriodUsage;
@@ -25,7 +26,7 @@ use UnexpectedValueException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage, HasGracePeriodUsage;
+    use BelongsToPlan, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage, HasGracePeriod, HasGracePeriodUsage;
 
     /**
      * {@inheritdoc}

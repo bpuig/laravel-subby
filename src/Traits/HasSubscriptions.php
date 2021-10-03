@@ -140,6 +140,8 @@ trait HasSubscriptions
                 'tier' => $plan->tier,
                 'trial_interval' => $plan->trial_interval,
                 'trial_period' => $plan->trial_period,
+                'grace_interval' => $plan->grace_interval,
+                'grace_period' => $plan->grace_period,
                 'invoice_interval' => $plan->invoice_interval,
                 'invoice_period' => $plan->invoice_period,
                 'trial_ends_at' => $subscriptionPeriod->getTrialEndDate(),
