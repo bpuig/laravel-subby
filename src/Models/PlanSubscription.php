@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Bpuig\Subby\Models;
 
 use BadMethodCallException;
-use Bpuig\Subby\Exceptions\PlanSubscriptionFeatureUsageDenied;
+use Bpuig\Subby\Exceptions\UsageDenied;
 use Bpuig\Subby\Services\Period;
 use Bpuig\Subby\Traits\BelongsToPlan;
 use Bpuig\Subby\Traits\HasFeatures;
+use Bpuig\Subby\Traits\HasGracePeriod;
+use Bpuig\Subby\Traits\HasGracePeriodUsage;
 use Bpuig\Subby\Traits\HasPricing;
 use Bpuig\Subby\Traits\HasSubscriptionPeriodUsage;
 use Bpuig\Subby\Traits\HasTrialPeriodUsage;
@@ -25,7 +27,7 @@ use UnexpectedValueException;
 
 class PlanSubscription extends Model
 {
-    use BelongsToPlan, HasSchedules, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage;
+    use BelongsToPlan, HasSchedules, HasFeatures, HasPricing, HasTrialPeriodUsage, HasSubscriptionPeriodUsage, HasGracePeriod, HasGracePeriodUsage;
 
     /**
      * {@inheritdoc}
@@ -41,6 +43,8 @@ class PlanSubscription extends Model
         'currency',
         'trial_period',
         'trial_interval',
+        'grace_period',
+        'grace_interval',
         'invoice_period',
         'invoice_interval',
         'tier',
@@ -61,6 +65,8 @@ class PlanSubscription extends Model
         'currency' => 'string',
         'trial_period' => 'integer',
         'trial_interval' => 'string',
+        'grace_period' => 'integer',
+        'grace_interval' => 'string',
         'invoice_period' => 'integer',
         'invoice_interval' => 'string',
         'tier' => 'integer',
@@ -108,6 +114,8 @@ class PlanSubscription extends Model
             'currency' => 'required|alpha|size:3',
             'trial_period' => 'sometimes|integer|max:100000',
             'trial_interval' => 'sometimes|in:hour,day,week,month',
+            'grace_period' => 'sometimes|integer|max:100000',
+            'grace_interval' => 'sometimes|in:hour,day,week,month',
             'invoice_period' => 'sometimes|integer|max:100000',
             'invoice_interval' => 'sometimes|in:hour,day,week,month',
             'tier' => 'nullable|integer|max:100000',
@@ -267,14 +275,10 @@ class PlanSubscription extends Model
         $this->price = $plan->price;
         $this->currency = $plan->currency;
         $this->tier = $plan->tier;
+        $this->grace_interval = $plan->grace_interval;
+        $this->grace_period = $plan->grace_period;
 
         if ($syncInvoicing) {
-            // Set new start and end date
-            $period = new Period($plan->invoice_interval, $plan->invoice_period);
-
-            $this->starts_at = $period->getStartDate();
-            $this->ends_at = $period->getEndDate();
-
             // Set same invoicing as selected plan
             $this->invoice_interval = $plan->invoice_interval;
             $this->invoice_period = $plan->invoice_period;
@@ -504,7 +508,7 @@ class PlanSubscription extends Model
     public function recordFeatureUsage(string $featureTag, int $uses = 1, bool $incremental = true)
     {
         if (!$this->canUseFeature($featureTag)) {
-            throw new PlanSubscriptionFeatureUsageDenied($featureTag);
+            throw new UsageDenied($featureTag);
         }
 
         $feature = $this->getFeatureByTag($featureTag);

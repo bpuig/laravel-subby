@@ -23,6 +23,8 @@ class PlanSubscriptionTrialTest extends TestCase
             'name' => 'New Plan without trial',
             'trial_period' => 0,
             'trial_interval' => 'hour',
+            'grace_period' => 0,
+            'grace_interval' => 'hour',
             'invoice_period' => 1,
             'invoice_interval' => 'month',
             'price' => 10,
@@ -57,6 +59,8 @@ class PlanSubscriptionTrialTest extends TestCase
         $plan = Plan::create([
             'tag' => 'test-with-trial',
             'name' => 'New Plan with trial',
+            'grace_period' => 0,
+            'grace_interval' => 'hour',
             'trial_period' => 7,
             'trial_interval' => 'day',
             'invoice_period' => 1,

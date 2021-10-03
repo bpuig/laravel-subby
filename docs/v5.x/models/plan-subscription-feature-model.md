@@ -128,3 +128,7 @@ To get all the subscription features along with their usage:
 ```php
 $user->subscription('main')->features()->with('usage')->get();
 ```
+
+## Other
+### Sort order
+`sort_order` column has no logic in package, it is just a field for you to use in your queries. 

@@ -17,7 +17,7 @@ class PlanTest extends TestCase
      */
     public function testUnableToCreatePlanWithExistingTag()
     {
-        $this->expectException('Bpuig\Subby\Exceptions\PlanTagAlreadyExists');
+        $this->expectException('Bpuig\Subby\Exceptions\DuplicateException');
         Plan::create([
             'tag' => 'basic',
             'name' => 'New Basic Plan',
