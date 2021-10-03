@@ -6,7 +6,6 @@ namespace Bpuig\Subby\Tests\Unit;
 
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Tests\Database\Factories\UserFactory;
-use Bpuig\Subby\Tests\Models\User;
 use Bpuig\Subby\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
