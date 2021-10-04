@@ -46,4 +46,9 @@ Is now named `getRemainingSubscriptionPeriodProportion()` and accepts new parame
 Is now named `getSubscriptionRemainingUsagePriceProrate()` and accepts new parameters.
 
 ### `setNewPeriod` method in subscription
+
 `setNewPeriod` has been removed.
+
+### `syncPlan` method (which also relates to `changePlan`) in subscription
+
+`syncPlan` now does not renew the subscription
