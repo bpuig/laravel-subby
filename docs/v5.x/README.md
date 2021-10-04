@@ -16,10 +16,9 @@ The way this package is made:
    subscriber's subscription stays as it was, price, invoicing and features are "frozen" unless manually synchronized
    with related plan.
 
-## Extensions
+## Other features
 
-- [Laravel Subby Schedule](https://github.com/bpuig/laravel-subby-schedule): For scheduling your plan changes in the
-  future.
+- [Schedule](models/plan-subscription-schedule-model.md): Ability to schedule one or multiple plan changes in the future.
 
 ## Considerations
 
