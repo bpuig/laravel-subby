@@ -1,23 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterPlansTableV5 extends Migration
+class AlterPlanSubscriptionsTableV5 extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
             $table->unsignedSmallInteger('trial_period')->default(0)->after('currency');
             $table->string('trial_interval')->default('day')->after('trial_period');
             $table->unsignedSmallInteger('grace_period')->default(0)->after('trial_interval');
-            $table->string('grace_interval')->default('day')>after('grace_period');
+            $table->string('grace_interval')->default('day')->after('grace_period');
         });
     }
 
@@ -26,7 +28,7 @@ class AlterPlansTableV5 extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
             $table->dropColumn(['trial_period', 'trial_interval', 'grace_period', 'grace_interval']);
