@@ -5,7 +5,8 @@ var sidebar = [
         collapsable: false,
         children: [
             ['', 'Introduction'],
-            ['install/', 'Installation']
+            ['install/', 'Installation'],
+            ['install/migrate-v5.md', 'Upgrade v4 to v5']
         ]
     },
     {
