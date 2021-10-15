@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $subscription_id
  * @property integer $plan_id;
  * @property string $service
- * @property integer $tries
- * @property integer $timeout
  * @property \Carbon\Carbon|null $scheduled_at
  * @property \Carbon\Carbon|null $failed_at
  * @property \Carbon\Carbon|null $succeeded_at
@@ -30,8 +28,6 @@ class PlanSubscriptionSchedule extends Model
         'subscription_id',
         'plan_id',
         'service',
-        'tries',
-        'timeout',
         'scheduled_at'
     ];
 
@@ -42,8 +38,6 @@ class PlanSubscriptionSchedule extends Model
         'subscription_id' => 'integer',
         'plan_id' => 'integer',
         'service' => 'string',
-        'tries' => 'integer',
-        'timeout' => 'integer',
         'scheduled_at' => 'datetime',
         'failed_at' => 'datetime',
         'succeeded_at' => 'datetime'
@@ -71,8 +65,6 @@ class PlanSubscriptionSchedule extends Model
             'subscription_id' => 'required|integer|exists:' . config('subby.tables.plan_subscriptions') . ',id',
             'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
             'service' => 'string',
-            'tries' => 'integer',
-            'timeout' => 'integer',
             'scheduled_at' => 'date'
         ];
     }

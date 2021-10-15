@@ -20,8 +20,6 @@ class CreatePlanSubscriptionSchedulesTable extends Migration
             $table->unsignedInteger('subscription_id');
             $table->unsignedInteger('plan_id');
             $table->string('service')->default('default');
-            $table->smallInteger('tries')->default(3);
-            $table->integer('timeout')->default(120);
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamp('failed_at')->nullable();
             $table->timestamp('succeeded_at')->nullable();

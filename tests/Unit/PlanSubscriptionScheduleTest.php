@@ -128,7 +128,7 @@ class PlanSubscriptionScheduleTest extends TestCase
     public function testSuccessfulJob()
     {
         $date = Carbon::now()->add(10, 'day');
-        $this->testUser->subscription('main')->toPlan($this->testPlanPro)->usingService('success')->timeout(200)->tries(1)->onDate($date)->setSchedule();
+        $this->testUser->subscription('main')->toPlan($this->testPlanPro)->usingService('success')->onDate($date)->setSchedule();
 
         $this->travelTo($date->add(5, 'second'));
 
@@ -151,7 +151,7 @@ class PlanSubscriptionScheduleTest extends TestCase
     public function testFailedJob()
     {
         $date = Carbon::now()->add(10, 'day');
-        $this->testUser->subscription('main')->toPlan($this->testPlanPro)->usingService('fail')->timeout(200)->tries(1)->onDate($date)->setSchedule();
+        $this->testUser->subscription('main')->toPlan($this->testPlanPro)->usingService('fail')->onDate($date)->setSchedule();
 
         $this->travelTo($date->add(5, 'second'));
 
@@ -179,7 +179,7 @@ class PlanSubscriptionScheduleTest extends TestCase
         while ($i <= 10) {
             $date->add(1, 'day');
             $plan = ($i % 2 === 0) ? $this->testPlanPro : $this->testPlanBasic;
-            $this->testUser->subscription('main')->toPlan($plan)->usingService('success')->timeout(200)->tries(1)->onDate($date)->setSchedule();
+            $this->testUser->subscription('main')->toPlan($plan)->usingService('success')->onDate($date)->setSchedule();
             $i++;
         }
 
