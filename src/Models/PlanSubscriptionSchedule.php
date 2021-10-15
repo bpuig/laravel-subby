@@ -4,6 +4,7 @@ namespace Bpuig\Subby\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Bpuig\Subby\Traits\IsEventable;
 
 /**
  * Class PlanSubscriptionSchedule
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PlanSubscriptionSchedule extends Model
 {
+    use IsEventable;
+
     public $timestamps = false;
 
     /**
@@ -112,16 +115,7 @@ class PlanSubscriptionSchedule extends Model
         return $query->where('scheduled_at', '<=', $date)->unprocessed();
     }
 
-    /**
-     * Not processed schedules
-     * @param $query
-     *
-     * @return mixed
-     */
-    public function scopeUnprocessed($query)
-    {
-        return $query->whereNull('succeeded_at')->whereNull('failed_at');
-    }
+
 
     /**
      * Process scheduled plan change

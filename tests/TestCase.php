@@ -40,15 +40,19 @@ class TestCase extends Orchestra
                 'plans' => 'plans',
                 'plan_features' => 'plan_features',
                 'plan_subscriptions' => 'plan_subscriptions',
+                'plan_subscription_events' => 'plan_subscription_events',
+                'plan_subscription_event_actions' => 'plan_subscription_event_actions',
                 'plan_subscription_features' => 'plan_subscription_features',
                 'plan_subscription_schedules' => 'plan_subscription_schedules',
-                'plan_subscription_usage' => 'plan_subscription_usage'
+                'plan_subscription_usage' => 'plan_subscription_usage',
             ],
             // Models
             'models' => [
                 'plan' => \Bpuig\Subby\Models\Plan::class,
                 'plan_feature' => \Bpuig\Subby\Models\PlanFeature::class,
                 'plan_subscription' => \Bpuig\Subby\Models\PlanSubscription::class,
+                'plan_subscription_event' => \Bpuig\Subby\Models\PlanSubscriptionEvent::class,
+                'plan_subscription_event_action' => \Bpuig\Subby\Models\PlanSubscriptionEventAction::class,
                 'plan_subscription_feature' => \Bpuig\Subby\Models\PlanSubscriptionFeature::class,
                 'plan_subscription_schedule' => \Bpuig\Subby\Models\PlanSubscriptionSchedule::class,
                 'plan_subscription_usage' => \Bpuig\Subby\Models\PlanSubscriptionUsage::class,
@@ -96,6 +100,8 @@ class TestCase extends Orchestra
         include_once __DIR__ . '/../database/migrations/create_plan_subscription_features_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plan_subscription_usage_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_plan_subscription_schedules_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_plan_subscription_events_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_plan_subscription_event_actions_table.php.stub';
 
         Artisan::call('migrate:fresh', ['--force' => true]);
 
@@ -107,6 +113,8 @@ class TestCase extends Orchestra
         (new \CreatePlanSubscriptionFeaturesTable)->up();
         (new \CreatePlanSubscriptionUsageTable)->up();
         (new \CreatePlanSubscriptionSchedulesTable)->up();
+        (new \CreatePlanSubscriptionEventsTable)->up();
+        (new \CreatePlanSubscriptionEventActionsTable)->up();
     }
 
     /**
