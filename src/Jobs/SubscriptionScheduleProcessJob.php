@@ -19,7 +19,7 @@ class SubscriptionScheduleProcessJob implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 3;
+    public $tries = 1;
 
     /**
      * The number of seconds the job can run before timing out.
@@ -48,9 +48,7 @@ class SubscriptionScheduleProcessJob implements ShouldQueue
 
         $this->planSubscriptionSchedule = $planSubscriptionSchedule;
 
-        // Set options
-        $this->tries = $this->planSubscriptionSchedule->tries;
-        $this->timeout = $this->planSubscriptionSchedule->timeout;
+        // Retrieve service from config
         $this->scheduleServiceConfig = 'subby.services.schedule.' . $this->planSubscriptionSchedule->service;
 
         // Check if service exists in config file
@@ -60,6 +58,10 @@ class SubscriptionScheduleProcessJob implements ShouldQueue
 
         // Create instance of selected service and inject plan's subscription schedule
         $this->scheduleService = app()->make(config($this->scheduleServiceConfig), ['planSubscriptionSchedule' => $this->planSubscriptionSchedule]);
+
+        // Set options from service constants
+        $this->tries = $this->scheduleService::TRIES;
+        $this->timeout = $this->scheduleService::TIMEOUT;
     }
 
     // Avoid overlapping jobs, so it is not paid double, etc.

@@ -4,6 +4,7 @@ There are some things different to  [Laravel Subby Schedule](https://github.com/
 rare event that you were using the package, please review the docs.
 - Limits were removed
 - Methods were renamed: `usingService` was `service`
+- Columns `tries` and `timeout` are now constants in service
 - IsScheduled trait no longer exists
 :::
 
@@ -32,14 +33,11 @@ $user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->setSched
 ```
 
 You can set other options like:
-
 - `usingService()`: References [service](#services) name in config file.
-- `timeout()`: Timeout for the job that will launch the service.
-- `tries()`: Number of tries job will be attempted
 
 ```php
 $date = Carbon::now()->add(15, 'day');
-$user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->usingService('default')->tries(2)->timeout(200)->setSchedule();
+$user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->usingService('default')->setSchedule();
 ```
 
 ## Scopes
@@ -111,6 +109,15 @@ class ScheduleService implements PlanSubscriptionScheduleService
         $this->success = true;
     }
 }
+```
+
+### Service options
+
+The defined options for the job that will call the service will be defined in constants the service file. By default, 
+PlanSubscriptionSchedule contract has this settings.
+```php
+const TRIES=3; // Number of tries job will be attempted
+const TIMEOUT=120; // Timeout for the job that will launch the service.
 ```
 
 ## Jobs

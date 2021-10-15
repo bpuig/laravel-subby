@@ -30,18 +30,6 @@ trait HasSchedules
     private $scheduledService = 'default';
 
     /**
-     * Tries for schedule job
-     * @var int
-     */
-    private $scheduledTries = 1;
-
-    /**
-     * Timeout for job
-     * @var int
-     */
-    private $scheduledTimeout = 120;
-
-    /**
      * Method of subscription change creation / update
      * @var string
      */
@@ -84,32 +72,6 @@ trait HasSchedules
     }
 
     /**
-     * Timeout for the job
-     *
-     * @param int $seconds
-     * @return $this
-     */
-    public function timeout(int $seconds): self
-    {
-        $this->scheduledTimeout = $seconds;
-
-        return $this;
-    }
-
-    /**
-     * Tries for the job
-     *
-     * @param int $number
-     * @return $this
-     */
-    public function tries(int $number): self
-    {
-        $this->scheduledTries = $number;
-
-        return $this;
-    }
-
-    /**
      * Schedule to time
      *
      * @param Carbon $date
@@ -136,8 +98,6 @@ trait HasSchedules
             'plan_id' => $this->scheduledPlan->id,
             'subscription_id' => $this->id,
             'service' => $this->scheduledService,
-            'tries' => $this->scheduledTries,
-            'timeout' => $this->scheduledTimeout,
             'scheduled_at' => $this->scheduledDate
         ];
 

@@ -6,6 +6,9 @@ namespace Bpuig\Subby\Contracts;
 
 interface PlanSubscriptionScheduleService
 {
+    const TRIES=3;
+    const TIMEOUT=120;
+
     /**
      * PlanSubscriptionScheduleService constructor.
      * @param $planSubscriptionSchedule
