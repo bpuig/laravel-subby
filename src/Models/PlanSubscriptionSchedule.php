@@ -116,12 +116,12 @@ class PlanSubscriptionSchedule extends Model
     }
 
     /**
-     * Process scheduled plan change
+     * Change Subscription plan
      * @param bool $clearUsage Clear subscription usage
      * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
      * @return PlanSubscriptionSchedule
      */
-    public function executeChange(bool $clearUsage = true, bool $syncInvoicing = true)
+    public function changeSubscriptionPlan(bool $clearUsage = true, bool $syncInvoicing = true)
     {
         $this->subscription->changePlan($this->plan, $clearUsage, $syncInvoicing);
         $this->succeed();

@@ -24,7 +24,7 @@ trait IsScheduleService
     public function changePlan()
     {
         if ($this->success) {
-            $this->planSubscriptionSchedule->executeChange($this->clearUsage, $this->syncInvoicing);
+            $this->planSubscriptionSchedule->changeSubscriptionPlan($this->clearUsage, $this->syncInvoicing);
         } else {
             $this->planSubscriptionSchedule->fail();
             throw new \Exception('Process failed.', 500);
