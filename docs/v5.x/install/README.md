@@ -26,18 +26,9 @@ php artisan migrate
 
 # Upgrade from v4.x to v5.x
 
-This package need to be upgraded version by version to apply database changes.
+This package need to be upgraded version by version to apply database changes. See [migrate v5](migrate-v5.md) for breaking
+changes.
 
-Require in composer version 5 or greater. Publish and migrate:
-
-```shell
-php artisan vendor:publish --tag=subby.migrations.v5.0.0
-php artisan migrate
-```
-
-### Breaking changes
-
-Find breaking changes in [changelog](../CHANGELOG.md).
 
 # Attach Subscriptions to model
 

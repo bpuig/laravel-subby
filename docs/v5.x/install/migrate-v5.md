@@ -2,7 +2,7 @@
 
 ## Composer
 
-In your composer version, require v4.
+In your composer version, require v5.
 
 ```json
 "bpuig/laravel-subby": "^5.0",

@@ -9,12 +9,12 @@ Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/
 
 ## Version Compatibility
 ::: tip CURRENT VERSION
-Current version is v4.0
+Current version is v5.0
 :::
 
 Laravel  | Laravel Subby
 :---------|:----------
-8.x    | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x (in development)](/v5.x/)
+8.x    | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x](/v5.x/)
 7.x    | [v4.x](/v4.x/)
 6.x    | [v4.x](/v4.x/)
 

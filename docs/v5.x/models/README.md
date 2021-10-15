@@ -1,6 +1,6 @@
 # Models
 
-**Subby** uses 6 models:
+**Subby** uses this models:
 
 ```php
 Bpuig\Subby\Models\Plan;
