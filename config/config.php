@@ -10,6 +10,8 @@ return [
         'plans' => 'plans',
         'plan_features' => 'plan_features',
         'plan_subscriptions' => 'plan_subscriptions',
+        'plan_subscription_events' => 'plan_subscription_events',
+        'plan_subscription_event_actions' => 'plan_subscription_event_actions',
         'plan_subscription_features' => 'plan_subscription_features',
         'plan_subscription_schedules' => 'plan_subscription_schedules',
         'plan_subscription_usage' => 'plan_subscription_usage',
