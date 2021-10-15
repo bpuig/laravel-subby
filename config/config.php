@@ -22,6 +22,8 @@ return [
         'plan' => \Bpuig\Subby\Models\Plan::class,
         'plan_feature' => \Bpuig\Subby\Models\PlanFeature::class,
         'plan_subscription' => \Bpuig\Subby\Models\PlanSubscription::class,
+        'plan_subscription_event' => \Bpuig\Subby\Models\PlanSubscriptionEvent::class,
+        'plan_subscription_event_action' => \Bpuig\Subby\Models\PlanSubscriptionEventAction::class,
         'plan_subscription_feature' => \Bpuig\Subby\Models\PlanSubscriptionFeature::class,
         'plan_subscription_schedule' => \Bpuig\Subby\Models\PlanSubscriptionSchedule::class,
         'plan_subscription_usage' => \Bpuig\Subby\Models\PlanSubscriptionUsage::class,

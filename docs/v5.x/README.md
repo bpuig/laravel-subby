@@ -23,9 +23,6 @@ The way this package is made:
 ## Considerations
 
 - Payments and translations are out of scope for this package.
-- You may want to extend some core models, in case you need to override the logic behind some helper methods
-  like `renew()`, `cancel()` etc. E.g.: when cancelling a subscription you may want to also cancel the recurring payment
-  attached.
 
 ## Changelog
 
