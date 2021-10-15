@@ -61,6 +61,16 @@ trait HasGracePeriodUsage
     }
 
     /**
+     * Check if entity has started grace
+     *
+     * @return bool
+     */
+    public function hasStartedGrace(): bool
+    {
+        return $this->getGraceStartDate() && \Carbon\Carbon::now()->gt($this->getGraceStartDate());
+    }
+
+    /**
      * Check if entity has ended grace
      *
      * @return bool
@@ -68,5 +78,13 @@ trait HasGracePeriodUsage
     public function hasEndedGrace(): bool
     {
         return !$this->getGraceStartDate() || \Carbon\Carbon::now()->gt($this->getGraceEndDate());
+    }
+
+    /**
+     * Check if entity is in grace period
+     * @return bool
+     */
+    public function isInGrace() {
+        return $this->hasStartedGrace() && !$this->hasEndedGrace();
     }
 }

@@ -99,6 +99,7 @@ $user->subscription('main')->getGraceEndDate(); // Returns grace end date
 $user->subscription('main')->getGraceTotalDurationIn('day'); // Returns number of days grace lasts
 $user->subscription('main')->getGracePeriodUsageIn('day'); // Returns number of days of grace consumed
 $user->subscription('main')->getGracePeriodRemainingUsageIn('day'); // Returns number of days until subscription grace ends
+$user->subscription('main')->hasStartedGrace(); // Returns boolean indicating if grace period is over
 $user->subscription('main')->hasEndedGrace(); // Returns boolean indicating if grace period is over
 ```
 

@@ -62,6 +62,9 @@ class PlanGraceTest extends TestCase
         // Travel one second after subscription ends
         $this->travelTo($user->subscription('grace')->ends_at->addSecond());
         $this->assertTrue($user->subscription('grace')->isActive());
+        $this->assertTrue($user->subscription('grace')->hasStartedGrace());
+        $this->assertTrue($user->subscription('grace')->isInGrace());
+        $this->assertFalse($user->subscription('grace')->hasEndedGrace());
     }
 
     /**
@@ -78,5 +81,8 @@ class PlanGraceTest extends TestCase
         // Travel one second after period ends
         $this->travelTo($graceSubscription->ends_at->add($graceSubscription->grace_period, $graceSubscription->grace_interval)->addSecond());
         $this->assertFalse($graceSubscription->isActive());
+        $this->assertTrue($user->subscription('grace')->hasStartedGrace());
+        $this->assertFalse($user->subscription('grace')->isInGrace());
+        $this->assertTrue($user->subscription('grace')->hasEndedGrace());
     }
 }
