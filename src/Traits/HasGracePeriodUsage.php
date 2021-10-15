@@ -84,7 +84,8 @@ trait HasGracePeriodUsage
      * Check if entity is in grace period
      * @return bool
      */
-    public function isInGrace() {
+    public function isInGrace(): bool
+    {
         return $this->hasStartedGrace() && !$this->hasEndedGrace();
     }
 }
