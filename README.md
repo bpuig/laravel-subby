@@ -8,11 +8,15 @@ changes.
 Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
 
 ## Version Compatibility
-Laravel  | Laravel Subby
-:---------|:----------
-8.x    | [v3.x](https://bpuig.github.io/laravel-subby/v3.x/), [v4.x](https://bpuig.github.io/laravel-subby/v4.x/), [v5.x](https://bpuig.github.io/laravel-subby/v5.x/)
-7.x    | [v4.x](https://bpuig.github.io/laravel-subby/v4.x/)
-6.x    | [v4.x](https://bpuig.github.io/laravel-subby/v4.x/)
+
+Current stable version is v5
+
+| Laravel     | Laravel Subby                                                                                                                                                 |
+|:------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 8.38 and up | [dev](https://bpuig.github.io/laravel-subby/dev/)                                                                                                                                                  |
+| 8.x         | [v3.x](https://bpuig.github.io/laravel-subby/v3.x/), [v4.x](https://bpuig.github.io/laravel-subby/v4.x/), [v5.x](https://bpuig.github.io/laravel-subby/v5.x/) |
+| 7.x         | [v4.x](https://bpuig.github.io/laravel-subby/v4.x/)                                                                                                           |
+| 6.x         | [v4.x](https://bpuig.github.io/laravel-subby/v4.x/)                                                                                                           |
 
 ## Changelog
 
@@ -25,7 +29,7 @@ creating the original!
 
 This software is released under [The MIT License (MIT)](LICENSE).
 
-&copy; 2020 - 2021 B. Puig, Some rights reserved.
+&copy; 2020 - 2022 B. Puig, Some rights reserved.
 
 
 
