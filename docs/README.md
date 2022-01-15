@@ -8,15 +8,16 @@ changes.
 Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
 
 ## Version Compatibility
-::: tip CURRENT VERSION
-Current version is v5.0
+
+::: tip CURRENT VERSION Current stable version is v5
 :::
 
-Laravel  | Laravel Subby
-:---------|:----------
-8.x    | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x](/v5.x/)
-7.x    | [v4.x](/v4.x/)
-6.x    | [v4.x](/v4.x/)
+| Laravel     | Laravel Subby                                  |
+|:------------|:-----------------------------------------------|
+| 8.38 and up | [dev](/dev/)                                   |
+| 8.x         | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x](/v5.x/) |
+| 7.x         | [v4.x](/v4.x/)                                 |
+| 6.x         | [v4.x](/v4.x/)                                 |
 
 ## Changelog
 
@@ -29,7 +30,7 @@ creating the original!
 
 This software is released under [The MIT License (MIT)](LICENSE).
 
-&copy; 2020 - 2021 B. Puig, Some rights reserved.
+&copy; 2020 - 2022 B. Puig, Some rights reserved.
 
 
 
