@@ -140,8 +140,10 @@ class PlanSubscriptionScheduleTest extends TestCase
         $job->handle();
 
         $pending->refresh();
+
         $this->assertNull($pending->failed_at);
         $this->assertNotNull($pending->succeeded_at);
+        $this->assertTrue($this->testUser->isSubscribedTo($this->testPlanPro->id));
     }
 
     /**
@@ -166,6 +168,7 @@ class PlanSubscriptionScheduleTest extends TestCase
         $pending->refresh();
         $this->assertNotNull($pending->failed_at);
         $this->assertNull($pending->succeeded_at);
+        $this->assertFalse($this->testUser->isSubscribedTo($this->testPlanPro->id));
     }
 
     /**
