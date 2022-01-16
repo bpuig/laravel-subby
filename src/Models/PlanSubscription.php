@@ -47,6 +47,7 @@ class PlanSubscription extends Model
         'grace_interval',
         'invoice_period',
         'invoice_interval',
+        'payment_method',
         'tier',
         'trial_ends_at',
         'starts_at',
@@ -69,6 +70,7 @@ class PlanSubscription extends Model
         'grace_interval' => 'string',
         'invoice_period' => 'integer',
         'invoice_interval' => 'string',
+        'payment_method' => 'string',
         'tier' => 'integer',
         'trial_ends_at' => 'datetime',
         'starts_at' => 'datetime',
@@ -118,6 +120,7 @@ class PlanSubscription extends Model
             'grace_interval' => 'sometimes|in:hour,day,week,month',
             'invoice_period' => 'sometimes|integer|max:100000',
             'invoice_interval' => 'sometimes|in:hour,day,week,month',
+            'payment_method' => 'nullable|string',
             'tier' => 'nullable|integer|max:100000',
             'trial_ends_at' => 'nullable|date',
             'starts_at' => 'required|date',
@@ -481,6 +484,29 @@ class PlanSubscription extends Model
     public function scopeFindEndedPeriod(Builder $builder): Builder
     {
         return $builder->where('ends_at', '<=', now());
+    }
+
+    /**
+     * Scope subscriptions that are payment pending
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param Carbon|null $date Moment in time when to check
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFindPendingPayment(Builder $builder, ?Carbon $date = null): Builder
+    {
+        if (!$date) {
+            $date = Carbon::now();
+        }
+
+        return $builder->where(function (Builder $query) use ($date) {
+            return $query->whereNull('canceled_at')
+                ->orWhere('canceled_at', '>', $date);
+        })
+            ->where(function (Builder $query) use ($date) {
+                return $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '<', $date);
+            });
     }
 
     /**

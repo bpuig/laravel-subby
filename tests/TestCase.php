@@ -57,6 +57,9 @@ class TestCase extends Orchestra
                 'schedule' => [
                     'success' => \Bpuig\Subby\Tests\Services\SucceededScheduleService::class,
                     'fail' => \Bpuig\Subby\Tests\Services\FailedScheduleService::class
+                ],
+                'payment_methods' => [
+                    'free' => \Bpuig\Subby\Services\PaymentMethods\Free::class
                 ]
             ]
         ]);
