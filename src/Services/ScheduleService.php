@@ -5,29 +5,36 @@ namespace Bpuig\Subby\Services;
 
 
 use Bpuig\Subby\Contracts\PlanSubscriptionScheduleService;
-use Bpuig\Subby\Traits\IsScheduleService;
+use Bpuig\Subby\Models\PlanSubscriptionSchedule;
+use function app;
 
 class ScheduleService implements PlanSubscriptionScheduleService
 {
-    use IsScheduleService;
+    private $planSubscriptionSchedule;
 
     /**
      * ScheduleService constructor.
      * Save current Plan Subscription Schedule
-     * @param $planSubscriptionSchedule
+     * @param PlanSubscriptionSchedule $planSubscriptionSchedule
      */
-    public function __construct($planSubscriptionSchedule)
+    public function __construct(PlanSubscriptionSchedule $planSubscriptionSchedule)
     {
         $this->planSubscriptionSchedule = $planSubscriptionSchedule;
     }
 
     /**
      * Execute the strategy
-     *
-     * Since this is kind of a dummy process, set success to true
+     * Try charging via default payment method and then change plan
      */
     public function execute()
     {
-        $this->success = true;
+        try {
+            $payment = app()->make($this->planSubscriptionSchedule->subscription->payment_method);
+            $payment->charge();
+        } catch (\Exception $exception) {
+            exit;
+        }
+
+        $this->planSubscriptionSchedule->changeSubscriptionPlan(true, true);
     }
 }

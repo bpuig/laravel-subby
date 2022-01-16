@@ -75,9 +75,6 @@ class PendingPaymentCollector
                 'subscription_id' => $subscription->id,
                 'collectable_type' => PlanSubscription::class,
                 'collectable_id' => $subscription->id,
-                'price' => $subscription->price,
-                'currency' => $subscription->currency,
-                'payment_method' => config('subby.services.payment_methods.' . $subscription->payment_method),
                 'date' => $subscription->ends_at
             ];
         });
@@ -98,9 +95,6 @@ class PendingPaymentCollector
                 'subscription_id' => $subscriptionSchedule->subscription_id,
                 'collectable_type' => PlanSubscriptionSchedule::class,
                 'collectable_id' => $subscriptionSchedule->id,
-                'price' => $subscriptionSchedule->subscription->price,
-                'currency' => $subscriptionSchedule->subscription->currency,
-                'payment_method' => config('subby.services.payment_methods.' . $subscriptionSchedule->subscription->payment_method),
                 'date' => $subscriptionSchedule->scheduled_at
             ];
         });

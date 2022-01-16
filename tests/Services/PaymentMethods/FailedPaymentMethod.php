@@ -1,10 +1,10 @@
 <?php
 
-namespace Bpuig\Subby\Services\PaymentMethods;
+namespace Bpuig\Subby\Tests\Services\PaymentMethods;
 
 use Bpuig\Subby\Contracts\PaymentMethodService;
 
-class Free implements PaymentMethodService
+class FailedPaymentMethod implements PaymentMethodService
 {
     /**
      * Charge desired amount
@@ -12,6 +12,6 @@ class Free implements PaymentMethodService
      */
     public function charge()
     {
-        // Nothing is charged, no exception is raised
+        throw new \Exception('Payment failed');
     }
 }

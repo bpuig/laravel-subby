@@ -4,6 +4,8 @@
 namespace Bpuig\Subby\Contracts;
 
 
+use Bpuig\Subby\Models\PlanSubscriptionSchedule;
+
 interface PlanSubscriptionScheduleService
 {
     const TRIES=3;
@@ -11,15 +13,9 @@ interface PlanSubscriptionScheduleService
 
     /**
      * PlanSubscriptionScheduleService constructor.
-     * @param $planSubscriptionSchedule
+     * @param PlanSubscriptionSchedule $planSubscriptionSchedule
      */
-    public function __construct($planSubscriptionSchedule);
-
-    /**
-     * Logic for change of plan
-     * @return mixed
-     */
-    public function changePlan();
+    public function __construct(PlanSubscriptionSchedule $planSubscriptionSchedule);
 
     /**
      * Logic executed before plan change

@@ -1,10 +1,10 @@
 <?php
 
-namespace Bpuig\Subby\Services\PaymentMethods;
+namespace Bpuig\Subby\Tests\Services\PaymentMethods;
 
 use Bpuig\Subby\Contracts\PaymentMethodService;
 
-class Free implements PaymentMethodService
+class SucceededPaymentMethod implements PaymentMethodService
 {
     /**
      * Charge desired amount

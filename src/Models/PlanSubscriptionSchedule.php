@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property integer $subscription_id
  * @property integer $plan_id;
- * @property string $service
  * @property \Carbon\Carbon|null $scheduled_at
  * @property \Carbon\Carbon|null $failed_at
  * @property \Carbon\Carbon|null $succeeded_at
@@ -27,7 +26,6 @@ class PlanSubscriptionSchedule extends Model
     protected $fillable = [
         'subscription_id',
         'plan_id',
-        'service',
         'scheduled_at'
     ];
 
@@ -37,7 +35,6 @@ class PlanSubscriptionSchedule extends Model
     protected $casts = [
         'subscription_id' => 'integer',
         'plan_id' => 'integer',
-        'service' => 'string',
         'scheduled_at' => 'datetime',
         'failed_at' => 'datetime',
         'succeeded_at' => 'datetime'
@@ -64,7 +61,6 @@ class PlanSubscriptionSchedule extends Model
         return [
             'subscription_id' => 'required|integer|exists:' . config('subby.tables.plan_subscriptions') . ',id',
             'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
-            'service' => 'string',
             'scheduled_at' => 'date'
         ];
     }
@@ -124,7 +120,9 @@ class PlanSubscriptionSchedule extends Model
     public function changeSubscriptionPlan(bool $clearUsage = true, bool $syncInvoicing = true)
     {
         $this->subscription->changePlan($this->plan, $clearUsage, $syncInvoicing);
-        $this->succeed();
+        $this->failed_at = null;
+        $this->succeeded_at = Carbon::now();
+        $this->save();
 
         return $this;
     }
@@ -137,19 +135,6 @@ class PlanSubscriptionSchedule extends Model
     {
         $this->failed_at = Carbon::now();
         $this->succeeded_at = null;
-        $this->save();
-
-        return $this;
-    }
-
-    /**
-     * Flag the schedule as succeeded
-     * @return PlanSubscriptionSchedule
-     */
-    public function succeed()
-    {
-        $this->failed_at = null;
-        $this->succeeded_at = Carbon::now();
         $this->save();
 
         return $this;
