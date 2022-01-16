@@ -47,7 +47,7 @@ class SubscriptionSchedulePaymentJob implements ShouldQueue
     // Avoid overlapping jobs to avoid any double payment issues
     public function middleware()
     {
-        return [(new WithoutOverlapping('subscription-payment-' . $this->planSubscriptionSchedule->subscription_id))];
+        return [(new WithoutOverlapping('subscription-payment-' . $this->planSubscriptionSchedule->subscription_id))->dontRelease()];
     }
 
     /**
