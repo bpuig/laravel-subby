@@ -122,7 +122,7 @@ class PlanSubscriptionScheduleTest extends TestCase
     }
 
     /**
-     * Test an acceptable concatenation of different plans
+     * Test a successful payment schedule
      * @throws \Exception
      */
     public function testSuccessfulJob()
@@ -151,7 +151,7 @@ class PlanSubscriptionScheduleTest extends TestCase
     }
 
     /**
-     * Test an acceptable concatenation of different plans
+     * Test a failed payment schedule
      * @throws \Exception
      */
     public function testFailedJob()
