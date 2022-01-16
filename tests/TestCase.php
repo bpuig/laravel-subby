@@ -54,12 +54,11 @@ class TestCase extends Orchestra
                 'plan_subscription_usage' => \Bpuig\Subby\Models\PlanSubscriptionUsage::class,
             ],
             'services' => [
-                'schedule' => [
-                    'success' => \Bpuig\Subby\Tests\Services\SucceededScheduleService::class,
-                    'fail' => \Bpuig\Subby\Tests\Services\FailedScheduleService::class
-                ],
+                'schedule' => \Bpuig\Subby\Services\ScheduleService::class,
+                'renewal' => \Bpuig\Subby\Services\RenewalService::class,
                 'payment_methods' => [
-                    'free' => \Bpuig\Subby\Tests\Services\PaymentMethods\Free::class
+                    'success' => \Bpuig\Subby\Tests\Services\PaymentMethods\SucceededPaymentMethod::class,
+                    'fail' => \Bpuig\Subby\Tests\Services\PaymentMethods\FailedPaymentMethod::class
                 ]
             ]
         ]);

@@ -28,7 +28,7 @@ class RenewalService implements PlanSubscriptionRenewalService
     public function execute()
     {
         try {
-            $payment = app()->make($this->planSubscription->payment_method);
+            $payment = app()->make(config('subby.services.payment_methods.' . $this->planSubscription->payment_method));
             $payment->charge();
         } catch (\Exception $exception) {
             exit;

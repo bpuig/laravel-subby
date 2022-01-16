@@ -4,9 +4,9 @@
 namespace Bpuig\Subby\Tests\Unit;
 
 
-use Bpuig\Subby\Jobs\SubscriptionScheduleProcessJob;
-use Bpuig\Subby\Jobs\SubscriptionScheduleQueuerJob;
+use Bpuig\Subby\Jobs\SubscriptionSchedulePaymentJob;
 use Bpuig\Subby\Models\PlanSubscriptionSchedule;
+use Bpuig\Subby\Services\PendingPaymentCollector;
 use Bpuig\Subby\Tests\TestCase;
 use Carbon\Carbon;
 
@@ -128,21 +128,25 @@ class PlanSubscriptionScheduleTest extends TestCase
     public function testSuccessfulJob()
     {
         $date = Carbon::now()->add(10, 'day');
-        $this->testUser->subscription('main')->toPlan($this->testPlanPro)->usingService('success')->onDate($date)->setSchedule();
+        $subscription = $this->testUser->subscription('main');
+        $subscription->payment_method = 'success';
+        $subscription->save();
+
+        $subscription->toPlan($this->testPlanPro)->onDate($date)->setSchedule();
 
         $this->travelTo($date->add(5, 'second'));
 
-        $pending = app(config('subby.models.plan_subscription_schedule'))
-            ->pending()
-            ->first();
+        $pendingPaymentCollector = new PendingPaymentCollector();
+        $pendingPayments = $pendingPaymentCollector->collectScheduledPayments();
 
-        $job = new SubscriptionScheduleProcessJob($pending);
-        $job->handle();
+        $job = (new SubscriptionSchedulePaymentJob($pendingPayments[0]['collectable_id']));
+        dispatch_sync($job);
 
-        $pending->refresh();
+        $planSubscriptionSchedule = app(config('subby.models.plan_subscription_schedule'))::find($pendingPayments[0]['collectable_id']);
 
-        $this->assertNull($pending->failed_at);
-        $this->assertNotNull($pending->succeeded_at);
+
+        $this->assertNull($planSubscriptionSchedule->failed_at);
+        $this->assertNotNull($planSubscriptionSchedule->succeeded_at);
         $this->assertTrue($this->testUser->isSubscribedTo($this->testPlanPro->id));
     }
 
@@ -153,64 +157,25 @@ class PlanSubscriptionScheduleTest extends TestCase
     public function testFailedJob()
     {
         $date = Carbon::now()->add(10, 'day');
-        $this->testUser->subscription('main')->toPlan($this->testPlanPro)->usingService('fail')->onDate($date)->setSchedule();
+        $subscription = $this->testUser->subscription('main');
+        $subscription->payment_method = 'fail';
+        $subscription->save();
+
+        $subscription->toPlan($this->testPlanPro)->onDate($date)->setSchedule();
 
         $this->travelTo($date->add(5, 'second'));
 
-        $pending = app(config('subby.models.plan_subscription_schedule'))
-            ->pending()
-            ->first();
+        $pendingPaymentCollector = new PendingPaymentCollector();
+        $pendingPayments = $pendingPaymentCollector->collectScheduledPayments();
 
-        $job = new SubscriptionScheduleProcessJob($pending);
-        $this->expectExceptionMessage('Process failed.');
-        $job->handle();
+        $job = (new SubscriptionSchedulePaymentJob($pendingPayments[0]['collectable_id']));
+        $this->expectException('\Exception');
+        dispatch_sync($job);
 
-        $pending->refresh();
-        $this->assertNotNull($pending->failed_at);
-        $this->assertNull($pending->succeeded_at);
+        $planSubscriptionSchedule = app(config('subby.models.plan_subscription_schedule'))::find($pendingPayments[0]['collectable_id']);
+
+        $this->assertNotNull($planSubscriptionSchedule->failed_at);
+        $this->assertNull($planSubscriptionSchedule->succeeded_at);
         $this->assertFalse($this->testUser->isSubscribedTo($this->testPlanPro->id));
-    }
-
-    /**
-     * Test an acceptable concatenation of different plans
-     * @throws \Exception
-     */
-    public function testSubscriptionScheduleQueuerJob()
-    {
-        $i = 1;
-        $date = Carbon::now();
-        while ($i <= 10) {
-            $date->add(1, 'day');
-            $plan = ($i % 2 === 0) ? $this->testPlanPro : $this->testPlanBasic;
-            $this->testUser->subscription('main')->toPlan($plan)->usingService('success')->onDate($date)->setSchedule();
-            $i++;
-        }
-
-        $this->travelTo($date->add(1, 'day'));
-
-        $anExceptionWasThrown = false;
-
-        try {
-            $job = new SubscriptionScheduleQueuerJob();
-            $job->handle();
-        } catch (\Exception $e) {
-            $anExceptionWasThrown = true;
-        }
-
-        $this->assertFalse($anExceptionWasThrown);
-
-        return PlanSubscriptionSchedule::all();
-    }
-
-    /**
-     * Test succeeded field
-     * @depends testSubscriptionScheduleQueuerJob
-     * @param $schedules
-     */
-    public function testAssertSucceededJobs($schedules)
-    {
-        foreach ($schedules as $schedule) {
-            $this->assertNotNull($schedule->succeeded_at);
-        }
     }
 }

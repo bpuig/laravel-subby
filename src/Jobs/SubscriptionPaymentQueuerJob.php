@@ -39,12 +39,12 @@ class SubscriptionPaymentQueuerJob implements ShouldQueue
         $pendingPayments->onDate($this->processUntil)->collectAllPayments();
 
         foreach ($pendingPayments as $pendingPayment) {
-            switch ($pendingPayment->collectable_type) {
+            switch ($pendingPayment['collectable_type']) {
                 case PlanSubscription::class:
-                    SubscriptionRenewalPaymentJob::dispatch();
+                    SubscriptionRenewalPaymentJob::dispatch($pendingPayment['collectable_id']);
                     break;
                 case PlanSubscriptionSchedule::class:
-                    SubscriptionSchedulePaymentJob::dispatch();
+                    SubscriptionSchedulePaymentJob::dispatch($pendingPayment['collectable_id']);
                     break;
             }
         }

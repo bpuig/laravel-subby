@@ -15,7 +15,11 @@ class SubscriptionSchedulePaymentJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private $service;
     private $planSubscriptionSchedule;
+
+    public $tries = 1;
+    public $timeout = 120;
 
     /**
      * Create a new job instance.
@@ -25,6 +29,7 @@ class SubscriptionSchedulePaymentJob implements ShouldQueue
     public function __construct($planSubscriptionScheduleId)
     {
         $this->planSubscriptionSchedule = PlanSubscriptionSchedule::find($planSubscriptionScheduleId);
+
 
         // Check if service exists in config file
         if (empty(config('subby.services.schedule'))) {
@@ -42,7 +47,7 @@ class SubscriptionSchedulePaymentJob implements ShouldQueue
     // Avoid overlapping jobs to avoid any double payment issues
     public function middleware()
     {
-        return [(new WithoutOverlapping('subscription-payment-'. $this->planSubscriptionSchedule->plan_subscription_id))];
+        return [(new WithoutOverlapping('subscription-payment-' . $this->planSubscriptionSchedule->subscription_id))];
     }
 
     /**

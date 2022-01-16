@@ -25,14 +25,16 @@ class ScheduleService implements PlanSubscriptionScheduleService
     /**
      * Execute the strategy
      * Try charging via default payment method and then change plan
+     * @throws \Exception
      */
     public function execute()
     {
         try {
-            $payment = app()->make($this->planSubscriptionSchedule->subscription->payment_method);
+            $payment = app()->make(config('subby.services.payment_methods.' . $this->planSubscriptionSchedule->subscription->payment_method));
             $payment->charge();
         } catch (\Exception $exception) {
-            exit;
+            $this->planSubscriptionSchedule->fail();
+            throw new \Exception($exception->getMessage(), $exception->getCode());
         }
 
         $this->planSubscriptionSchedule->changeSubscriptionPlan(true, true);
