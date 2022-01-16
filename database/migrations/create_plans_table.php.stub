@@ -47,4 +47,4 @@ return new class extends Migration
     {
         Schema::dropIfExists(config('subby.tables.plans'));
     }
-}
+};
