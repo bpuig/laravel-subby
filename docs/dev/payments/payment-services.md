@@ -50,19 +50,31 @@ namespace PaymentMethods;
 
 use Bpuig\Subby\Contracts\PaymentMethodService;
 use Bank\BankPackages\YourPaymentProcessor;
-use Bpuig\Subby\Traits\IsPaymentMethod;
 
 class CreditCard implements PaymentMethodService
 {
-    use IsPaymentMethod;
-
     private $amount;
     private $currency;
+    private $creditCard;
 
-    private function retrieveCreditCard() {
-        $this->subscription->user
+    public function amount($amount = 0) {
+        $this->amount = $amount;
+        
+        return $this;
     }
     
+    public function currency($currency = 'EUR') {
+        $this->currency = $currency;
+        
+        return $this;
+    }
+
+    public function creditCard($creditCard = null) {
+        $this->creditCard = $creditCard;
+        
+        return $this;
+    }
+     
     /**
      * Charge desired amount with your favorite bank
      * @return void
