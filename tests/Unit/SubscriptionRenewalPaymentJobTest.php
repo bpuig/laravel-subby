@@ -5,7 +5,6 @@ namespace Bpuig\Subby\Tests\Unit;
 
 
 use Bpuig\Subby\Jobs\SubscriptionRenewalPaymentJob;
-use Bpuig\Subby\Jobs\SubscriptionSchedulePaymentJob;
 use Bpuig\Subby\Services\PendingPaymentCollector;
 use Bpuig\Subby\Tests\TestCase;
 use Carbon\Carbon;
@@ -54,7 +53,7 @@ class SubscriptionRenewalPaymentJobTest extends TestCase
         $pendingPaymentCollector = new PendingPaymentCollector();
         $pendingPayments = $pendingPaymentCollector->collectScheduledPayments();
 
-        $job = (new SubscriptionSchedulePaymentJob($pendingPayments[0]['collectable_id']));
+        $job = (new SubscriptionRenewalPaymentJob($pendingPayments[0]['collectable_id']));
         $this->expectException('\Exception');
         dispatch_sync($job);
 
