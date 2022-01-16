@@ -1,5 +1,7 @@
 # Plan Subscription Feature Model
 
+[[toc]]
+
 This model relates to which features has a Subscription.
 
 ## How does it work?

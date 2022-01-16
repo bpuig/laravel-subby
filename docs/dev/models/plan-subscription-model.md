@@ -1,5 +1,7 @@
 # Plan Subscription Model
 
+[[toc]]
+
 ## Create a Subscription
 ::: tip New in v6.0 
 `newSubscription` accepts sixth argument: Payment Method

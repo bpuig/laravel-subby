@@ -1,5 +1,7 @@
 # Plan Subscription Schedule
 
+[[toc]]
+
 Want to change a subscription but not right now? Schedule it at the end of the period? With this model you can
 schedule your subscription plan changes.
 
@@ -122,4 +124,4 @@ const TIMEOUT=120; // Timeout for the job that will launch the service.
 
 ## Dispatch the schedule job
 
-See [Subscription payment queuer job](../jobs/subscription-payment-queuer-job.md)
+See [Subscription payment queuer job](../payments/subscription-payment-queuer-job.md)
