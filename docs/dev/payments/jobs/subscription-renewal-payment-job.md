@@ -3,4 +3,4 @@ This is the job that needs to be called to process a subscription payment. This 
 is due for payment (that is done in the (Subscription Payment Queuer Job)).
 
 ## What it does
-This job passes data to and calls `execute()` method on the renewal service.
+This job passes data to and calls `execute()` method on the payment method service.

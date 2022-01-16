@@ -4,7 +4,8 @@ have to be paid and process the payments.
 
 ## What it does
 The queuer job uses the Payment Collector class. This class retrieves all pending subscription renewals and also all pending
-subscription plan change schedules, then the job dispatches new jobs for each type of action needed (renewal or schedule).
+subscription plan change schedules, then the job dispatches new jobs for each type of payment method and action needed 
+(renewal or schedule).
 
 ### What happens when subscription schedule is set at renewal date?
 Subscription schedule change has priority over renewal, so schedule change will be first processed. Plan
