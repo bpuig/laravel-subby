@@ -11,7 +11,7 @@ use Bpuig\Subby\Tests\TestCase;
 use Carbon\Carbon;
 
 
-class PlanSubscriptionRenewalJobTest extends TestCase
+class SubscriptionSchedulePaymentJobTest extends TestCase
 {
     /**
      * Test a successful payment schedule
@@ -19,21 +19,27 @@ class PlanSubscriptionRenewalJobTest extends TestCase
      */
     public function testSuccessfulJob()
     {
+        $date = Carbon::now()->add(10, 'day');
         $subscription = $this->testUser->subscription('main');
         $subscription->payment_method = 'success';
         $subscription->save();
 
-        $this->travelTo($subscription->ends_at->add(5, 'second'));
+        $subscription->toPlan($this->testPlanPro)->onDate($date)->setSchedule();
+
+        $this->travelTo($date->add(5, 'second'));
 
         $pendingPaymentCollector = new PendingPaymentCollector();
-        $pendingPayments = $pendingPaymentCollector->collectPayments();
+        $pendingPayments = $pendingPaymentCollector->collectScheduledPayments();
 
-        $job = (new SubscriptionRenewalPaymentJob($pendingPayments[0]['collectable_id']));
+        $job = (new SubscriptionSchedulePaymentJob($pendingPayments[0]['collectable_id']));
         dispatch_sync($job);
 
-        $subscription->refresh();
+        $planSubscriptionSchedule = app(config('subby.models.plan_subscription_schedule'))::find($pendingPayments[0]['collectable_id']);
 
-        $this->assertTrue($this->testUser->subscription('main')->ends_at > now());
+
+        $this->assertNull($planSubscriptionSchedule->failed_at);
+        $this->assertNotNull($planSubscriptionSchedule->succeeded_at);
+        $this->assertTrue($this->testUser->isSubscribedTo($this->testPlanPro->id));
     }
 
     /**
@@ -58,6 +64,10 @@ class PlanSubscriptionRenewalJobTest extends TestCase
         $this->expectException('\Exception');
         dispatch_sync($job);
 
-        $this->assertTrue($this->testUser->subscription('main')->ends_at < now());
+        $planSubscriptionSchedule = app(config('subby.models.plan_subscription_schedule'))::find($pendingPayments[0]['collectable_id']);
+
+        $this->assertNotNull($planSubscriptionSchedule->failed_at);
+        $this->assertNull($planSubscriptionSchedule->succeeded_at);
+        $this->assertFalse($this->testUser->isSubscribedTo($this->testPlanPro->id));
     }
 }
