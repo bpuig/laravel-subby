@@ -16,16 +16,16 @@ The way this package is made:
    subscriber's subscription stays as it was, price, invoicing and features are "frozen" unless manually synchronized
    with related plan.
 
-## Other features
+### Processing payments <Badge text="new in v6.0" type="tip"/>
+Payment services are dispatched when renewal or schedule time has come. The package provides a "free" payment service,
+with no logic. You need to make your own services for your payment providers.
 
-- [Schedule](models/plan-subscription-schedule-model.md): Ability to schedule one or multiple plan changes in the future.
+### Scheduling changes
+With [Schedule](models/plan-subscription-schedule-model.md) you can schedule one or multiple plan changes in a future date.
 
 ## Considerations
 
-- Payments and translations are out of scope for this package.
-- You may want to extend some core models, in case you need to override the logic behind some helper methods
-  like `renew()`, `cancel()` etc. E.g.: when cancelling a subscription you may want to also cancel the recurring payment
-  attached.
+- Translations are out of scope for this package.
 
 ## Changelog
 

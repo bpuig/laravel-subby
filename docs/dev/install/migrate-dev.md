@@ -9,21 +9,33 @@ In your composer version, require `dev-main` version.
 ```
 
 ## Config
+
 ### New lines in config
-In `'services'`:
+
+`'services'` now look should like this:
+
 ```php 
-'payment_method' => [
-    'free' => \Bpuig\Subby\Services\PaymentMethods\Free::class
+'services' => [
+        'schedule' => \Bpuig\Subby\Services\ScheduleService::class,
+        'renewal' => \Bpuig\Subby\Services\RenewalService::class,
+        'payment_methods' => [
+            'free' => \Bpuig\Subby\Services\PaymentMethods\Free::class
+        ]
 ]
 ```
 
-### Removed lines in config: 
+### Removed lines in config:
+
 In `'services'`:
+
 ```php 
-'schedule' => [
-    'default' => \Bpuig\Subby\Services\ScheduleService::class
-],
+'services' => [
+    'schedule' => [
+        'default' => \Bpuig\Subby\Services\ScheduleService::class
+    ]
+]
 ```
+
 ## Migrations
 
 Publish dev migrations

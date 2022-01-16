@@ -1,7 +1,9 @@
 # Plan Subscription Model
 
 ## Create a Subscription
-
+::: tip New in v6.0 
+`newSubscription` accepts sixth argument: Payment Method
+:::
 You can subscribe a user (or any model correctly traited) to a plan by using the `newSubscription()` function available
 in the `HasSubscriptions` trait. First, retrieve an instance of your subscriber's model, which typically will be your
 user model and an instance of the plan your subscriber is subscribing to. Once you have retrieved the model instance,
@@ -18,7 +20,7 @@ are "frozen" unless
 $user = User::find(1);
 $plan = Plan::find(1);
 
-$user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscription');
+$user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscription', 'free');
 ```
 
 - First argument passed to `newSubscription` method should be the identifier tag of the subscription. If your
@@ -27,6 +29,7 @@ $user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscr
 - Third argument is a human-readable name for your subscription.
 - Fourth argument is a description.
 - Fifth argument is a start date for the subscription.
+- Sixth argument is payment method service defined in config.  <Badge text="new in 6.0" type="tip"/>
 
 ## Change its Plan
 
@@ -88,9 +91,11 @@ $user->subscription('main')->syncPlan(null, true, true);
 default behaviour is to synchronize `true`. The third one is `bool` to also synchronize features.
 
 ## Grace
+
 Grace period is the extra time the subscription will be considered active after it has ended.
 
 ### Grace related functions
+
 ```php
 $user->subscription('main')->hasGrace(); // Returns boolean indicating if subscription has grace period
 $user->subscription('main')->getGraceTotalDurationIn('day'); // Returns duration integer in set Carbon interval (second, day, month...)
@@ -188,6 +193,7 @@ $user->subscription('main')->recordFeatureUsage('social_profiles', 3, false);
 ```
 
 :::
+
 ### Reduce Feature Usage
 
 Reducing the feature usage is _almost_ the same as incrementing it. Here we only _substract_ a given quantity (default
@@ -294,8 +300,9 @@ $user->subscription('main')->renew(3); // This will triple the periods. CAUTION:
 
 Canceled subscriptions can't be renewed. Renewing a subscription with trial period ends it.
 
-When a subscription has already ended time ago and now is renewed, period will be set as if subscription started today, but when
-a subscription is still ongoing and renewed, start date is kept and end date is extended by the amount of periods specified.
+When a subscription has already ended time ago and now is renewed, period will be set as if subscription started today,
+but when a subscription is still ongoing and renewed, start date is kept and end date is extended by the amount of
+periods specified.
 
 ## Cancel a Subscription
 
@@ -306,6 +313,7 @@ $user->subscription('main')->cancel();
 ```
 
 ### Immediately
+
 By default the subscription will remain active until the end of the period, you may pass `true` to end the
 subscription _immediately_:
 
@@ -314,10 +322,12 @@ $user->subscription('main')->cancel(true);
 ```
 
 ### Fallback plan
+
 If a `fallback_plan_tag` is not `null` in config, when `cancel` is called, subscription will not be canceled but changed
 to fallback plan.
 
 To cancel subscription and ignore fallback, a second parameter is available on `cancel` method:
+
 ```php
 $user->subscription('main')->cancel(false, true);
 ```

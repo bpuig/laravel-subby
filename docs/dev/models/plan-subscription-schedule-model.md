@@ -15,21 +15,16 @@ schedule your subscription plan changes.
 
 ## Usage
 
-### Create schedule
+### Create schedule <Badge text="updated in v6.0" type="warning"/>
+::: danger Breaking change in v6.0
+Method `usingService` is abandoned to use a combination of fixed service and variable payment method.
+:::
 
 You can schedule a change in your user subscription like this:
 
 ```php
 $date = Carbon::now()->add(15, 'day');
 $user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->setSchedule();
-```
-
-You can set other options like:
-- `usingService()`: References [service](#services) name in config file.
-
-```php
-$date = Carbon::now()->add(15, 'day');
-$user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->usingService('default')->setSchedule();
 ```
 
 ## Scopes
@@ -51,56 +46,69 @@ $user->subscription('main')->getLatestSchedule(); // Get latest schedule before 
 $user->subscription('main')->getFirstSchedule(); // Get first schedule after date (now() or parameter with date)
 ```
 
-## Services
+## Service <Badge text="updated in v6.0" type="warning"/>
+::: danger Breaking change in v6.0
+There are no longer multiple services to process the schedule. There is only one and is set via config.
+:::
 
-By default, the config file includes a `default` service for processing your plan change. This service it's a good
-starting point to see how it works. The default service is an empty service that will not perform any action or stop the
-plan change.
+By default, the config file includes a service for processing your plan change. This service it's a good
+starting point to see how it works. The service is a template service that will use payment method and do the plan change.
 
 ### How to make a service?
 
-In the example `ScheduleService` you can see the minimum requirements of a service.
+In the `ScheduleService` you can see the minimum requirements of a service.
 
-Your own service has to implement interface `PlanSubscriptionScheduleService` and also use `IsScheduleService`
-trait. `__construct` accepts one parameter, the `PlanSubscriptionSchedule` Eloquent object of the subscription schedule.
+Your own service has to implement interface `PlanSubscriptionScheduleService`. `__construct` accepts one parameter, the
+`PlanSubscriptionSchedule` Eloquent object of the subscription schedule.
 
-The outcome to later change plan or not is defined by `success` property. By default, is `false`, so your successful
-process has to set it to `true`. Any exception will stop the process.
+In this file you can see how it works. A change is considered failed when an exception is raised. Any exception will stop
+the process and flag it as failed. If no exceptions are raised, it means payment has been successful and change can be done.
 
 ```php
 <?php
 
 
+declare(strict_types=1);
+
 namespace Bpuig\Subby\Services;
 
-
 use Bpuig\Subby\Contracts\PlanSubscriptionScheduleService;
-use Bpuig\Subby\Traits\IsScheduleService;
+use Bpuig\Subby\Models\PlanSubscriptionSchedule;
+use function app;
 
 class ScheduleService implements PlanSubscriptionScheduleService
 {
-    use IsScheduleService;
+    private $planSubscriptionSchedule;
 
     /**
      * ScheduleService constructor.
      * Save current Plan Subscription Schedule
-     * @param $planSubscriptionSchedule
+     * @param PlanSubscriptionSchedule $planSubscriptionSchedule
      */
-    public function __construct($planSubscriptionSchedule)
+    public function __construct(PlanSubscriptionSchedule $planSubscriptionSchedule)
     {
         $this->planSubscriptionSchedule = $planSubscriptionSchedule;
     }
 
     /**
      * Execute the strategy
-     *
-     * Since this is kind of a dummy process, set success to true
+     * Try charging via default payment method and then change plan
+     * @throws \Exception
      */
     public function execute()
     {
-        $this->success = true;
+        try {
+            $payment = app()->make(config('subby.services.payment_methods.' . $this->planSubscriptionSchedule->subscription->payment_method));
+            $payment->charge();
+        } catch (\Exception $exception) {
+            $this->planSubscriptionSchedule->fail();
+            throw new \Exception($exception->getMessage(), $exception->getCode());
+        }
+
+        $this->planSubscriptionSchedule->changeSubscriptionPlan(true, true);
     }
 }
+
 ```
 
 ### Service options
@@ -112,21 +120,6 @@ const TRIES=3; // Number of tries job will be attempted
 const TIMEOUT=120; // Timeout for the job that will launch the service.
 ```
 
-## Jobs
+## Dispatch the schedule job
 
-To process the schedules you can include the `SubscriptionScheduleQueuerJob` in your app schedule or make your own jobs.
-
-```php
-protected function schedule(Schedule $schedule)
-{
-    ...
-    $schedule->job(new SubscriptionScheduleQueuerJob)->everyFiveMinutes();
-}
-```
-
-This job will make dispatch jobs for pending subscription changes.
-
-I recommend running first this job with a date parameter and then chain your regular subscription renewal job with said
-date parameter as end to avoid collision since a subscription can have same `ends_at` and `scheduled_at` dates. This
-order of events would prevent renewals before schedules, since after schedule is processed `ends_at` would have changed
-to next period.
+See [Subscription payment queuer job](../jobs/subscription-payment-queuer-job.md)
