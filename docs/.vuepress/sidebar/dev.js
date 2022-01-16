@@ -27,14 +27,15 @@ var sidebar = [
         sidebarDepth: 2,
         collapsable: false,
         children: [
+            ['payments/payment-services.md', 'Payment services'],
             {
                 title: 'Jobs',
                 sidebarDepth: 0,
                 collapsable: false,
                 children: [
-                    ['payments/subscription-payment-queuer-job.md', 'Subscription Payment Queuer'],
-                    ['payments/subscription-renewal-payment-job.md', 'Subscription Payment'],
-                    ['payments/subscription-schedule-payment-job.md', 'Subscription Schedule Payment']
+                    ['payments/jobs/subscription-payment-queuer-job.md', 'Subscription Payment Queuer'],
+                    ['payments/jobs/subscription-renewal-payment-job.md', 'Subscription Payment'],
+                    ['payments/jobs/subscription-schedule-payment-job.md', 'Subscription Schedule Payment']
                 ]
             },
 

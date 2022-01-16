@@ -51,17 +51,17 @@ class SubbyServiceProvider extends ServiceProvider
     protected function publishMigrations()
     {
         $this->publishes([
-            __DIR__ . '/../database/migrations/create_plans_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_plans_table.php'),
-            __DIR__ . '/../database/migrations/create_plan_features_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 1) . '_create_plan_features_table.php'),
-            __DIR__ . '/../database/migrations/create_plan_subscriptions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 2) . '_create_plan_subscriptions_table.php'),
-            __DIR__ . '/../database/migrations/create_plan_subscription_features_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 3) . '_create_plan_subscription_features_table.php'),
-            __DIR__ . '/../database/migrations/create_plan_subscription_usage_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 4) . '_create_plan_subscription_usage_table.php'),
-            __DIR__ . '/../database/migrations/create_plan_subscription_schedules_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 5) . '_create_plan_subscription_schedules_table.php')
+            __DIR__ . '/../database/migrations/create_plans_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_plans_table.php'),
+            __DIR__ . '/../database/migrations/create_plan_features_table.php' => database_path('migrations/' . date('Y_m_d_His', time() + 1) . '_create_plan_features_table.php'),
+            __DIR__ . '/../database/migrations/create_plan_subscriptions_table.php' => database_path('migrations/' . date('Y_m_d_His', time() + 2) . '_create_plan_subscriptions_table.php'),
+            __DIR__ . '/../database/migrations/create_plan_subscription_features_table.php' => database_path('migrations/' . date('Y_m_d_His', time() + 3) . '_create_plan_subscription_features_table.php'),
+            __DIR__ . '/../database/migrations/create_plan_subscription_usage_table.php' => database_path('migrations/' . date('Y_m_d_His', time() + 4) . '_create_plan_subscription_usage_table.php'),
+            __DIR__ . '/../database/migrations/create_plan_subscription_schedules_table.php' => database_path('migrations/' . date('Y_m_d_His', time() + 5) . '_create_plan_subscription_schedules_table.php')
         ], 'subby.migrations');
 
         $this->publishes([
-            __DIR__ . '/../database/migrations/dev/alter_plan_subscriptions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_alter_plan_subscriptions_table.php'),
-            __DIR__ . '/../database/migrations/dev/alter_plan_subscription_schedules_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time() + 1) . '_alter_plan_subscription_schedules_table.php')
+            __DIR__ . '/../database/migrations/dev/alter_plan_subscriptions_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_alter_plan_subscriptions_table.php'),
+            __DIR__ . '/../database/migrations/dev/alter_plan_subscription_schedules_table.php' => database_path('migrations/' . date('Y_m_d_His', time() + 1) . '_alter_plan_subscription_schedules_table.php')
         ], 'subby.migrations.dev');
     }
 

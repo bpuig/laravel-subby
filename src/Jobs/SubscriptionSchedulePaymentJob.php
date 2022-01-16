@@ -25,19 +25,22 @@ class SubscriptionSchedulePaymentJob implements ShouldQueue
      * Create a new job instance.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function __construct($planSubscriptionScheduleId)
     {
         $this->planSubscriptionSchedule = PlanSubscriptionSchedule::find($planSubscriptionScheduleId);
 
+        // Retrieve service name from config
+        $paymentMethod = config('subby.services.payment_methods.' . $this->planSubscriptionSchedule->subscription->payment_method);
 
         // Check if service exists in config file
-        if (empty(config('subby.services.schedule'))) {
-            throw new InvalidArgumentException('Selected Subscription Service does not exist', 401);
+        if (empty($paymentMethod)) {
+            throw new InvalidArgumentException('Selected payment method does not exist', 401);
         }
 
-        // Retrieve service from config
-        $this->service = app()->make(config('subby.services.schedule'), ['planSubscriptionSchedule' => $this->planSubscriptionSchedule]);
+        // Make service
+        $this->service = app()->make($paymentMethod);
 
         // Set options from service constants
         $this->tries = $this->service::TRIES;
@@ -57,6 +60,10 @@ class SubscriptionSchedulePaymentJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->service->execute();
+        $this->service
+            ->schedule($this->planSubscriptionSchedule)
+            ->amount($this->planSubscriptionSchedule->plan->price)
+            ->currency($this->planSubscriptionSchedule->plan->currency)
+            ->execute();
     }
 }

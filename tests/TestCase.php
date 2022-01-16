@@ -6,11 +6,12 @@ use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanFeature;
 use Bpuig\Subby\SubbyServiceProvider;
 use Bpuig\Subby\Tests\Database\Factories\UserFactory;
-use Illuminate\Support\Facades\Artisan;
-use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class TestCase extends Orchestra
+class TestCase extends \Orchestra\Testbench\TestCase
 {
+    use RefreshDatabase;
+
     protected $testUser;
     protected $testPlanBasic;
     protected $testPlanPro;
@@ -19,7 +20,6 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-        $this->setUpDatabase();
         $this->setupDefaultTestData();
     }
 
@@ -54,8 +54,6 @@ class TestCase extends Orchestra
                 'plan_subscription_usage' => \Bpuig\Subby\Models\PlanSubscriptionUsage::class,
             ],
             'services' => [
-                'schedule' => \Bpuig\Subby\Services\ScheduleService::class,
-                'renewal' => \Bpuig\Subby\Services\RenewalService::class,
                 'payment_methods' => [
                     'success' => \Bpuig\Subby\Tests\Services\PaymentMethods\SucceededPaymentMethod::class,
                     'fail' => \Bpuig\Subby\Tests\Services\PaymentMethods\FailedPaymentMethod::class
@@ -71,44 +69,30 @@ class TestCase extends Orchestra
         ]);
     }
 
-
     /**
-     * add the package provider
+     * Get package providers.
      *
-     * @param $app
+     * @param \Illuminate\Foundation\Application $app
+     *
      * @return array
      */
     protected function getPackageProviders($app)
     {
-        return [SubbyServiceProvider::class];
+        return [
+            SubbyServiceProvider::class,
+        ];
     }
 
     /**
-     * Set up the database.
+     * Define database migrations.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @return void
      */
-    protected function setUpDatabase()
+    protected function defineDatabaseMigrations()
     {
-        // import classes from the migration
-        include_once __DIR__ . '/Database/migrations/create_users_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_plans_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_plan_features_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_plan_subscriptions_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_plan_subscription_features_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_plan_subscription_usage_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_plan_subscription_schedules_table.php.stub';
+        $this->loadLaravelMigrations(['--database' => 'testbench']);
 
-        Artisan::call('migrate:fresh', ['--force' => true]);
-
-        // run the up() method of that migration class
-        (new \CreateUsersTable)->up();
-        (new \CreatePlansTable)->up();
-        (new \CreatePlanFeaturesTable)->up();
-        (new \CreatePlanSubscriptionsTable)->up();
-        (new \CreatePlanSubscriptionFeaturesTable)->up();
-        (new \CreatePlanSubscriptionUsageTable)->up();
-        (new \CreatePlanSubscriptionSchedulesTable)->up();
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 
     /**

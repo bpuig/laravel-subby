@@ -8,10 +8,13 @@ use Bpuig\Subby\Jobs\SubscriptionRenewalPaymentJob;
 use Bpuig\Subby\Services\PendingPaymentCollector;
 use Bpuig\Subby\Tests\TestCase;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
 class SubscriptionRenewalPaymentJobTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Test a successful payment renewal
      * @throws \Exception

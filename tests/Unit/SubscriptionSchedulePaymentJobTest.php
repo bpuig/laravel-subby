@@ -9,10 +9,13 @@ use Bpuig\Subby\Jobs\SubscriptionSchedulePaymentJob;
 use Bpuig\Subby\Services\PendingPaymentCollector;
 use Bpuig\Subby\Tests\TestCase;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
 class SubscriptionSchedulePaymentJobTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Test a successful payment schedule
      * @throws \Exception

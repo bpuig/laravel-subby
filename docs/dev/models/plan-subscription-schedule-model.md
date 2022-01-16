@@ -124,4 +124,4 @@ const TIMEOUT=120; // Timeout for the job that will launch the service.
 
 ## Dispatch the schedule job
 
-See [Subscription payment queuer job](../payments/subscription-payment-queuer-job.md)
+See [Subscription payment queuer job](../payments/jobs/subscription-payment-queuer-job.md)

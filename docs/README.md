@@ -14,7 +14,7 @@ Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/
 
 | Laravel     | Laravel Subby                                  |
 |:------------|:-----------------------------------------------|
-| 8.38 and up | [dev](/dev/)                                   |
+| 8.37 and up | [dev](/dev/)                                   |
 | 8.x         | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x](/v5.x/) |
 | 7.x         | [v4.x](/v4.x/)                                 |
 | 6.x         | [v4.x](/v4.x/)                                 |

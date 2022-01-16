@@ -4,15 +4,16 @@
 namespace Bpuig\Subby\Tests\Unit;
 
 
-use Bpuig\Subby\Jobs\SubscriptionSchedulePaymentJob;
 use Bpuig\Subby\Models\PlanSubscriptionSchedule;
-use Bpuig\Subby\Services\PendingPaymentCollector;
 use Bpuig\Subby\Tests\TestCase;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
 class PlanSubscriptionScheduleTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Test Create a schedule
      */
