@@ -29,7 +29,6 @@ return new class extends Migration {
     {
         Schema::table(config('subby.tables.plan_subscription_schedules'), function (Blueprint $table) {
             $table->string('service')->default('default')->after('plan_id');
-
         });
     }
 };
