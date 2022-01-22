@@ -55,26 +55,8 @@ class CreditCard implements PaymentMethodService
 {
     private $amount;
     private $currency;
-    private $creditCard;
 
-    public function amount($amount = 0) {
-        $this->amount = $amount;
-        
-        return $this;
-    }
     
-    public function currency($currency = 'EUR') {
-        $this->currency = $currency;
-        
-        return $this;
-    }
-
-    public function creditCard($creditCard = null) {
-        $this->creditCard = $creditCard;
-        
-        return $this;
-    }
-     
     /**
      * Charge desired amount with your favorite bank
      * @return void
