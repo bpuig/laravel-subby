@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create(config('subby.tables.plan_subscription_usage'), function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('plan_subscription_feature_id')->unique();
-            $table->integer('used')->unsigned();
+            $table->unsignedInteger('used');
             $table->timestamp('valid_until')->nullable();
             $table->timestamps();
 
