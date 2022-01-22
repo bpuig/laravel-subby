@@ -32,7 +32,7 @@ class SubscriptionSchedulePaymentJob implements ShouldQueue
         $this->planSubscriptionSchedule = PlanSubscriptionSchedule::find($planSubscriptionScheduleId);
 
         // Retrieve service name from config
-        $paymentMethod = config('subby.services.payment_methods.' . $this->planSubscriptionSchedule->subscription->payment_method);
+        $paymentMethod = config('subby.services.payment_methods.' . $this->planSubscriptionSchedule->plan->payment_method);
 
         // Check if service exists in config file
         if (empty($paymentMethod)) {
