@@ -16,11 +16,9 @@ In your composer version, require `dev-main` version.
 
 ```php 
 'services' => [
-        'schedule' => \Bpuig\Subby\Services\ScheduleService::class,
-        'renewal' => \Bpuig\Subby\Services\RenewalService::class,
-        'payment_methods' => [
-            'free' => \Bpuig\Subby\Services\PaymentMethods\Free::class
-        ]
+    'payment_methods' => [
+        'free' => \Bpuig\Subby\Services\PaymentMethods\Free::class
+    ]
 ]
 ```
 
@@ -46,3 +44,7 @@ php artisan migrate
 ```
 
 ## Breaking changes
+
+### Plan subscription schedule
+* Method `usingService` is abandoned to use subscription's payment method.
+* There are no longer multiple services to process the schedule. There is only one and it uses payments set via config. 

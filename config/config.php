@@ -26,8 +26,6 @@ return [
     ],
 
     'services' => [
-        'schedule' => \Bpuig\Subby\Services\ScheduleService::class,
-        'renewal' => \Bpuig\Subby\Services\RenewalService::class,
         'payment_methods' => [
             'free' => \Bpuig\Subby\Services\PaymentMethods\Free::class
         ]

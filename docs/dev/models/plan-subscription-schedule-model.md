@@ -19,7 +19,7 @@ schedule your subscription plan changes.
 
 ### Create schedule <Badge text="updated in v6.0" type="warning"/>
 ::: danger Breaking change in v6.0
-Method `usingService` is abandoned to use a combination of fixed service and variable payment method.
+Method `usingService` is abandoned to use subscription's payment method.
 :::
 
 You can schedule a change in your user subscription like this:
@@ -50,7 +50,7 @@ $user->subscription('main')->getFirstSchedule(); // Get first schedule after dat
 
 ## Service <Badge text="updated in v6.0" type="warning"/>
 ::: danger Breaking change in v6.0
-There are no longer multiple services to process the schedule. There is only one and is set via config.
+There are no longer multiple services to process the schedule. There is only one and it uses payments set via config.
 :::
 
 By default, the config file includes a service for processing your plan change. This service it's a good
