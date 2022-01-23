@@ -24,12 +24,6 @@ trait HasSchedules
     private $scheduledDate;
 
     /**
-     * Service used in job
-     * @var string
-     */
-    private $scheduledService = 'default';
-
-    /**
      * Method of subscription change creation / update
      * @var string
      */
@@ -54,19 +48,6 @@ trait HasSchedules
     public function toPlan($plan): self
     {
         $this->scheduledPlan = $plan;
-
-        return $this;
-    }
-
-    /**
-     * Service used in the processing
-     *
-     * @param string $service
-     * @return $this
-     */
-    public function usingService(string $service): self
-    {
-        $this->scheduledService = $service;
 
         return $this;
     }
@@ -97,7 +78,6 @@ trait HasSchedules
         $subscriptionChange = [
             'plan_id' => $this->scheduledPlan->id,
             'subscription_id' => $this->id,
-            'service' => $this->scheduledService,
             'scheduled_at' => $this->scheduledDate
         ];
 

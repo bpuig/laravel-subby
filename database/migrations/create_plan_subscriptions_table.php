@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlanSubscriptionsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -30,6 +30,7 @@ class CreatePlanSubscriptionsTable extends Migration
             $table->string('grace_interval')->default('day');
             $table->unsignedSmallInteger('invoice_period')->default(1);
             $table->string('invoice_interval')->default('month');
+            $table->string('payment_method')->nullable()->default('free');
             $table->unsignedMediumInteger('tier')->default(0);
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('starts_at')->nullable();
@@ -54,4 +55,4 @@ class CreatePlanSubscriptionsTable extends Migration
     {
         Schema::dropIfExists(config('subby.tables.plan_subscriptions'));
     }
-}
+};

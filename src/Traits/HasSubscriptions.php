@@ -121,7 +121,7 @@ trait HasSubscriptions
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function newSubscription(?string $tag, Plan $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null)
+    public function newSubscription(?string $tag, Plan $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null, $paymentMethod = 'free')
     {
         $tag = $tag ?? config('subby.main_subscription_tag');
 
@@ -144,6 +144,7 @@ trait HasSubscriptions
                 'grace_period' => $plan->grace_period,
                 'invoice_interval' => $plan->invoice_interval,
                 'invoice_period' => $plan->invoice_period,
+                'payment_method' => $paymentMethod,
                 'trial_ends_at' => $subscriptionPeriod->getTrialEndDate(),
                 'starts_at' => $subscriptionPeriod->getStartDate(),
                 'ends_at' => $subscriptionPeriod->getEndDate(),

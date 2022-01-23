@@ -1,6 +1,6 @@
 var sidebar = [
     {
-        title: 'The package',   // required
+        title: 'The package',
         sidebarDepth: 1,
         collapsable: false,
         children: [
@@ -10,7 +10,7 @@ var sidebar = [
         ]
     },
     {
-        title: 'Usage',   // required
+        title: 'Models',
         sidebarDepth: 2,
         collapsable: false,
         children: [
@@ -19,9 +19,28 @@ var sidebar = [
             ['models/plan-feature-model.md', 'Plan Feature Model'],
             ['models/plan-subscription-model.md', 'Plan Subscription Model'],
             ['models/plan-subscription-feature-model.md', 'Plan Subscription Feature Model'],
-            ['models/plan-subscription-schedule-model.md', 'Plan Subscription Schedule Model'],
+            ['models/plan-subscription-schedule-model.md', 'Plan Subscription Schedule Model']
+        ]
+    },
+    {
+        title: 'Payments',
+        sidebarDepth: 2,
+        collapsable: false,
+        children: [
+            ['payments/payment-services.md', 'Payment services'],
+            {
+                title: 'Jobs',
+                sidebarDepth: 0,
+                collapsable: false,
+                children: [
+                    ['payments/jobs/subscription-payment-queuer-job.md', 'Subscription Payment Queuer'],
+                    ['payments/jobs/subscription-renewal-payment-job.md', 'Subscription Payment'],
+                    ['payments/jobs/subscription-schedule-payment-job.md', 'Subscription Schedule Payment']
+                ]
+            },
+
         ]
     }
 ]
 
-module.exports = {sidebar}
+module.exports = { sidebar }

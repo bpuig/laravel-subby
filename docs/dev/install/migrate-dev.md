@@ -10,11 +10,41 @@ In your composer version, require `dev-main` version.
 
 ## Config
 
+### New lines in config
+
+`'services'` now look should like this:
+
+```php 
+'services' => [
+    'payment_methods' => [
+        'free' => \Bpuig\Subby\Services\PaymentMethods\Free::class
+    ]
+]
+```
+
+### Removed lines in config:
+
+In `'services'`:
+
+```php 
+'services' => [
+    'schedule' => [
+        'default' => \Bpuig\Subby\Services\ScheduleService::class
+    ]
+]
+```
 
 ## Migrations
 
 Publish dev migrations
 
-
+```shell
+php artisan vendor:publish --tag=subby.migrations.dev
+php artisan migrate
+```
 
 ## Breaking changes
+
+### Plan subscription schedule
+* Method `usingService` is abandoned to use subscription's payment method.
+* There are no longer multiple services to process the schedule. There is only one and it uses payments set via config. 

@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlanSubscriptionFeaturesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -47,4 +47,4 @@ class CreatePlanSubscriptionFeaturesTable extends Migration
     {
         Schema::dropIfExists(config('subby.tables.plan_subscription_features'));
     }
-}
+};

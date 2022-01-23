@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlanSubscriptionSchedulesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -19,7 +19,6 @@ class CreatePlanSubscriptionSchedulesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('subscription_id');
             $table->unsignedInteger('plan_id');
-            $table->string('service')->default('default');
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamp('failed_at')->nullable();
             $table->timestamp('succeeded_at')->nullable();
@@ -40,4 +39,4 @@ class CreatePlanSubscriptionSchedulesTable extends Migration
     {
         Schema::dropIfExists(config('subby.tables.plan_subscription_schedules'));
     }
-}
+};

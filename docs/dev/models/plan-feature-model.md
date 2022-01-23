@@ -1,5 +1,7 @@
 # Plan Feature Model
 
+[[toc]]
+
 This model relates to which features has a Plan. This features will be attached to every new subscription.
 
 ## Create plan features
