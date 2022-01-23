@@ -7,8 +7,8 @@ use Bpuig\Subby\Models\PlanSubscriptionSchedule;
 
 trait IsPaymentMethod
 {
-    private $planSubscriptionSchedule = null;
-    private $planSubscription;
+    private $subscriptionSchedule = null;
+    private $subscription;
     private $amount;
     private $currency;
 
@@ -20,7 +20,7 @@ trait IsPaymentMethod
      */
     public function subscription(PlanSubscription $planSubscription)
     {
-        $this->planSubscription = $planSubscription;
+        $this->subscription = $planSubscription;
 
         return $this;
     }
@@ -32,7 +32,7 @@ trait IsPaymentMethod
      */
     public function schedule(?PlanSubscriptionSchedule $planSubscriptionSchedule = null)
     {
-        $this->planSubscriptionSchedule = $planSubscriptionSchedule;
+        $this->subscriptionSchedule = $planSubscriptionSchedule;
 
         return $this;
     }
@@ -63,7 +63,7 @@ trait IsPaymentMethod
 
     public function execute()
     {
-        if ($this->planSubscriptionSchedule) {
+        if ($this->subscriptionSchedule) {
             $this->executeSchedule();
         } else {
             $this->executeRenewal();
@@ -80,11 +80,11 @@ trait IsPaymentMethod
         try {
             $this->charge();
         } catch (\Exception $exception) {
-            $this->planSubscriptionSchedule->fail();
+            $this->subscriptionSchedule->fail();
             throw new \Exception($exception->getMessage(), $exception->getCode());
         }
 
-        $this->planSubscriptionSchedule->changeSubscriptionPlan(true, true);
+        $this->subscriptionSchedule->changeSubscriptionPlan(true, true);
     }
 
     /**
@@ -99,6 +99,6 @@ trait IsPaymentMethod
             throw new \Exception($exception->getMessage(), $exception->getCode());
         }
 
-        $this->planSubscription->renew();
+        $this->subscription->renew();
     }
 }
