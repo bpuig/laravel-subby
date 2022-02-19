@@ -7,6 +7,8 @@ etc.
 
 ## Create a Plan Combination
 
+Combinations must be unique for `country`, `currency`, `invoice_period` and `invoice_interval`.
+
 ```php
 use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanCombination;
@@ -15,7 +17,7 @@ $plan = Plan::getByTag('basic');
 
 $plan->combinations()->create([
     'tag' => 'basic-es-eur-1-year'
-    'country' => 'ES',
+    'country' => 'ESP',
     'currency' => 'EUR',
     'price' => 99.99,
     'invoice_period' => 1,
@@ -36,8 +38,7 @@ $planCombination = PlanCombination::getByTag('basic-es-eur-1-year');
 // Or do your own query
 $plan = Plan::getByTag('basic');
 
-$planCombination = $plan->combinations()
-                                        ->where('country', 'ES')
+$planCombination = $plan->combinations()->where('country', 'ESP')
                                         ->where('currency', 'EUR')
                                         ->where('invoice_period', 1)
                                         ->where('invoice_interval', 'year')
