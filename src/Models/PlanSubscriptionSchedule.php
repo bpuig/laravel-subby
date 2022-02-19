@@ -25,7 +25,6 @@ class PlanSubscriptionSchedule extends Model
      */
     protected $fillable = [
         'subscription_id',
-        'plan_id',
         'scheduled_at'
     ];
 
@@ -33,8 +32,7 @@ class PlanSubscriptionSchedule extends Model
      * {@inheritdoc}
      */
     protected $casts = [
-        'subscription_id' => 'integer',
-        'plan_id' => 'integer',
+        'scheduleable_type' => 'string',
         'scheduled_at' => 'datetime',
         'failed_at' => 'datetime',
         'succeeded_at' => 'datetime'
@@ -60,7 +58,6 @@ class PlanSubscriptionSchedule extends Model
     {
         return [
             'subscription_id' => 'required|integer|exists:' . config('subby.tables.plan_subscriptions') . ',id',
-            'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
             'scheduled_at' => 'date'
         ];
     }
@@ -76,12 +73,11 @@ class PlanSubscriptionSchedule extends Model
     }
 
     /**
-     * Subscription schedule belongs to plan
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Get the parent scheduleable model (plan or plan combination).
      */
-    public function plan()
+    public function scheduleable()
     {
-        return $this->belongsTo(config('subby.models.plan'), 'plan_id', 'id');
+        return $this->morphTo();
     }
 
     /**
@@ -119,7 +115,7 @@ class PlanSubscriptionSchedule extends Model
      */
     public function changeSubscriptionPlan(bool $clearUsage = true, bool $syncInvoicing = true)
     {
-        $this->subscription->changePlan($this->plan, $clearUsage, $syncInvoicing);
+        $this->subscription->changePlan($this->scheduleable, $clearUsage, $syncInvoicing);
         $this->failed_at = null;
         $this->succeeded_at = Carbon::now();
         $this->save();

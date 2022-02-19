@@ -24,7 +24,9 @@ return new class extends Migration {
             $table->string('invoice_interval')->default('month');
             $table->timestamps();
 
-            $table->unique(['country', 'currency', 'invoice_period', 'invoice_interval']);
+            $table->unique(['country', 'currency', 'invoice_period', 'invoice_interval'], 'unique_plan_combination');
+
+            $table->foreign('plan_id', 'plan_id_fk')->references('id')->on(config('subby.tables.plans'))->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

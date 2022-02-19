@@ -18,15 +18,14 @@ return new class extends Migration
         Schema::create(config('subby.tables.plan_subscription_schedules'), function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('subscription_id');
-            $table->unsignedInteger('plan_id');
+            $table->morphs('scheduleable');
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamp('failed_at')->nullable();
             $table->timestamp('succeeded_at')->nullable();
 
-            $table->unique(['subscription_id', 'plan_id', 'scheduled_at'], 'unique_plan_subscription_keys');
+            $table->unique(['subscription_id', 'scheduleable_type', 'scheduleable_id', 'scheduled_at'], 'unique_plan_subscription_keys');
 
             $table->foreign('subscription_id', 'plan_subscription_fk')->references('id')->on(config('subby.tables.plan_subscriptions'))->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('plan_id', 'plan_id_fk')->references('id')->on(config('subby.tables.plans'))->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

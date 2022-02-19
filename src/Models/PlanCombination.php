@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bpuig\Subby\Models;
 
 use Bpuig\Subby\Traits\BelongsToPlan;
+use Bpuig\Subby\Traits\MorphsSchedules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PlanCombination extends Model
 {
-    use BelongsToPlan;
+    use BelongsToPlan, MorphsSchedules;
 
     /**
      * {@inheritdoc}
