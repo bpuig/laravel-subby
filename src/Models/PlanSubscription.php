@@ -236,13 +236,13 @@ class PlanSubscription extends Model
     /**
      * Change subscription plan.
      *
-     * @param \Bpuig\Subby\Models\Plan $plan
+     * @param Plan|PlanCombination $planCombination Plan or PlanCombination model instance of the desired change
      * @param bool $clearUsage Clear subscription usage
      * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
      * @return $this
      * @throws \Exception
      */
-    public function changePlan(Plan $plan, bool $clearUsage = true, bool $syncInvoicing = true): PlanSubscription
+    public function changePlan(Plan|PlanCombination $planCombination, bool $clearUsage = true, bool $syncInvoicing = true): PlanSubscription
     {
         // Sometimes you want to keep usage
         // E.g. of false: Renew plan at day 6 of subscription,
@@ -253,38 +253,42 @@ class PlanSubscription extends Model
         }
 
         // Synchronize subscription data with plan
-        $this->syncPlan($plan, $syncInvoicing, true);
+        $this->syncPlan($planCombination, $syncInvoicing, true);
 
         return $this;
     }
 
     /**
      * Synchronize subscription data with plan
-     * @param Plan|null $plan Plan to be synchronized
+     * @param Plan|PlanCombination|null $planCombination Plan or Plan Combination to be synchronized
      * @param bool $syncInvoicing Synchronize billing frequency or leave it unchanged
      * @param bool $syncFeatures
      * @return PlanSubscription
-     * @throws \Exception
      */
-    public function syncPlan(Plan $plan = null, bool $syncInvoicing = true, bool $syncFeatures = false): PlanSubscription
+    public function syncPlan(Plan|PlanCombination $planCombination = null, bool $syncInvoicing = true, bool $syncFeatures = false): PlanSubscription
     {
-        if (!$plan && !$this->plan) {
-            throw new BadMethodCallException('Default plan not set.');
-        } elseif (!$plan) {
-            $plan = $this->plan;
+        if ($planCombination instanceof PlanCombination) {
+            // If it's a Plan Combination, use parent plan
+            $plan = $planCombination->plan;
+        } elseif ($planCombination instanceof Plan) {
+            // If it's a Plan use it
+            $plan = $planCombination;
+        } else {
+            // If neither plan combination is provided, just resync subscription parent plan data
+            $plan = $planCombination = $this->plan;
         }
 
         $this->plan_id = $plan->id;
-        $this->price = $plan->price;
-        $this->currency = $plan->currency;
+        $this->price = $planCombination->price;
+        $this->currency = $planCombination->currency;
         $this->tier = $plan->tier;
         $this->grace_interval = $plan->grace_interval;
         $this->grace_period = $plan->grace_period;
 
         if ($syncInvoicing) {
             // Set same invoicing as selected plan
-            $this->invoice_interval = $plan->invoice_interval;
-            $this->invoice_period = $plan->invoice_period;
+            $this->invoice_interval = $planCombination->invoice_interval;
+            $this->invoice_period = $planCombination->invoice_period;
         }
 
         $this->save();

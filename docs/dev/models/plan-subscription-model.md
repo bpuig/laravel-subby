@@ -3,7 +3,8 @@
 [[toc]]
 
 ## Create a Subscription
-::: tip New in v6.0 
+::: tip New in v6.0
+`newSubscription` accepts a `PlanCombination` as second argument
 `newSubscription` accepts sixth argument: Payment Method
 :::
 You can subscribe a user (or any model correctly traited) to a plan by using the `newSubscription()` function available
@@ -22,16 +23,15 @@ are "frozen" unless
 $user = User::find(1);
 $plan = Plan::find(1);
 
-$user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscription', 'free');
+$user->newSubscription(
+            'main', // identifier tag of the subscription. If your application offers a single subscription, you might call this 'main' or 'primary'
+             $plan, // Plan or PlanCombination instance your subscriber is subscribing to
+             'Main subscription', // Human-readable name for your subscription
+             'Customer main subscription', // Description
+             null, // Start date for the subscription, defaults to now()
+             'free' // Payment method service defined in config
+             );
 ```
-
-- First argument passed to `newSubscription` method should be the identifier tag of the subscription. If your
-  application offers a single subscription, you might call this `main` or `primary`.
-- Second argument is the plan instance your subscriber is subscribing to.
-- Third argument is a human-readable name for your subscription.
-- Fourth argument is a description.
-- Fifth argument is a start date for the subscription.
-- Sixth argument is payment method service defined in config.  <Badge text="new in 6.0" type="tip"/>
 
 ## Change its Plan
 
