@@ -9,7 +9,7 @@ Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/
 
 ## Version Compatibility
 
-::: tip CURRENT VERSION Current stable version is v5
+::: tip CURRENT VERSION Current stable version is v6
 :::
 
 | Laravel | Laravel Subby                                  |
