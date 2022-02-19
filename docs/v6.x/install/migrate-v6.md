@@ -1,4 +1,4 @@
-# Upgrade v5.x to dev
+# Upgrade v5.x to v6.x
 
 ## Composer
 

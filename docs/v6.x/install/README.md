@@ -26,7 +26,7 @@ php artisan migrate
 
 # Upgrade from v5.x to dev
 
-This package need to be upgraded version by version to apply database changes. See [migrate dev](migrate-dev.md) for breaking
+This package need to be upgraded version by version to apply database changes. See [migrate v6.x](migrate-v6.md) for breaking
 changes.
 
 
