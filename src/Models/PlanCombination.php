@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Models;
 
+use Bpuig\Subby\Traits\BelongsToPlan;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,10 +13,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PlanCombination extends Model
 {
+    use BelongsToPlan;
+
     /**
      * {@inheritdoc}
      */
     protected $fillable = [
+        'plan_id',
         'tag',
         'country',
         'currency',
@@ -57,6 +61,7 @@ class PlanCombination extends Model
     public function getRules(): array
     {
         return [
+            'plan_id' => 'required|exists:' . config('subby.tables.plans') . ',id',
             'tag' => 'required|max:150|unique:' . config('subby.tables.plan_combinations') . ',tag',
             'country' => 'required|alpha|size:3',
             'price' => 'required|numeric',
@@ -65,5 +70,16 @@ class PlanCombination extends Model
             'invoice_period' => 'sometimes|integer|max:100000',
             'invoice_interval' => 'sometimes|in:hour,day,week,month'
         ];
+    }
+
+    /**
+     * Get plan combination by the given tag.
+     *
+     * @param string $tag
+     * @return null|$this
+     */
+    static public function getByTag(string $tag): ?PlanCombination
+    {
+        return static::where('tag', $tag)->first();
     }
 }

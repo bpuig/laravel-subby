@@ -109,7 +109,7 @@ class PlanSubscription extends Model
             ],
             'subscriber_id' => 'required|integer',
             'subscriber_type' => 'required|string|max:150',
-            'plan_id' => 'required|integer|exists:' . config('subby.tables.plans') . ',id',
+            'plan_id' => 'required|exists:' . config('subby.tables.plans') . ',id',
             'name' => 'required|string|max:150',
             'description' => 'nullable|string|max:32768',
             'price' => 'required|numeric',

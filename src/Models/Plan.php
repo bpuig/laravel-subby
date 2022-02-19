@@ -121,6 +121,16 @@ class Plan extends Model
     }
 
     /**
+     * The plan may have many combinations.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function combinations(): HasMany
+    {
+        return $this->hasMany(config('subby.models.plan_combinations'), 'plan_id', 'id');
+    }
+
+    /**
      * The plan may have many features.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
