@@ -7,6 +7,7 @@ namespace Bpuig\Subby\Traits;
 use Bpuig\Subby\Exceptions\DuplicateException;
 use Bpuig\Subby\Exceptions\InvalidPlanSubscription;
 use Bpuig\Subby\Models\Plan;
+use Bpuig\Subby\Models\PlanCombination;
 use Bpuig\Subby\Models\PlanSubscription;
 use Bpuig\Subby\Services\SubscriptionPeriod;
 use Carbon\Carbon;
@@ -121,7 +122,7 @@ trait HasSubscriptions
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function newSubscription(?string $tag, Plan $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null, $paymentMethod = 'free')
+    public function newSubscription(?string $tag, Plan|PlanCombination $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null, $paymentMethod = 'free')
     {
         $tag = $tag ?? config('subby.main_subscription_tag');
 
