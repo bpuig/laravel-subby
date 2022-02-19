@@ -31,7 +31,7 @@
         "illuminate/console": "^9.0",
         "illuminate/container": "^9.0",
         "phpunit/phpunit": "^9.5.8",
-        "orchestra/testbench": "^6.24.0"
+        "orchestra/testbench": "^7.0.0"
     },
     "autoload": {
         "psr-4": {
