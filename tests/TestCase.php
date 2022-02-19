@@ -38,6 +38,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
             // Database Tables
             'tables' => [
                 'plans' => 'plans',
+                'plan_combinations' => 'plan_combinations',
                 'plan_features' => 'plan_features',
                 'plan_subscriptions' => 'plan_subscriptions',
                 'plan_subscription_features' => 'plan_subscription_features',
@@ -47,6 +48,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
             // Models
             'models' => [
                 'plan' => \Bpuig\Subby\Models\Plan::class,
+                'plan_combination' => \Bpuig\Subby\Models\PlanCombination::class,
                 'plan_feature' => \Bpuig\Subby\Models\PlanFeature::class,
                 'plan_subscription' => \Bpuig\Subby\Models\PlanSubscription::class,
                 'plan_subscription_feature' => \Bpuig\Subby\Models\PlanSubscriptionFeature::class,
@@ -123,6 +125,15 @@ class TestCase extends \Orchestra\Testbench\TestCase
             new PlanFeature(['tag' => 'social_profiles', 'name' => 'Social profiles available', 'value' => 3, 'sort_order' => 1]),
             new PlanFeature(['tag' => 'posts_per_social_profile', 'name' => 'Scheduled posts per profile', 'value' => 30, 'sort_order' => 10, 'resettable_period' => 1, 'resettable_interval' => 'month']),
             new PlanFeature(['tag' => 'analytics', 'name' => 'Analytics', 'value' => false, 'sort_order' => 15])
+        ]);
+
+        $this->testPlanBasic->combinations()->create([
+            'tag' => 'test',
+            'country' => 'ESP',
+            'currency' => 'EUR',
+            'price' => 99.99,
+            'invoice_period' => 1,
+            'invoice_interval' => 'year'
         ]);
 
         // Create a Pro plan
