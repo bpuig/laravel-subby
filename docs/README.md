@@ -12,12 +12,12 @@ Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/
 ::: tip CURRENT VERSION Current stable version is v5
 :::
 
-| Laravel     | Laravel Subby                                  |
-|:------------|:-----------------------------------------------|
-| 8.37 and up | [dev](/dev/)                                   |
-| 8.x         | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x](/v5.x/) |
-| 7.x         | [v4.x](/v4.x/)                                 |
-| 6.x         | [v4.x](/v4.x/)                                 |
+| Laravel | Laravel Subby                                  |
+|:--------|:-----------------------------------------------|
+| 9.x     | [dev](/dev/)                                   |
+| 8.x     | [v3.x](/v3.x/), [v4.x](/v4.x/), [v5.x](/v5.x/) |
+| 7.x     | [v4.x](/v4.x/)                                 |
+| 6.x     | [v4.x](/v4.x/)                                 |
 
 ## Changelog
 
