@@ -128,7 +128,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         ]);
 
         $this->testPlanBasic->combinations()->create([
-            'tag' => 'test',
+            'tag' => 'test-plan-basic-esp-eur-1-year',
             'country' => 'ESP',
             'currency' => 'EUR',
             'price' => 99.99,

@@ -40,6 +40,15 @@ class PlanSubscriptionTest extends TestCase
     }
 
     /**
+     * Test making a Subscription to a combination
+     */
+    public function testSubscriptionToAPlanCombination()
+    {
+        $this->testUser->newSubscription('combination-test', $this->testPlanBasic->combinations()->first(), 'Test a combination subscription');
+        $this->assertNotNull($this->testUser->subscription('combination-test'));
+    }
+
+    /**
      * Test plan change
      */
     public function testPlanChange()
