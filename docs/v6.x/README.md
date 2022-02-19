@@ -7,7 +7,8 @@ from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscripti
 
 The way this package is made:
 
-1. There are [plans](models/plan-model.md) that have [features](models/plan-feature-model.md).
+1. There are [plans](models/plan-model.md) that have [features](models/plan-feature-model.md)
+   1. These plans can have multiple combinations (country, currency, periods...).
 2. There is an entity (morph) receiving the
    trait `HasSubscriptions` ([subscriptions](models/plan-subscription-model.md)). It can be a user, a team, whatever you
    want; see [Attach Subscriptions to model](install/#attach-subscription).

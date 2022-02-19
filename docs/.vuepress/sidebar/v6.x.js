@@ -6,7 +6,7 @@ var sidebar = [
         children: [
             ['', 'Introduction'],
             ['install/', 'Installation'],
-            ['install/migrate-dev.md', 'Upgrade v5.x to dev']
+            ['install/migrate-v6.md', 'Upgrade v5.x to v6.x']
         ]
     },
     {
