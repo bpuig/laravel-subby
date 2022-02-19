@@ -2,7 +2,8 @@
 
 [[toc]]
 
-With this model you define your plan combinations. You can have multiple prices and intervals per currency, country, etc.
+With this model you define your plan combinations. You can have multiple prices and intervals per currency, country,
+etc.
 
 ## Create a Plan Combination
 
@@ -33,7 +34,10 @@ $planCombination = PlanCombination::find(1);
 $planCombination = PlanCombination::getByTag('basic-es-eur-1-year');
 
 // Or do your own query
-$planCombination = PlanCombination::where('country', 'ES')
+$plan = Plan::getByTag('basic');
+
+$planCombination = $plan->combinations()
+                                        ->where('country', 'ES')
                                         ->where('currency', 'EUR')
                                         ->where('invoice_period', 1)
                                         ->where('invoice_interval', 'year')
