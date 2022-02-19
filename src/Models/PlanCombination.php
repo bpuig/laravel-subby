@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bpuig\Subby\Models;
 
 use Bpuig\Subby\Traits\BelongsToPlan;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -19,7 +20,6 @@ class PlanCombination extends Model
      * {@inheritdoc}
      */
     protected $fillable = [
-        'plan_id',
         'tag',
         'country',
         'currency',
@@ -62,7 +62,14 @@ class PlanCombination extends Model
     {
         return [
             'plan_id' => 'required|exists:' . config('subby.tables.plans') . ',id',
-            'tag' => 'required|max:150|unique:' . config('subby.tables.plan_combinations') . ',tag',
+            'tag' => [
+                'required',
+                'alpha_dash',
+                'max:300',
+                Rule::unique(config('subby.tables.plan_combinations'))->where(function ($query) {
+                    return $query->where('id', '!=', $this->id);
+                }),
+            ],
             'country' => 'required|alpha|size:3',
             'price' => 'required|numeric',
             'signup_fee' => 'required|numeric',
