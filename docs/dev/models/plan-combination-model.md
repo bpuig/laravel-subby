@@ -48,3 +48,13 @@ $planCombination = $plan->combinations()->where('country', 'ESP')
 $planCombination->plan;
 
 ```
+
+## Subscribe to plan combination
+
+See [Create a Subscription](plan-subscription-model.md#create-a-subscription) and use a `PlanCombination` instead of a
+`Plan`.
+
+## Change subscription's plan to plan combination
+
+See [Create a Subscription](plan-subscription-model.md#change-its-plan) and use a `PlanCombination` instead of a
+`Plan`.

@@ -43,6 +43,9 @@ $plan->features;
 // Get all plan subscriptions
 $plan->subscriptions;
 
+// Get all plan combinations
+$plan->combinations;
+
 // Check if the plan is free
 $plan->isFree();
 

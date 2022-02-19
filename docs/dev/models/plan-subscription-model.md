@@ -35,7 +35,7 @@ $user->newSubscription(
 
 ## Change its Plan
 
-You can change subscription related plan easily as follows:
+You can change subscription related plan easily as follows, method accepts either `Plan` or `PlanCombination`:
 
 ```php
 $plan = Plan::find(2);
@@ -78,19 +78,24 @@ $subscription->save();
 
 ### Revert custom subscription changes (resynchronize to plan)
 
-You can revert changes made to subscription with function `syncPlan`.
+You can revert changes made to subscription with function `syncPlan`. Be careful if you are using a `PlanCombination`,
+synchronizing without specifying a plan will synchronize subscription with parent plan.
 
 ```php 
-// Synchronize price, invoicing and tier with related plan
+// Synchronize price, invoicing and tier with parent plan
 $user->subscription('main')->syncPlan();
 
-// Synchronize plan and also features
+// Synchronize with parent plan and also features
 $user->subscription('main')->syncPlan(null, true, true);
+
 ```
 
-`syncPlan()` accepts 3 parameters. First parameter is a `Plan`, if you want to synchronize with current plan
-(default behaviour), set to `null`. Second is `bool` for synchronizing also invoicing details (period and interval),
-default behaviour is to synchronize `true`. The third one is `bool` to also synchronize features.
+`syncPlan()` accepts 3 parameters. 
+- First parameter is a `Plan`, if you want to synchronize with current plan
+(default behaviour), set to `null`. 
+- Second is `bool` for synchronizing also invoicing details (period and interval),
+default behaviour is to synchronize `true`. 
+- Third one is `bool` to also synchronize features.
 
 ## Grace
 
