@@ -114,7 +114,7 @@ trait HasSubscriptions
      * Subscribe subscriber to a new plan.
      *
      * @param string $tag Identifier tag for the subscription
-     * @param \Bpuig\Subby\Models\Plan $plan Related plan
+     * @param \Bpuig\Subby\Models\Plan|\Bpuig\Subby\Models\PlanCombination $planCombination Plan pricing and invoice data
      * @param string|null $name Human readable name for your subscriber's subscription
      * @param string|null $description Description for the subscription
      * @param \Carbon\Carbon|null $startDate When will the subscription start
@@ -122,9 +122,11 @@ trait HasSubscriptions
      * @return \Illuminate\Database\Eloquent\Model
      * @throws \Exception
      */
-    public function newSubscription(?string $tag, Plan|PlanCombination $plan, ?string $name = null, ?string $description = null, ?Carbon $startDate = null, $paymentMethod = 'free')
+    public function newSubscription(?string $tag, Plan|PlanCombination $planCombination, ?string $name = null, ?string $description = null, ?Carbon $startDate = null, $paymentMethod = 'free')
     {
         $tag = $tag ?? config('subby.main_subscription_tag');
+
+        $plan = ($planCombination instanceof PlanCombination) ? $planCombination->plan : $planCombination;
 
         $subscriptionPeriod = new SubscriptionPeriod($plan, $startDate ?? now());
 
@@ -136,15 +138,15 @@ trait HasSubscriptions
                 'name' => $name,
                 'description' => $description,
                 'plan_id' => $plan->id,
-                'price' => $plan->price,
-                'currency' => $plan->currency,
+                'price' => $planCombination->price,
+                'currency' => $planCombination->currency,
                 'tier' => $plan->tier,
                 'trial_interval' => $plan->trial_interval,
                 'trial_period' => $plan->trial_period,
                 'grace_interval' => $plan->grace_interval,
                 'grace_period' => $plan->grace_period,
-                'invoice_interval' => $plan->invoice_interval,
-                'invoice_period' => $plan->invoice_period,
+                'invoice_interval' => $planCombination->invoice_interval,
+                'invoice_period' => $planCombination->invoice_period,
                 'payment_method' => $paymentMethod,
                 'trial_ends_at' => $subscriptionPeriod->getTrialEndDate(),
                 'starts_at' => $subscriptionPeriod->getStartDate(),

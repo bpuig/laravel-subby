@@ -3,7 +3,8 @@
 [[toc]]
 
 ## Create a Subscription
-::: tip New in v6.0 
+::: tip New in v6.0
+`newSubscription` accepts a `PlanCombination` as second argument
 `newSubscription` accepts sixth argument: Payment Method
 :::
 You can subscribe a user (or any model correctly traited) to a plan by using the `newSubscription()` function available
@@ -22,20 +23,19 @@ are "frozen" unless
 $user = User::find(1);
 $plan = Plan::find(1);
 
-$user->newSubscription('main', $plan, 'Main subscription', 'Customer main subscription', 'free');
+$user->newSubscription(
+            'main', // identifier tag of the subscription. If your application offers a single subscription, you might call this 'main' or 'primary'
+             $plan, // Plan or PlanCombination instance your subscriber is subscribing to
+             'Main subscription', // Human-readable name for your subscription
+             'Customer main subscription', // Description
+             null, // Start date for the subscription, defaults to now()
+             'free' // Payment method service defined in config
+             );
 ```
-
-- First argument passed to `newSubscription` method should be the identifier tag of the subscription. If your
-  application offers a single subscription, you might call this `main` or `primary`.
-- Second argument is the plan instance your subscriber is subscribing to.
-- Third argument is a human-readable name for your subscription.
-- Fourth argument is a description.
-- Fifth argument is a start date for the subscription.
-- Sixth argument is payment method service defined in config.  <Badge text="new in 6.0" type="tip"/>
 
 ## Change its Plan
 
-You can change subscription related plan easily as follows:
+You can change subscription related plan easily as follows, method accepts either `Plan` or `PlanCombination`:
 
 ```php
 $plan = Plan::find(2);
@@ -78,19 +78,24 @@ $subscription->save();
 
 ### Revert custom subscription changes (resynchronize to plan)
 
-You can revert changes made to subscription with function `syncPlan`.
+You can revert changes made to subscription with function `syncPlan`. Be careful if you are using a `PlanCombination`,
+synchronizing without specifying a plan will synchronize subscription with parent plan.
 
 ```php 
-// Synchronize price, invoicing and tier with related plan
+// Synchronize price, invoicing and tier with parent plan
 $user->subscription('main')->syncPlan();
 
-// Synchronize plan and also features
+// Synchronize with parent plan and also features
 $user->subscription('main')->syncPlan(null, true, true);
+
 ```
 
-`syncPlan()` accepts 3 parameters. First parameter is a `Plan`, if you want to synchronize with current plan
-(default behaviour), set to `null`. Second is `bool` for synchronizing also invoicing details (period and interval),
-default behaviour is to synchronize `true`. The third one is `bool` to also synchronize features.
+`syncPlan()` accepts 3 parameters. 
+- First parameter is a `Plan`, if you want to synchronize with current plan
+(default behaviour), set to `null`. 
+- Second is `bool` for synchronizing also invoicing details (period and interval),
+default behaviour is to synchronize `true`. 
+- Third one is `bool` to also synchronize features.
 
 ## Grace
 

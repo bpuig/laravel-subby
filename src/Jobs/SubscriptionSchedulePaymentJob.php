@@ -62,8 +62,8 @@ class SubscriptionSchedulePaymentJob implements ShouldQueue
     {
         $this->service
             ->schedule($this->planSubscriptionSchedule)
-            ->amount($this->planSubscriptionSchedule->plan->price)
-            ->currency($this->planSubscriptionSchedule->plan->currency)
+            ->amount($this->planSubscriptionSchedule->scheduleable->price)
+            ->currency($this->planSubscriptionSchedule->scheduleable->currency)
             ->execute();
     }
 }

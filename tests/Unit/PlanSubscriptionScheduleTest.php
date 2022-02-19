@@ -4,6 +4,7 @@
 namespace Bpuig\Subby\Tests\Unit;
 
 
+use Bpuig\Subby\Models\Plan;
 use Bpuig\Subby\Models\PlanSubscriptionSchedule;
 use Bpuig\Subby\Tests\TestCase;
 use Carbon\Carbon;
@@ -22,7 +23,7 @@ class PlanSubscriptionScheduleTest extends TestCase
         $date = Carbon::now()->add(5, 'day');
         $this->testUser->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->setSchedule();
 
-        $schedule = PlanSubscriptionSchedule::where('plan_id', $this->testPlanPro->id)
+        $schedule =$this->testPlanPro->schedules()
             ->where('subscription_id', $this->testUser->subscription('main')->id)
             ->where('scheduled_at', $date->format('Y-m-d H:i:s'))
             ->first();
@@ -45,7 +46,7 @@ class PlanSubscriptionScheduleTest extends TestCase
     public function testScheduleCreationWithoutPlan()
     {
         $date = Carbon::now()->add(5, 'day');
-        $this->expectExceptionMessage('Scheduled plan is empty.');
+        $this->expectExceptionMessage('Scheduled plan/combination is empty.');
         $this->testUser->subscription('main')->onDate($date)->setSchedule();
     }
 
@@ -55,7 +56,7 @@ class PlanSubscriptionScheduleTest extends TestCase
     public function testScheduleCreationWithWrongPlan()
     {
         $date = Carbon::now()->add(5, 'day');
-        $this->expectExceptionMessage('Plan is not a valid Eloquent Plan Model instance.');
+        $this->expectExceptionMessage('Argument #1 ($planCombination) must be of type Bpuig\Subby\Models\Plan|Bpuig\Subby\Models\PlanCombination');
         $this->testUser->subscription('main')->toPlan('test')->onDate($date)->setSchedule();
     }
 

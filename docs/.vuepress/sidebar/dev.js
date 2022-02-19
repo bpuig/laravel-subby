@@ -16,6 +16,7 @@ var sidebar = [
         children: [
             ['models/', 'Models'],
             ['models/plan-model.md', 'Plan Model'],
+            ['models/plan-combination-model.md', 'Plan Combination Model'],
             ['models/plan-feature-model.md', 'Plan Feature Model'],
             ['models/plan-subscription-model.md', 'Plan Subscription Model'],
             ['models/plan-subscription-feature-model.md', 'Plan Subscription Feature Model'],

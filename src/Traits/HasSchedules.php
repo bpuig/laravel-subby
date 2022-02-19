@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Bpuig\Subby\Traits;
 
+use Bpuig\Subby\Models\Plan;
+use Bpuig\Subby\Models\PlanCombination;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -41,13 +43,13 @@ trait HasSchedules
     /**
      * Future plan
      *
-     * @param $plan
+     * @param Plan|PlanCombination $planCombination Plan or PlanCombination that will be the new one
      *
-     * @return $this
+     * @return HasSchedules|\Bpuig\Subby\Models\PlanSubscription
      */
-    public function toPlan($plan): self
+    public function toPlan(Plan|PlanCombination $planCombination): self
     {
-        $this->scheduledPlan = $plan;
+        $this->scheduledPlan = $planCombination;
 
         return $this;
     }
@@ -76,12 +78,11 @@ trait HasSchedules
         $this->validateNeighbourSchedules();
 
         $subscriptionChange = [
-            'plan_id' => $this->scheduledPlan->id,
             'subscription_id' => $this->id,
             'scheduled_at' => $this->scheduledDate
         ];
 
-        return app(config('subby.models.plan_subscription_schedule'))->create($subscriptionChange);
+        return $this->scheduledPlan->schedules()->create($subscriptionChange);
     }
 
     /**
@@ -89,7 +90,8 @@ trait HasSchedules
      * @param Carbon|null $date
      * @return mixed
      */
-    public function getLatestSchedule(?Carbon $date = null) {
+    public function getLatestSchedule(?Carbon $date = null)
+    {
         if (!$date) {
             $date = Carbon::now();
         }
@@ -106,7 +108,8 @@ trait HasSchedules
      * @param Carbon|null $date
      * @return mixed
      */
-    public function getFirstSchedule(?Carbon $date = null) {
+    public function getFirstSchedule(?Carbon $date = null)
+    {
         if (!$date) {
             $date = Carbon::now();
         }
@@ -142,15 +145,29 @@ trait HasSchedules
         // Search previous plan change
         $previous = $this->getLatestSchedule($this->scheduledDate);
 
-        if (!is_null($previous) && $previous->plan_id === $this->scheduledPlan->id) {
+        if (!is_null($previous) && $this->arePlansEqual($previous->scheduleable, $this->scheduledPlan)) {
             throw new \Exception('Previous plan change is to the same plan.', 401);
         }
 
         $next = $this->getFirstSchedule($this->scheduledDate);
 
-        if (!is_null($next) && $next->plan_id === $this->scheduledPlan->id) {
+        if (!is_null($next) && $this->arePlansEqual($next->scheduleable, $this->scheduledPlan)) {
             throw new \Exception('Next plan change is to the same plan.', 401);
         }
+    }
+
+    /**
+     * Compare essential data to determine if it's the same plan settings
+     * @param $one First plan to compare
+     * @param $two Second plan to compare
+     * @return bool
+     */
+    private function arePlansEqual($one, $two)
+    {
+        return ($one->currency === $two->currency
+            && $one->price === $two->price
+            && $one->invoice_period === $two->invoice_period
+            && $one->invoice_interval === $two->invoice_interval);
     }
 
     /**
@@ -160,12 +177,7 @@ trait HasSchedules
     private function validatePlan()
     {
         if (empty($this->scheduledPlan)) {
-            throw new \Exception('Scheduled plan is empty.', 401);
-        }
-
-        $model = app(config('subby.models.plan'));
-        if ($this->scheduledPlan instanceof $model == false) {
-            throw new \Exception('Plan is not a valid Eloquent Plan Model instance.', 401);
+            throw new \Exception('Scheduled plan/combination is empty.', 401);
         }
     }
 }
