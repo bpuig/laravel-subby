@@ -7,7 +7,7 @@ schedule your subscription plan changes.
 
 ## What it does
 
-- Plan Subscription is scheduled to change to another plan at a certain date in the future.
+- Plan Subscription is scheduled to change to another plan or plan combination at a certain date in the future.
     * In this schedule you specify date and which service will be executed before the change.
     * You can also set a timeout and tries for the job.
 - A job is added in your app schedule
@@ -26,7 +26,10 @@ You can schedule a change in your user subscription like this:
 
 ```php
 $date = Carbon::now()->add(15, 'day');
-$user->subscription('main')->toPlan($this->testPlanPro)->onDate($date)->setSchedule();
+
+$proPlan = Plan::findByTag('pro-plan');
+
+$user->subscription('main')->toPlan($proPlan)->onDate($date)->setSchedule();
 ```
 
 ## Scopes

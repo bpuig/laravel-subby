@@ -51,10 +51,14 @@ $planCombination->plan;
 
 ## Subscribe to plan combination
 
-See [Create a Subscription](plan-subscription-model.md#create-a-subscription) and use a `PlanCombination` instead of a
+See [create a Subscription](plan-subscription-model.md#create-a-subscription) and use a `PlanCombination` instead of a
 `Plan`.
 
 ## Change subscription's plan to plan combination
 
-See [Create a Subscription](plan-subscription-model.md#change-its-plan) and use a `PlanCombination` instead of a
+See [change its plan](plan-subscription-model.md#change-its-plan) and use a `PlanCombination` instead of a `Plan`.
+
+## Schedule subscription's plan change to plan combination
+
+See [create schedule](plan-subscription-schedule-model.md#create-schedule) and use a `PlanCombination` instead of a
 `Plan`.
