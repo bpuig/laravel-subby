@@ -127,7 +127,7 @@ class Plan extends Model
      */
     public function combinations(): HasMany
     {
-        return $this->hasMany(config('subby.models.plan_combinations'), 'plan_id', 'id');
+        return $this->hasMany(config('subby.models.plan_combination'), 'plan_id', 'id');
     }
 
     /**
