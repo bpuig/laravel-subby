@@ -12,7 +12,23 @@ In your composer version, require `dev-main` version.
 
 ### New lines in config
 
-`'services'` now look should like this:
+Added `plan_combinations` under `tables` and models:
+
+```php
+    'tables' => [
+        ...
+        'plan_combinations' => 'plan_combinations',
+        ...
+    ],
+    // Models
+    'models' => [
+        ...
+        'plan_combinations' => \Bpuig\Subby\Models\PlanCombination::class,
+    ...
+    ]
+```
+
+Added `payment_methods`, `'services'` now look should like this:
 
 ```php 
 'services' => [
