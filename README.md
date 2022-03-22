@@ -7,9 +7,12 @@ changes.
 
 Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/laravel-subscriptions).
 
+## Documentation
+Find here the [documentation](https://bpuig.github.io/laravel-subby/).
+
 ## Version Compatibility
 
-Current stable version is v6
+Current stable version is v6. Click on each version to read documentation.
 
 | Laravel | Laravel Subby                                                                                                                                                 |
 |:--------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------|

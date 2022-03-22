@@ -12,6 +12,8 @@ Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/
 ::: tip CURRENT VERSION Current stable version is v6
 :::
 
+Click on each version to read documentation.
+
 | Laravel | Laravel Subby                                  |
 |:--------|:-----------------------------------------------|
 | 9.x     | [v6.x](/v6.x/)                                 |
