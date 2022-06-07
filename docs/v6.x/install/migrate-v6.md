@@ -2,10 +2,10 @@
 
 ## Composer
 
-In your composer version, require `dev-main` version.
+In your composer version, require `v6.0` version.
 
 ```json
-"bpuig/laravel-subby": "dev-main",
+"bpuig/laravel-subby": "^v6.0",
 ```
 
 ## Config
@@ -52,10 +52,10 @@ In `'services'`:
 
 ## Migrations
 
-Publish dev migrations
+Publish v6 migrations
 
 ```shell
-php artisan vendor:publish --tag=subby.migrations.dev
+php artisan vendor:publish --tag=subby.migrations.v6.0.0
 php artisan migrate
 ```
 
