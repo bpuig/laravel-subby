@@ -31,7 +31,8 @@ module.exports = {
             '/v3.x/': require('./sidebar/v3.x').sidebar,
             '/v4.x/': require('./sidebar/v4.x').sidebar,
             '/v5.x/': require('./sidebar/v5.x').sidebar,
-            '/v6.x/': require('./sidebar/v6.x').sidebar
+            '/v6.x/': require('./sidebar/v6.x').sidebar,
+            '/v7.x/': require('./sidebar/v7.x').sidebar
         }
     },
 
