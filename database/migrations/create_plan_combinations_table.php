@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('plan_combinations', function (Blueprint $table) {
+        Schema::create(config('subby.tables.plan_combinations'), function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('plan_id')->nullable();
             $table->string('tag')->unique();
@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('invoice_interval')->default('month');
             $table->timestamps();
 
-            $table->unique(['country', 'currency', 'invoice_period', 'invoice_interval'], 'unique_plan_combination');
+            $table->unique(['plan_id','country', 'currency', 'invoice_period', 'invoice_interval'], 'unique_plan_combination');
 
             $table->foreign('plan_id', 'plan_id_fk')->references('id')->on(config('subby.tables.plans'))->onDelete('cascade')->onUpdate('cascade');
         });
@@ -37,6 +37,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('plan_combinations');
+        Schema::dropIfExists(config('subby.tables.plan_combinations'));
     }
 };

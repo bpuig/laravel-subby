@@ -15,8 +15,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
-            $table->string('payment_method')->nullable()->default('free')->after('invoice_interval');
+        Schema::table(config('subby.tables.plan_combinations'), function (Blueprint $table) {
+            $table->dropUnique('unique_plan_combination');
         });
     }
 
@@ -27,8 +27,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table(config('subby.tables.plan_subscriptions'), function (Blueprint $table) {
-            $table->dropColumn('payment_method');
+        Schema::table(config('subby.tables.plan_combinations'), function (Blueprint $table) {
+            $table->unique(['plan_id', 'country', 'currency', 'invoice_period', 'invoice_interval'], 'unique_plan_combination');
         });
     }
 };

@@ -28,6 +28,6 @@ Changed `plan_combinations` to `plan_combination` in models:
 Publish v7 migrations
 
 ```shell
-php artisan vendor:publish --tag=subby.migrations.v7.0.0
+php artisan vendor:publish --tag=subby.migrations.v7
 php artisan migrate
 ```
