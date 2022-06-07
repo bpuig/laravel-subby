@@ -19,7 +19,7 @@ return [
     // Models
     'models' => [
         'plan' => \Bpuig\Subby\Models\Plan::class,
-        'plan_combinations' => \Bpuig\Subby\Models\PlanCombination::class,
+        'plan_combination' => \Bpuig\Subby\Models\PlanCombination::class,
         'plan_feature' => \Bpuig\Subby\Models\PlanFeature::class,
         'plan_subscription' => \Bpuig\Subby\Models\PlanSubscription::class,
         'plan_subscription_feature' => \Bpuig\Subby\Models\PlanSubscriptionFeature::class,
