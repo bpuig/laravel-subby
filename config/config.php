@@ -8,7 +8,7 @@ return [
     // Database Tables
     'tables' => [
         'plans' => 'plans',
-        'plan_combination' => 'plan_combinations',
+        'plan_combinations' => 'plan_combinations',
         'plan_features' => 'plan_features',
         'plan_subscriptions' => 'plan_subscriptions',
         'plan_subscription_features' => 'plan_subscription_features',
