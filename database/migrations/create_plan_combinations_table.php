@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('plan_combinations', function (Blueprint $table) {
+        Schema::create(config('subby.tables.plan_combinations'), function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('plan_id')->nullable();
             $table->string('tag')->unique();
@@ -37,6 +37,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('plan_combinations');
+        Schema::dropIfExists(config('subby.tables.plan_combinations'));
     }
 };
