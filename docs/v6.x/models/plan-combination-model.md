@@ -16,7 +16,7 @@ use Bpuig\Subby\Models\PlanCombination;
 $plan = Plan::getByTag('basic');
 
 $plan->combinations()->create([
-    'tag' => 'basic-es-eur-1-year'
+    'tag' => 'basic-es-eur-1-year',
     'country' => 'ESP',
     'currency' => 'EUR',
     'price' => 99.99,
