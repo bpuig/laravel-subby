@@ -128,7 +128,7 @@ trait HasSubscriptions
 
         $plan = ($planCombination instanceof PlanCombination) ? $planCombination->plan : $planCombination;
 
-        $subscriptionPeriod = new SubscriptionPeriod($plan, $startDate ?? now());
+        $subscriptionPeriod = new SubscriptionPeriod($planCombination, $startDate ?? now());
 
         try {
             $this->subscription($tag);
