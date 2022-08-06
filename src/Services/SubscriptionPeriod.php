@@ -23,7 +23,7 @@ class SubscriptionPeriod
     protected $plan;
     protected $startDate;
 
-    public function __construct(Plan $plan, Carbon $startDate)
+    public function __construct(Plan|PlanCombination $plan, Carbon $startDate)
     {
         $this->plan = $plan;
         $this->startDate = $startDate;
