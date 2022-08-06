@@ -13,7 +13,7 @@ class PlanCombinationTest extends TestCase
      */
     public function testUnableToCreatePlanCombinationWithExistingTag()
     {
-        $this->expectExceptionMessage('UNIQUE constraint failed: ' . config('subby.tables.plan_combinations') . '.tag');
+        $this->expectExceptionMessage('UNIQUE constraint failed');
         $this->testPlanBasic->combinations()->create([
             'tag' => 'test-plan-basic-esp-eur-1-year',
             'country' => 'ESP',
@@ -29,7 +29,7 @@ class PlanCombinationTest extends TestCase
      */
     public function testUnableToCreatePlanCombinationWithExistingContent()
     {
-        $this->expectExceptionMessage('UNIQUE constraint failed: ' . config('subby.tables.plan_combinations') . '.country, ' . config('subby.tables.plan_combinations') . '.currency, ' . config('subby.tables.plan_combinations') . '.invoice_period, ' . config('subby.tables.plan_combinations') . '.invoice_interval');
+        $this->expectExceptionMessage('UNIQUE constraint failed');
         $this->testPlanBasic->combinations()->create([
             'tag' => 'test-2',
             'country' => 'ESP',
