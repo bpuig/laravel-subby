@@ -326,17 +326,13 @@ class PlanSubscription extends Model
      */
     private function deleteFeaturesNotInPlan(Plan $plan)
     {
-        // Retrieve current features that are not related to a plan
-        $featuresWithPlan = $this->features()->withoutPlan()->get();
+        // Retrieve current subscription features tags
+        $subscriptionFeatureTags = $this->features()->get()->pluck('tag');
+        // Retrieve desired plan features tags
+        $planFeatureTags = $plan->features()->pluck('tag');
 
-        // Retrieve selected plan features
-        $planFeatures = $plan->features();
-
-        // Use tags to find which features are no longer in selected plan
-        $featuresWithPlanTags = $featuresWithPlan->pluck('tag');
-        $planFeatureTags = $planFeatures->pluck('tag');
-
-        $featuresWithoutPlan = $featuresWithPlanTags->diff($planFeatureTags);
+        // Use those tags to get which features are not in desired plan
+        $featuresWithoutPlan = $subscriptionFeatureTags->diff($planFeatureTags);
 
         // Delete not found features
         $this->features()->whereIn('tag', $featuresWithoutPlan->all())->delete();
