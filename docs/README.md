@@ -9,7 +9,7 @@ Originally forked from [rinvex/laravel-subscriptions](https://github.com/rinvex/
 
 ## Version Compatibility
 
-::: tip CURRENT VERSION Current stable version is v6
+::: tip CURRENT VERSION Current stable version is v7
 :::
 
 Click on each version to read documentation.
