@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bpuig\Subby\Services;
 
 use Bpuig\Subby\Models\Plan;
+use Bpuig\Subby\Models\PlanCombination;
 use Carbon\Carbon;
 
 /**
