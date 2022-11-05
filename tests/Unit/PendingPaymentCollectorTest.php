@@ -37,6 +37,26 @@ class PendingPaymentCollectorTest extends TestCase
     }
 
     /**
+     * Test pending payment collector
+     */
+    public function testPendingPaymentCollectorWithoutPending()
+    {
+        // Cancel main test data
+        $this->testUser->subscription('main')->cancel(true);
+
+        // Generate 3 users with subscription
+        $users = UserFactory::new()->count(3)->create();
+        foreach ($users as $user) {
+            $user->newSubscription('main', $this->testPlanBasic);
+        }
+
+        $collector = new PendingPaymentCollector();
+        $pending = $collector->collectPayments();
+
+        $this->assertCount(0, $pending);
+    }
+
+    /**
      * Test pending payment collector schedule
      */
     public function testScheduledPendingPaymentCollector()
@@ -62,6 +82,27 @@ class PendingPaymentCollectorTest extends TestCase
 
         // Assert that of the 2 schedules, only 1 is set to schedule at current date (ends_at + 1 second)
         $this->assertCount(1, $pending);
+    }
+
+    /**
+     * Test pending payment collector schedule
+     */
+    public function testScheduledPendingPaymentCollectorWithoutScheduled()
+    {
+        // Cancel main test data
+        $this->testUser->subscription('main')->cancel(true);
+
+        // Generate 3 users with subscription
+        $users = UserFactory::new()->count(3)->create();
+        foreach ($users as $user) {
+            $user->newSubscription('main', $this->testPlanBasic);
+        }
+
+        $collector = new PendingPaymentCollector();
+        $pending = $collector->collectScheduledPayments();
+
+        // Assert that there are 0 scheduled payments
+        $this->assertCount(0, $pending);
     }
 
     /**
