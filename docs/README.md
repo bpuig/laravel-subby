@@ -32,7 +32,7 @@ creating the original!
 
 This software is released under [The MIT License (MIT)](LICENSE).
 
-&copy; 2020 - 2022 B. Puig, Some rights reserved.
+&copy; 2020 - 2023 B. Puig, Some rights reserved.
 
 
 
