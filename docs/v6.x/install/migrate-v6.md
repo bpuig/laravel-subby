@@ -10,7 +10,7 @@ In your composer version, require `v6.0` version.
 
 ## Config
 
-### New lines in config
+### New lines in config file `subby.php`
 
 Added `plan_combinations` under `tables` and models:
 
@@ -55,7 +55,7 @@ In `'services'`:
 Publish v6 migrations
 
 ```shell
-php artisan vendor:publish --tag=subby.migrations.v6.0.0
+php artisan vendor:publish --tag=subby.migrations.v6
 php artisan migrate
 ```
 
